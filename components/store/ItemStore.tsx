@@ -1,5 +1,5 @@
+import { pictonBlue, white } from "@/constants/Pallete";
 import { Image, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { pictonBlue, white } from "../common/colors";
 
 export default function ItemStore() {
   return (

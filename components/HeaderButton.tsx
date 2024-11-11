@@ -1,4 +1,4 @@
-import { pictonBlue, white } from "@/app/common/colors";
+import { pictonBlue, white } from "@/constants/Pallete";
 import { useNavigation } from "@react-navigation/native";
 import { Image, Text, StyleSheet, TouchableOpacity} from "react-native";
 import { TouchableOpacityProps } from "react-native-gesture-handler";

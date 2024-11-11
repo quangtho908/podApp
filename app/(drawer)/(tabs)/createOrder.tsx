@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet } from "react-native";
-import Header from "../header";
 
 export default function CreateOrderScreen() {
   return(

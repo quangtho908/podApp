@@ -3,21 +3,21 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HistoryStackScreen, HomeStackScreen } from '../common/navigatiors';
-import CreateOrderButton from './CreateOrderButton';
-import CreateOrderScreen from '../screens/createOrder';
-
+import CreateOrderScreen from './createOrder';
+import CreateOrderButton from '@/components/CreateOrderButton';
+import { HomeLayout } from './(home)/_layout';
+import { HistoryLayout } from './(history)/_layout';
+import { useNavigation } from 'expo-router';
 const Tab = createBottomTabNavigator();
 
 export default function BottomNavigation() {
   const colorScheme = useColorScheme();
-
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
       }}>
-      <Tab.Screen name="HomeStack" component={HomeStackScreen} options={{
+      <Tab.Screen name="HomeStack" component={HomeLayout} options={{
         headerShown: false,
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'home' : 'home-outline'} />
       }}/>
@@ -30,7 +30,7 @@ export default function BottomNavigation() {
         })}
       />
 
-      <Tab.Screen name="Hisotry" component={HistoryStackScreen} options={{
+      <Tab.Screen name="Hisotry" component={HistoryLayout} options={{
         headerShown: false,
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'time' : 'time-outline'} />
       }}/>

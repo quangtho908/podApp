@@ -1,22 +1,16 @@
-import { createDrawerNavigator } from "@react-navigation/drawer"
-import BottomNavigation from "../components/BottomNavigation";
-import { NavigationContainer } from "@react-navigation/native";
-import LeftSideDrawer from "../components/LeftSideDrawer";
-
-const Drawer = createDrawerNavigator();
+import LeftSideDrawer from "@/components/drawer/LeftSideDrawer";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {Drawer} from "expo-router/drawer"
 
 export default function DrawerLayout() {
   return (
-    <NavigationContainer independent={true} >
-      <Drawer.Navigator initialRouteName="Home" drawerContent={(props) => (<LeftSideDrawer {...props} />)} screenOptions={{headerShown: false}}>
+    <GestureHandlerRootView>
+      <Drawer drawerContent={(props) => (<LeftSideDrawer {...props} />)} screenOptions={{headerShown: false}}>
         <Drawer.Screen 
-          name="Home" 
-          component={BottomNavigation} 
-          options={{
-            headerShown: false
-          }}
+          name="(tabs)"
         />
-      </Drawer.Navigator>
-    </NavigationContainer>
+        <Drawer.Screen name="table" />
+      </Drawer>
+    </GestureHandlerRootView>
   )
 }

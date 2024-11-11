@@ -5,7 +5,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -26,13 +25,12 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView>
       <ThemeProvider value={DefaultTheme}>
         <Stack>
+          {/* <Stack.Screen name="login" /> */}
           <Stack.Screen name="(drawer)" options={{ headerShown: false }}/> 
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>
-    </GestureHandlerRootView>
   );
 }
