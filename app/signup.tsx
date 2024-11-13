@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet } from "react-native"
 
-export default function LoginScreen() {
-  // input username
-  // input password
-  // button login
-  // link signup
+export default function SignUpScreen() {
+
+  // input số điện thoại
+  // input email
+  // input họ tên
+  // button next
   return (
     <View style={styles.container}>
       <Text>Login</Text>
