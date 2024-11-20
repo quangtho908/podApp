@@ -1,13 +1,13 @@
+import { Link, router, useNavigation } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 
-export default function SignUpScreen() {
+export default function UserSignUpScreen() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
 
   const handleNext = () => {
-    // Xử lý khi nhấn nút Next, có thể thêm logic như chuyển màn hình hoặc kiểm tra dữ liệu.
     console.log("Phone:", phone);
     console.log("Email:", email);
     console.log("Full Name:", fullName);
@@ -15,7 +15,7 @@ export default function SignUpScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.title}>Thông tin người dùng</Text>
 
       <TextInput
         style={styles.input}
@@ -39,15 +39,13 @@ export default function SignUpScreen() {
         value={fullName}
         onChangeText={setFullName}
       />
-
-      <Button title="Next" onPress={handleNext} />
+      <Button title="Next" onPress={() => router.push("/signup/merchant")}/>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     padding: 20,
   },

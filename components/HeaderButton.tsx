@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 5
+    borderRadius: 5,
   },
   title: {
     fontWeight: "bold",

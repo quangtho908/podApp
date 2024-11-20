@@ -1,41 +1,43 @@
+import PasswordField from "@/components/PasswordField";
+import PrimaryButton from "@/components/PrimaryButton";
+import { pictonBlue, white } from "@/constants/Pallete";
+import { router } from "expo-router";
 import React from "react"
-import { View, Text, StyleSheet, TextInput, Touchable, TouchableOpacity } from "react-native"
+import { View, Text, StyleSheet, TextInput, Pressable } from "react-native"
 
 export default function LoginScreen() {
-  // input username
-  // input password
-  // button login
-  // link signup
+  
+  const handleSubmit = () => {
+    router.push("/pin/input")
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor="#888"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#888"
-        secureTextEntry={true} //Hidden password
-      />
-
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
-
+      <Text style={styles.title}>Đăng nhập</Text>
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>
-          You don't have an account?{" "}
+          Bạn chưa có tài khoản?{" "}
         </Text>
-        <TouchableOpacity>
-          <Text style={styles.signupLink}>Signup Now</Text>
-        </TouchableOpacity>
+        <Pressable onPress={() => router.push('/signup')}>
+          <Text style={styles.signupLink}>Đăng ký</Text>
+        </Pressable>
       </View>
-      
+      <TextInput
+        style={styles.input}
+        placeholder="Email hoặc số điện thoại"
+        placeholderTextColor={white[400]}
+      />
+
+      <PasswordField placeholder="Mật khẩu" />
+      <PrimaryButton title="Đăng nhập" onPress={handleSubmit} />
+      <View style={styles.signupContainer}>
+        <Text style={styles.signupText}>
+          Bạn quên mật khẩu?{" "}
+        </Text>
+        <Pressable onPress={() => router.push('/signup')}>
+          <Text style={styles.signupLink}>Quên mật khẩu</Text>
+        </Pressable>
+      </View>
     </View>
   )
 }
@@ -45,34 +47,21 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: white[50],
+    gap: 15
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
     textAlign: "center",
   },
   input: {
     height: 50,
-    borderColor: "#ccc",
+    borderColor: white[300],
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 5,
     paddingHorizontal: 10,
-    marginBottom: 15,
     fontSize: 16,
-  },
-  loginButton: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  loginButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
   },
   signupContainer: {
     flexDirection: "row",
@@ -81,11 +70,11 @@ const styles = StyleSheet.create({
   },
   signupText: {
     fontSize: 16,
-    color: "#333",
+    color: white[900],
   },
   signupLink: {
     fontSize: 16,
-    color: "#007bff",
+    color: pictonBlue[500],
     fontWeight: "bold",
   },
 });
