@@ -18,7 +18,7 @@ export default function MerchantSignupScreen() {
         placeholder="Địa chỉ cửa hàng"
       />
 
-      <Button title="Next" onPress={() => router.push("/verifyMail/signup")} />
+      <Button title="Next" onPress={() => router.push("/signup/verifyMail")} />
     </View>
   );
 }

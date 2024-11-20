@@ -1,5 +1,5 @@
 import { pictonBlue, white } from "@/constants/Pallete";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, View, Text, Pressable, Button } from "react-native";
 import {  CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
@@ -9,7 +9,6 @@ export default function VerifyMailPage() {
   const [isResend, setIsResend] = useState(false);
   let [countDown, setCountDown] = useState(59);
   const ref = useBlurOnFulfill({value, cellCount: 6});
-  const params = useLocalSearchParams<{ query?: string }>();
   const resend = () => {
     setCountDown(59);
     setIsResend(false);
