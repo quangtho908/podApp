@@ -30,7 +30,6 @@ export default function RootLayout() {
           <Stack.Screen name="login" options={{headerShown: false}} />
           <Stack.Screen name='pin' options={{headerShown: false}} />
           <Stack.Screen name='signup' options={{headerShown: false}} />
-          <Stack.Screen name='verifyMail' options={{headerShown: false}} />
           <Stack.Screen name='setPassword' options={{headerTitle: "Thiết lập Mật Khẩu"}} />
           <Stack.Screen name="(drawer)" options={{ headerShown: false }}/> 
           <Stack.Screen name="+not-found" />
