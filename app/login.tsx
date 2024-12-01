@@ -1,3 +1,4 @@
+import { pictonBlue, white } from "@/constants/Pallete";
 import React from "react"
 import { View, Text, StyleSheet, TextInput, Touchable, TouchableOpacity } from "react-native"
 
@@ -13,13 +14,13 @@ export default function LoginScreen() {
       <TextInput
         style={styles.input}
         placeholder="Username"
-        placeholderTextColor="#888"
+        placeholderTextColor={pictonBlue[400]}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Password"
-        placeholderTextColor="#888"
+        placeholderTextColor={pictonBlue[400]}
         secureTextEntry={true} //Hidden password
       />
 
@@ -45,13 +46,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: white[50],
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+    color: pictonBlue[700]
   },
   input: {
     height: 50,
@@ -61,16 +63,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 15,
     fontSize: 16,
+    color: pictonBlue[900],
   },
   loginButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: pictonBlue[500],
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: "center",
     marginBottom: 20,
   },
   loginButtonText: {
-    color: "#fff",
+    color: white[50],
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -81,11 +84,11 @@ const styles = StyleSheet.create({
   },
   signupText: {
     fontSize: 16,
-    color: "#333",
+    color: pictonBlue[800],
   },
   signupLink: {
     fontSize: 16,
-    color: "#007bff",
+    color: pictonBlue[500],
     fontWeight: "bold",
   },
 });
