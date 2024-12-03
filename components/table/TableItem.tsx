@@ -1,12 +1,14 @@
 import { pictonBlue, white } from "@/constants/Pallete";
+import useModalChooseTable from "@/service/modalChooseTable";
 import { useState } from "react";
 import { Image, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 export default function TableItem() {
   const [cardForcus, setCardFocus] = useState(false);
-
+  const setModalChooseTable = useModalChooseTable(state => state.setVisible)
   const onFocus = () => {
     setCardFocus(!cardForcus)
+    setModalChooseTable(false)
   }
 
   return (

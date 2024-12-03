@@ -11,6 +11,14 @@ export default function CreateOrderScreen() {
         <CardProductOrder amount={0} />
         <CardProductOrder amount={0} />
         <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
+        <CardProductOrder amount={0} />
       </ResetOnPullToRefresh>
       <ModalOrder />
     </View>
@@ -20,11 +28,11 @@ export default function CreateOrderScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 15,
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
     justifyContent: 'center',
-    paddingBottom: 150
+    paddingBottom: 170
   }
 })

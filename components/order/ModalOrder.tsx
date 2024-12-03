@@ -6,19 +6,17 @@ import { useState } from "react";
 import ModalChooseTable from "../table/ModalChooseTable";
 import styleText from "@/styles/text";
 import color from "@/styles/color";
+import useModalChooseTable from "@/service/modalChooseTable";
 
 export default function ModalOrder() {
-  const [openChooseTable, setOpenChooseTable] = useState(false);
-
-  const setCloseModalChooseTable = () => {
-    setOpenChooseTable(false);
-  }
-
+  const setModalChooseTable = useModalChooseTable(state => state.setVisible)
+  const [table, setTable] = useState('Chưa chọn bàn')
   return (
     <View style={styles.centeredView}>
+      <Text>Chưa chọn bàn</Text>
       <View style={styles.options}>
         <OrderTypeBtn />
-        <TouchableOpacity onPress={() => setOpenChooseTable(true)}>
+        <TouchableOpacity onPress={() => setModalChooseTable(true)}>
           <Text style={{...styleText.text, ...color.textBlue500}}>Chọn bàn</Text>
         </TouchableOpacity>
       </View>
@@ -32,7 +30,7 @@ export default function ModalOrder() {
           <Text style={{...styleText.text, ...color.textWhite50}}>Đặt bàn</Text>
         </TouchableOpacity>
       </View>
-      <ModalChooseTable visible={openChooseTable} setVisible={setCloseModalChooseTable}/>
+      <ModalChooseTable />
     </View>
   )
 }
