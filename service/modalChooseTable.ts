@@ -2,19 +2,19 @@ import { create } from "zustand"
 
 type State = {
   visible: boolean,
-  tables: any[]
+  order: any
 }
 
 type Action = {
   setVisible: (visible: boolean) => void
-  setTables: (order: any) => void 
+  setOrder: (order: any) => void 
 }
 
-const useModalOrderDetail = create<State & Action>(set => ({
+const useModalChooseTable = create<State & Action>(set => ({
   visible: false,
-  tables: [],
+  order: {},
   setVisible: (newState: boolean) => set(() => ({visible: newState})),
-  setTables: (newList: any) => set(() => ({tables: newList}))
+  setOrder: (newOrder: any) => set(() => ({order: newOrder}))
 }))
 
-export default useModalOrderDetail;
+export default useModalChooseTable;

@@ -15,12 +15,27 @@ export default function ModalOrderDetail() {
       visible={visible}
     >
       <View style={{...styles.title}}>
-        <Text style={{...styleText.textTitle}}>Đơn hàng</Text>
         <TouchableOpacity onPress={() => setVisible(false)}>
-          <Text style={{...styleText.text, ...color.textBlue500}}>Huỷ</Text>
+          <Text style={{...styleText.text, ...color.textRed500}}>Huỷ</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setVisible(false)}>
+          <Text style={{...styleText.text, ...color.textBlue500}}>Xác nhận</Text>
         </TouchableOpacity>
       </View>
+      <View style={{margin: 'auto', paddingVertical: 15}}>
+        <Text style={{...styleText.textTitle}} >Đơn hàng</Text>
+      </View>
       <ResetOnPullToRefresh contentContainerStyle={styles.container}>
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
+        <CardProductOrder amount={1} state={true} />
         <CardProductOrder amount={1} state={true} />
       </ResetOnPullToRefresh>
     </Modal>
@@ -31,7 +46,8 @@ const styles = StyleSheet.create({
   title: {
     borderBottomWidth: 2,
     borderBottomColor: white[200],
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
@@ -39,7 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 20,
-    paddingVertical: 20
+    gap: 10,
+    padding: 20
   }
 })

@@ -1,4 +1,4 @@
-import { pictonBlue, white } from "@/constants/Pallete";
+import { green, orange, pictonBlue, red, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Button, Image, StyleSheet, Text, View } from "react-native";
@@ -23,19 +23,19 @@ export default function OrderItem () {
           </View>
           <Text>Sản phẩm: 2</Text>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
-            <TabBarIcon name={"refresh-circle-outline"} />
-            <Text style={{...color.textBlue500}} >Chuẩn bị</Text>
+            <TabBarIcon name={"refresh-circle-outline"} color={orange[500]} />
+            <Text style={{...color.textOrange500}} >Chuẩn bị</Text>
           </View>
         </View>
       </TouchableOpacity>
       <View style={styles.actionContainer}>
         <TouchableOpacity style={styles.action}>
-          <Text style={{...styleText.text, ...color.textBlue500}}>Huỷ</Text>
-          <TabBarIcon name='backspace' color={pictonBlue[500]}/>
+          <Text style={{...styleText.text, ...color.textRed500}}>Huỷ</Text>
+          <TabBarIcon name='backspace' color={red[500]}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.action}>
-          <TabBarIcon name='card' color={pictonBlue[500]}/>
-          <Text style={{...styleText.text, ...color.textBlue500}}>Thanh Toán</Text>
+          <TabBarIcon name='card' color={green[500]}/>
+          <Text style={{...styleText.text, ...color.textGreen500}}>Thanh Toán</Text>
         </TouchableOpacity>
       </View>
     </View>

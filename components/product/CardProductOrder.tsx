@@ -1,4 +1,4 @@
-import { pictonBlue, white } from "@/constants/Pallete";
+import { pictonBlue, red, white } from "@/constants/Pallete";
 import { Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useState } from "react";
@@ -48,7 +48,7 @@ export default function CardProductOrder(props: CardProductOrderProp) {
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.resetBtn} onPress={disable}>
-          <TabBarIcon name='trash' size={30} />
+          <TabBarIcon name='trash' size={30} color={red[500]} />
         </TouchableOpacity>
       </View>
       
@@ -72,11 +72,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    paddingBottom: 10
+    paddingBottom: 10, 
   },
   containerActive: {
-    borderWidth: 5,
-    borderColor: pictonBlue[500]
+    backgroundColor: pictonBlue[200],
   },
   image: {
     width: 100,
