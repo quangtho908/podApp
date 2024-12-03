@@ -2,38 +2,28 @@ import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import CreateOrderScreen from './createOrder';
-import CreateOrderButton from '@/components/CreateOrderButton';
-import { HomeLayout } from './(home)/_layout';
-import { HistoryLayout } from './(history)/_layout';
-import { useNavigation } from 'expo-router';
-const Tab = createBottomTabNavigator();
+import { Tabs, useNavigation } from 'expo-router';
+import HeaderButton from '@/components/HeaderButton';
+import { NavigationProp } from '@react-navigation/native';
 
 export default function BottomNavigation() {
   const colorScheme = useColorScheme();
+  const navigation: NavigationProp<ReactNavigation.RootParamList> & {openDrawer: () => void} = useNavigation('../../(drawer)');
   return (
-    <Tab.Navigator
+    <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        headerLeft: () => <HeaderButton onPress={() => navigation.openDrawer()} />,
       }}>
-      <Tab.Screen name="HomeStack" component={HomeLayout} options={{
-        headerShown: false,
-        tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'home' : 'home-outline'} />
+      <Tabs.Screen name="index" options={{
+        headerTitle: '',
+        tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'home' : 'home-outline'} />,
       }}/>
 
-      <Tab.Screen 
-        name='createOrder' 
-        component={CreateOrderScreen} 
-        options={({ navigation }) => ({
-          tabBarButton: () => <CreateOrderButton onPress={() => navigation.navigate("CreateOrder")} />
-        })}
-      />
-
-      <Tab.Screen name="Hisotry" component={HistoryLayout} options={{
-        headerShown: false,
+      <Tabs.Screen name='history' options={{
+        headerTitle: '',
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'time' : 'time-outline'} />
       }}/>
-    </Tab.Navigator>
+    </Tabs>
   );
 }

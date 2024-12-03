@@ -1,8 +1,10 @@
 // ResetOnPullToRefresh.tsx
-import React, { useState } from 'react';
-import { ScrollView, RefreshControl, Text, View, Button } from 'react-native';
+import React, { Children, useState } from 'react';
+import { ScrollView, RefreshControl, Text, View, Button, ViewProps, ScrollViewProps } from 'react-native';
 
-const ResetOnPullToRefresh = () => {
+const ResetOnPullToRefresh = (
+  props: ScrollViewProps
+) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [content, setContent] = useState('This is some content.');
 
@@ -22,10 +24,9 @@ const ResetOnPullToRefresh = () => {
           onRefresh={onRefresh}
         />
       }
+      {...props}
     >
-      <View style={{flexDirection: 'column', alignItems: 'center'}}>
-        <Text>{content}</Text>
-      </View>
+      {props.children}
     </ScrollView>
   );
 };

@@ -5,5 +5,5 @@ import { type IconProps } from '@expo/vector-icons/build/createIconSet';
 import { type ComponentProps } from 'react';
 
 export function TabBarIcon({ style, size, ...rest }: IconProps<ComponentProps<typeof Ionicons>['name']>) {
-  return <Ionicons size={size || 28} style={[{ marginBottom: -3 }, style]} {...rest} color={pictonBlue[500]} />;
+  return <Ionicons size={size || 28} style={[{ marginBottom: -3 }, style]} color={pictonBlue[500]} {...rest}/>;
 }
