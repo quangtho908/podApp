@@ -3,8 +3,8 @@ import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import ResetOnPullToRefresh from "../ResetOnPullRequest";
-import TableItem from "./TableItem";
 import useModalChooseTable from "@/service/modalChooseTable";
+import ChooseTableItem from "./ChooseTableItem";
 
 export default function ModalChooseTable() {
   const visible = useModalChooseTable(state => state.visible)
@@ -21,11 +21,7 @@ export default function ModalChooseTable() {
         </TouchableOpacity>
       </View>
       <ResetOnPullToRefresh contentContainerStyle={styles.container}>
-        <TableItem />
-        <TableItem />
-        <TableItem />
-        <TableItem />
-        <TableItem />
+        <ChooseTableItem />
       </ResetOnPullToRefresh>
     </Modal>
   )

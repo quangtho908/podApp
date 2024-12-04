@@ -67,4 +67,7 @@ export const green = {
   900: '#185314',
   950: '#072e05',
 }
-    
+
+export const transparent = {
+  50: 'rgba(52, 52, 52, 0.5)'
+}
