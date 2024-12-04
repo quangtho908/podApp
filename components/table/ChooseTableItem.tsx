@@ -1,26 +1,20 @@
 import { pictonBlue, white } from "@/constants/Pallete";
+import useModalChooseTable from "@/service/modalChooseTable";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
-import useModalTable, { ModalType } from "./services/modalTable";
 
-export default function TableItem() {
-  const {setProps, modals} = useModalTable()
-  const modalAction: any = modals.get(ModalType.Action);
-  const editAction: any = modals.get(ModalType.Edit);
-
+export default function ChooseTableItem() {
+  const [cardForcus, setCardFocus] = useState(false);
+  const setModalChooseTable = useModalChooseTable(state => state.setVisible)
   const onFocus = () => {
-    setProps(ModalType.Edit, {...editAction, visible: true})
-  }
-
-  const onLongPress = () => {
-    setProps(ModalType.Action, {...modalAction, visible: true})
+    setCardFocus(!cardForcus)
+    setModalChooseTable(false)
   }
 
   return (
     <TouchableOpacity 
-      style={styles.container}
+      style={{...styles.container, ...(cardForcus ? styles.containerActive : {})}}
       onPress={onFocus}
-      onLongPress={onLongPress}
     >
       <Image style={styles.image} source={require('@/assets/images/table_draw.jpg')} />
       <Text>Bàn 1</Text>
@@ -42,6 +36,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     backgroundColor: white[50]
+  },
+  containerActive: {
+    borderWidth: 5,
+    borderColor: pictonBlue[500]
   },
   image: {
     width: 100,

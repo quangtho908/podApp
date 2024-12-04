@@ -17,11 +17,13 @@ export default function BottomNavigation() {
       }}>
       <Tabs.Screen name="index" options={{
         headerTitle: '',
+        title: 'Danh sách đơn',
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'home' : 'home-outline'} />,
       }}/>
 
       <Tabs.Screen name='history' options={{
         headerTitle: '',
+        title: 'Lịch sử đơn',
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'time' : 'time-outline'} />
       }}/>
     </Tabs>

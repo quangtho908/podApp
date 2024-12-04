@@ -5,9 +5,15 @@ import { Button, Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import useModalOrderDetail from "@/service/modalOrderDetail";
+import { useRouter } from "expo-router";
 
 export default function OrderItem () {
-  const setVisible = useModalOrderDetail(state => state.setVisible)
+  const setVisible = useModalOrderDetail(state => state.setVisible);
+  const router = useRouter();
+
+  const payment = () => {
+    router.push("/payment");
+  }
 
   return (
     <View style={styles.container}>
@@ -33,7 +39,7 @@ export default function OrderItem () {
           <Text style={{...styleText.text, ...color.textRed500}}>Huỷ</Text>
           <TabBarIcon name='backspace' color={red[500]}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.action}>
+        <TouchableOpacity style={styles.action} onPress={payment}>
           <TabBarIcon name='card' color={green[500]}/>
           <Text style={{...styleText.text, ...color.textGreen500}}>Thanh Toán</Text>
         </TouchableOpacity>
