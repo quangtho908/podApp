@@ -3,17 +3,18 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {Drawer} from "expo-router/drawer"
 import { TouchableOpacity } from "react-native";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import useModalTable, { ModalType } from "@/components/table/services/modalTable";
+import useModalTable, { ModalTableType } from "@/components/table/services/modalTable";
+import { useRouter } from "expo-router";
 
 export default function DrawerLayout() {
   const {setProps, modals} = useModalTable()
-  const modalCreateTable: any = modals.get(ModalType.Create);
+  const modalCreateTable: any = modals.get(ModalTableType.Create);
+  const router = useRouter();
   const onAddTable = () => {
-    setProps(ModalType.Create, {
+    setProps(ModalTableType.Create, {
       ...modalCreateTable,
       visible: true
     })
-
   }
 
   return (
@@ -32,6 +33,19 @@ export default function DrawerLayout() {
               <TouchableOpacity
                 style={{marginRight: 10}}
                 onPress={onAddTable}
+              >
+                <TabBarIcon name='add' />
+              </TouchableOpacity>
+            )
+          }}
+        />
+        <Drawer.Screen
+          name="menu"
+          options={{
+            headerRight: () => (
+              <TouchableOpacity
+                style={{marginRight: 10}}
+                onPress={() => router.push("/addProduct")}
               >
                 <TabBarIcon name='add' />
               </TouchableOpacity>

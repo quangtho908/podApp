@@ -1,25 +1,25 @@
 import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useModalTable, { ModalTableType } from "./services/modalTable";
 import { useEffect, useState } from "react";
+import useModalProduct, { ModalProductType } from "./services/modalProduct";
 
-export default function ModalActionTable() {
-  const {setModal, setProps, modals} = useModalTable()
+export default function ModalActionProduct() {
+  const {setModal, setProps, modals} = useModalProduct()
   useEffect(()=> {
-    setModal(ModalTableType.Action);
+    setModal(ModalProductType.Action);
   }, [])
 
   const cancel = () => {
-    setProps(ModalTableType.Action, {
-      table: modals.get(ModalTableType.Action)?.table,
+    setProps(ModalProductType.Action, {
+      product: modals.get(ModalProductType.Action)?.product,
       visible: false
     })
   }
 
   return (
     <Modal
-      visible={modals.get(ModalTableType.Action)?.visible}
+      visible={modals.get(ModalProductType.Action)?.visible}
       animationType="fade"
       onRequestClose={cancel}
       transparent={true}
@@ -37,6 +37,7 @@ export default function ModalActionTable() {
     </Modal>
   )
 }
+
 
 const styles = StyleSheet.create({
   container: {

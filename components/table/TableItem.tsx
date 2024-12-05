@@ -1,19 +1,19 @@
 import { pictonBlue, white } from "@/constants/Pallete";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
-import useModalTable, { ModalType } from "./services/modalTable";
+import useModalTable, { ModalTableType } from "./services/modalTable";
 
 export default function TableItem() {
   const {setProps, modals} = useModalTable()
-  const modalAction: any = modals.get(ModalType.Action);
-  const editAction: any = modals.get(ModalType.Edit);
+  const modalAction: any = modals.get(ModalTableType.Action);
+  const editAction: any = modals.get(ModalTableType.Edit);
 
   const onFocus = () => {
-    setProps(ModalType.Edit, {...editAction, visible: true})
+    setProps(ModalTableType.Edit, {...editAction, visible: true})
   }
 
   const onLongPress = () => {
-    setProps(ModalType.Action, {...modalAction, visible: true})
+    setProps(ModalTableType.Action, {...modalAction, visible: true})
   }
 
   return (

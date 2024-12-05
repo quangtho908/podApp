@@ -44,6 +44,8 @@ export default function RootLayout() {
               </TouchableOpacity>
             )}}
           />
+          <Stack.Screen name='addProduct' />
+          <Stack.Screen name='updateProduct' />
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>

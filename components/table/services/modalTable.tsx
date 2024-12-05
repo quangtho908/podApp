@@ -5,28 +5,28 @@ type ModalProps = {
   table: any
 }
 
-export enum ModalType {
+export enum ModalTableType {
   Action,
   Edit,
   Create
 }
 
 type State = {
-  modals: Map<ModalType, ModalProps>
+  modals: Map<ModalTableType, ModalProps>
 }
 
 type Action = {
-  setProps: (modal: ModalType, props: ModalProps) => void
-  setModal: (modal: ModalType) => void
+  setProps: (modal: ModalTableType, props: ModalProps) => void
+  setModal: (modal: ModalTableType) => void
 }
 
 const useModalTable = create<State & Action>(set => ({
-  modals: new Map<ModalType, ModalProps>(),
-  setProps: (modal: ModalType, props: ModalProps) => set((state) => {
+  modals: new Map<ModalTableType, ModalProps>(),
+  setProps: (modal: ModalTableType, props: ModalProps) => set((state) => {
     state.modals.set(modal, props)
     return {modals: state.modals}
   }),
-  setModal: (modal: ModalType) => set((state) => {
+  setModal: (modal: ModalTableType) => set((state) => {
     state.modals.set(modal, {visible: false, table: []})
     return {modals: state.modals}
   })
