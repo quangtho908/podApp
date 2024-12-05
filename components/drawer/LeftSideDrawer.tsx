@@ -18,6 +18,7 @@ export default function LeftSideDrawer(props: any) {
         <Button title="Home" onPress={() => router.push('/(drawer)/(tabs)')} />
         <Link href="/login" style={{color: pictonBlue[500], marginTop: 20}}>Login</Link>
         <Link href="/(drawer)/table" style={{color: pictonBlue[500], marginTop: 20}}>Table</Link>
+        <Link href="/(drawer)/menu" style={{color: pictonBlue[500], marginTop: 20}}>Menu</Link>
       </View>
     </View>
   )

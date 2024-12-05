@@ -2,26 +2,26 @@ import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import useModalTable, {ModalType} from "./services/modalTable";
+import useModalTable, {ModalTableType} from "./services/modalTable";
 import { useEffect} from "react";
 import { TextInput } from "react-native-gesture-handler";
 
 export default function ModalCreateTable() {
   const {setModal, setProps, modals} = useModalTable()
   useEffect(() => {
-    setModal(ModalType.Create);
+    setModal(ModalTableType.Create);
   }, [])
 
   const cancel = () => {
-    setProps(ModalType.Create, {
-      table: modals.get(ModalType.Create)?.table,
+    setProps(ModalTableType.Create, {
+      table: modals.get(ModalTableType.Create)?.table,
       visible: false
     })
   }
 
   const confirm = () => {
-    setProps(ModalType.Create, {
-      table: modals.get(ModalType.Create)?.table,
+    setProps(ModalTableType.Create, {
+      table: modals.get(ModalTableType.Create)?.table,
       visible: false
     })
   }
@@ -29,7 +29,7 @@ export default function ModalCreateTable() {
   return (
     <Modal
       animationType="fade"
-      visible={modals.get(ModalType.Create)?.visible}
+      visible={modals.get(ModalTableType.Create)?.visible}
       transparent={true}
       onRequestClose={cancel}
     >
