@@ -6,7 +6,7 @@ import ModalChooseTable from "../table/ModalChooseTable";
 import styleText from "@/styles/text";
 import color from "@/styles/color";
 import useModalChooseTable from "@/service/modalChooseTable";
-import newOrderService from "@/service/orders/newOrder";
+import setOrderService from "@/service/orders/setOrder";
 import Input from "../Input";
 import { useEffect, useState } from "react";
 import { postRequest } from "@/apis/common";
@@ -17,7 +17,7 @@ import { ResponseError } from "@/apis/model";
 export default function ModalOrder() {
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
   const [note, setNote] = useState("")
-  const {currentTable, order, update, destroy} = newOrderService()
+  const {currentTable, order, update, destroy} = setOrderService()
   const [isError, setIsError] = useState(false)
   const [error, setError] = useState({
     title: "",

@@ -1,6 +1,6 @@
 import { pictonBlue, white } from "@/constants/Pallete";
 import useModalChooseTable from "@/service/modalChooseTable";
-import newOrderService from "@/service/orders/newOrder";
+import setOrderService from "@/service/orders/setOrder";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -13,7 +13,7 @@ type ChooseTableItemProps = {
 export default function ChooseTableItem(props: ChooseTableItemProps) {
   const [cardForcus, setCardFocus] = useState(false);
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
-  const {updateCurrentTable} = newOrderService()
+  const {updateCurrentTable} = setOrderService()
 
   const onFocus = () => {
     setCardFocus(!cardForcus)

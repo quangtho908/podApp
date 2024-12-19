@@ -1,62 +1,31 @@
 import CardProductOrder from "@/components/product/CardProductOrder";
 import ModalOrder from "@/components/order/ModalOrder";
 import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
-import { View, StyleSheet, Alert } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { useEffect } from "react";
 import productService from "@/service/product/productsStore";
 import merchantService from "@/service/merchant/merchantStore";
-import newOrderService from "@/service/orders/newOrder";
-import { useNavigation } from "expo-router";
+import setOrderService from "@/service/orders/setOrder";
 
 export default function CreateOrderScreen() {
 
   const {products, filter} = productService()
   const {merchant} = merchantService()
-  const {order, update, destroy} = newOrderService()
-  const [skipAlert, setSkipAlert] = useState(false)
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    if(order.products.length <= 0) {
-      setSkipAlert(true);
-    }
-  }, [JSON.stringify(order)])
+  const {order, update} = setOrderService()
 
   useEffect(() => { 
     order.merchantId = merchant.id;
     update(order);
     filter({merchantId: merchant.id})
-    const cancel = navigation.addListener("beforeRemove", (e) => {
-      if(skipAlert) {
-        destroy();
-        cancel();
-        setSkipAlert(false)
-        navigation.goBack();
-        return;
-      };
-      e.preventDefault()
-      Alert.alert("Bạn muốn huỷ tạo đơn", "Bạn chắc chắn chứ",
-        [
-          {text: "Huỷ", style: "cancel"},
-          {text: "Xác nhận", onPress: () => {
-            destroy();
-            cancel();
-            navigation.goBack();
-          }}
-        ]
-      ) 
-    })
-    return () => cancel();
-  }, [navigation, skipAlert])
+  }, [])
 
   return(
     <View style={{flex: 1}}>
       <ResetOnPullToRefresh contentContainerStyle={styles.container}>
-        {products.map(product => <CardProductOrder amount={0} key={product.id} {...product} />)}
+        {products.map(product => <CardProductOrder quantity={0} key={product.id} {...product} />)}
       </ResetOnPullToRefresh>
       <ModalOrder />
     </View>
-    
   )
 }
 
