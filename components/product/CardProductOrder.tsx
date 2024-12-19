@@ -2,20 +2,20 @@ import { pictonBlue, red, white } from "@/constants/Pallete";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useState } from "react";
-import newOrderService from "@/service/orders/newOrder";
+import setOrderService from "@/service/orders/setOrder";
 
 type CardProductOrderProp = {
   id: number,
   state?: boolean,
   name?: string,
   price?: number,
-  amount: number
+  quantity: number
 }
 
 export default function CardProductOrder(props: CardProductOrderProp) {
   const [cardForcus, setCardFocus] = useState(!!props.state);
-  let [count, setCount] = useState(props.amount);
-  const {order, update} = newOrderService();
+  let [count, setCount] = useState(props.quantity);
+  const {order, update} = setOrderService();
 
   function updateCount() {
     for(let i = 0; i < order.products.length; i++) {

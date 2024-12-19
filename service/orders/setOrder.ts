@@ -8,8 +8,8 @@ type ProductOrder = {
 
 type Order = {
   merchantId: number,
-  tableId: number,
-  isTakeOut: boolean,
+  tableId?: number,
+  isTakeOut?: boolean,
   note: string,
   products: ProductOrder[]
 }
@@ -29,15 +29,13 @@ type Action = {
 const initState: State = {
   order: {
     merchantId: 0,
-    tableId: 0,
-    isTakeOut: false,
     note: "",
     products: []
   },
   currentTable: null
 }
 
-const newOrderService = create<State & Action>(set => ({
+const setOrderService = create<State & Action>(set => ({
   ..._.cloneDeep(initState),
   update: (order: Order) => set({order}),
   updateCurrentTable: (table: Table | null) => {
@@ -50,7 +48,7 @@ const newOrderService = create<State & Action>(set => ({
     set({currentTable: table})
   },
   isTakeOut: (isTakeOut: boolean) => set(state => ({order: {...state.order, isTakeOut}})),
-  destroy: () => set(initState)
+  destroy: () => set(_.cloneDeep(initState))
 }))
 
-export default newOrderService;
+export default setOrderService;

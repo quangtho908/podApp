@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { TouchableOpacity } from 'react-native';
+import CancelCreateOrderBtn from '@/components/order/CancelCreateOrderBtn';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -47,7 +48,9 @@ export default function RootLayout() {
           <Stack.Screen name='addProduct' />
           <Stack.Screen name='updateProduct' />
           <Stack.Screen name='createOrder' options={{
-            
+            headerLeft: () => <CancelCreateOrderBtn />,
+            title: "Tạo đơn hàng",
+            headerTitleAlign: "center"
           }} />
           <Stack.Screen name="+not-found" />
         </Stack>

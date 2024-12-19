@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import SwitchBtn from "../SwitchBtn";
-import newOrderService from "@/service/orders/newOrder";
+import setOrderService from "@/service/orders/setOrder";
 
 export default function OrderTypeBtn() {
   const [isEnabled, setIsEnabled] = useState(false);
-  const {order, updateCurrentTable, currentTable, isTakeOut} = newOrderService();
+  const {order, updateCurrentTable, currentTable, isTakeOut} = setOrderService();
 
   useEffect(() => {
     if(order.tableId > 0) {
