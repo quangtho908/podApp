@@ -1,13 +1,23 @@
 import { pictonBlue, white } from "@/constants/Pallete";
 import useModalChooseTable from "@/service/modalChooseTable";
+import newOrderService from "@/service/orders/newOrder";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export default function ChooseTableItem() {
+type ChooseTableItemProps = {
+  id: number,
+  name: string,
+  isUsed: boolean
+}
+
+export default function ChooseTableItem(props: ChooseTableItemProps) {
   const [cardForcus, setCardFocus] = useState(false);
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
+  const {updateCurrentTable} = newOrderService()
+
   const onFocus = () => {
     setCardFocus(!cardForcus)
+    updateCurrentTable(props)
     setModalChooseTable(false)
   }
 
@@ -15,9 +25,10 @@ export default function ChooseTableItem() {
     <TouchableOpacity 
       style={{...styles.container, ...(cardForcus ? styles.containerActive : {})}}
       onPress={onFocus}
+      disabled={props.isUsed}
     >
       <Image style={styles.image} source={require('@/assets/images/table_draw.jpg')} />
-      <Text>Bàn 1</Text>
+      <Text>{props.name}</Text>
     </TouchableOpacity>
   )
 }

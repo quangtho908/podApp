@@ -1,7 +1,7 @@
 import ChooseIamge from "@/components/ChooseImage";
 import Input from "@/components/Input";
 import PrimaryButton from "@/components/PrimaryButton";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function addProduct() {
   return (

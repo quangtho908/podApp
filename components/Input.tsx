@@ -1,7 +1,8 @@
 import { white } from "@/constants/Pallete";
+import React, { Ref } from "react";
 import { View, Text, TextInput, StyleSheet, TextInputProps } from "react-native";
 
-export default function Input(props: TextInputProps & {label: string}) {
+export default function Input(props: TextInputProps & {label?: string}) {
   return (
     <View style={{gap: 10}}>
       <Text>{props.label}</Text>

@@ -46,6 +46,9 @@ export default function RootLayout() {
           />
           <Stack.Screen name='addProduct' />
           <Stack.Screen name='updateProduct' />
+          <Stack.Screen name='createOrder' options={{
+            
+          }} />
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>
