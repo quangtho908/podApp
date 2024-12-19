@@ -1,9 +1,11 @@
 import { pictonBlue, red, white } from "@/constants/Pallete";
-import { Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useState } from "react";
+import newOrderService from "@/service/orders/newOrder";
 
 type CardProductOrderProp = {
+  id: number,
   state?: boolean,
   name?: string,
   price?: number,
@@ -13,22 +15,60 @@ type CardProductOrderProp = {
 export default function CardProductOrder(props: CardProductOrderProp) {
   const [cardForcus, setCardFocus] = useState(!!props.state);
   let [count, setCount] = useState(props.amount);
+  const {order, update} = newOrderService();
+
+  function updateCount() {
+    for(let i = 0; i < order.products.length; i++) {
+      if(order.products[i].productId === props.id) {
+        (order.products[i].quantity = count);
+        break;
+      }
+    }
+    update(order)
+  }
+
+  function clearCount() {
+    setCardFocus(false);
+    for(let i = 0; i < order.products.length; i++) {
+      if(order.products[i].productId === props.id) {
+        order.products.splice(i, 1); 
+        break;
+      }
+    }
+    update(order);
+  }
+
+  const inscrease = () => {
+    setCount(++count);
+    updateCount();
+  }
 
   const descrease = () => {
-    if(count == 1) {
-      setCardFocus(false);
-    }
     setCount(--count)
+    if(count == 0) {
+      clearCount()
+      return;
+    }
+    updateCount()
   }
 
   const focusHandle = () => {
     !cardForcus && setCardFocus(true);
-    setCount(++count) 
+    setCount(++count);
+    if(count == 1) {
+      order.products.push({
+        productId: props.id,
+        quantity: count
+      })
+      update(order);
+      return
+    }
+    updateCount();
   }
 
   const disable = () => {
     setCount(0),
-    setCardFocus(false);
+    clearCount()
   }
 
   return (
@@ -44,7 +84,7 @@ export default function CardProductOrder(props: CardProductOrderProp) {
           </TouchableOpacity>
           <Text>{count}</Text>
           <TouchableOpacity>
-            <TabBarIcon name='add' size={25} onPress={() => setCount(++count)} />
+            <TabBarIcon name='add' size={25} onPress={inscrease} />
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.resetBtn} onPress={disable}>
@@ -52,8 +92,8 @@ export default function CardProductOrder(props: CardProductOrderProp) {
         </TouchableOpacity>
       </View>
       
-      <Text style={{...styles.textCenter, ...styles.textBold}}>Hamburger</Text>
-      <Text style={styles.textCenter}>100.000</Text>
+      <Text style={{...styles.textCenter, ...styles.textBold}}>{props.name}</Text>
+      <Text style={styles.textCenter}>{props.price}</Text>
     </TouchableOpacity>
   )
 }
@@ -61,7 +101,6 @@ export default function CardProductOrder(props: CardProductOrderProp) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: white[50],
-    alignSelf: 'flex-start',
     borderRadius: 10,
     gap: 10,
     shadowColor: "#000",
@@ -72,14 +111,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    paddingBottom: 10, 
+    paddingBottom: 10,
+    width: 150
   },
   containerActive: {
     backgroundColor: pictonBlue[200],
   },
   image: {
-    width: 100,
-    height: 100,
+    width: "100%",
+    height: 130,
     borderRadius: 5
   },
   actionContainer: {

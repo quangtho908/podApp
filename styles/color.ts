@@ -8,6 +8,9 @@ const color = StyleSheet.create({
   textWhite50: {
     color: white[50]
   },
+  textWhite500: {
+    color: white[500]
+  },
   textRed300: {
     color: red[300]
   },

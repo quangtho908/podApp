@@ -1,10 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import SwitchBtn from "../SwitchBtn";
+import newOrderService from "@/service/orders/newOrder";
 
 export default function OrderTypeBtn() {
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const {order, updateCurrentTable, currentTable, isTakeOut} = newOrderService();
+
+  useEffect(() => {
+    if(order.tableId > 0) {
+      setIsEnabled(false)
+    }
+  }, [currentTable])
+
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled)
+    if(!isEnabled) {
+      updateCurrentTable(null)
+    }else {
+      isTakeOut(false)
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Tại bàn</Text>

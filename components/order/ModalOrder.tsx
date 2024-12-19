@@ -1,35 +1,83 @@
 import { pictonBlue, white } from "@/constants/Pallete";
-import { View,  StyleSheet, Button, TouchableOpacity, Text } from "react-native";
+import { View,  StyleSheet, Button, TouchableOpacity, Text, Alert } from "react-native";
 import OrderTypeBtn from "./OrderTypeBtn";
 import { TabBarIcon } from "../navigation/TabBarIcon";
-import { useState } from "react";
 import ModalChooseTable from "../table/ModalChooseTable";
 import styleText from "@/styles/text";
 import color from "@/styles/color";
 import useModalChooseTable from "@/service/modalChooseTable";
+import newOrderService from "@/service/orders/newOrder";
+import Input from "../Input";
+import { useEffect, useState } from "react";
+import { postRequest } from "@/apis/common";
+import { useNavigation } from "expo-router";
+import { AxiosError } from "axios";
+import { ResponseError } from "@/apis/model";
 
 export default function ModalOrder() {
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
-  const [table, setTable] = useState('Chưa chọn bàn')
+  const [note, setNote] = useState("")
+  const {currentTable, order, update, destroy} = newOrderService()
+  const [isError, setIsError] = useState(false)
+  const [error, setError] = useState({
+    title: "",
+    message: "",
+  })
+  const navigation = useNavigation();
+  const onNoteChange = (newText: string) => {
+    setNote(newText)
+  }
+
+  const placeTable = async () => {
+    order.note = note;
+    update(order)
+    const response = await postRequest("orders", order);
+    if(response.status === 200) {
+      destroy();
+      navigation.goBack();
+      return;
+    }
+    setIsError(true);
+    setError({
+      title: "Lỗi tạo đơn hàng",
+      message: (response as ResponseError).response?.data.message || ""
+    })
+  }
+
+  useEffect(() => {
+    if(isError) {
+      Alert.alert(error.title, error.message, [
+        {text: "Ok", style: "cancel", onPress: () => {
+          setIsError(false)
+        }},
+      ])
+    }
+  }, [isError, JSON.stringify(error)])
+
   return (
     <View style={styles.centeredView}>
-      <Text>Chưa chọn bàn</Text>
+      <Text>{currentTable == null ? "Chưa chọn bàn" : currentTable.name}</Text>
       <View style={styles.options}>
         <OrderTypeBtn />
-        <TouchableOpacity onPress={() => setModalChooseTable(true)}>
-          <Text style={{...styleText.text, ...color.textBlue500}}>Chọn bàn</Text>
+        <TouchableOpacity disabled={order.isTakeOut} onPress={() => setModalChooseTable(true)}>
+          <Text style={{...styleText.text, ...(order.isTakeOut ? color.textWhite500 : color.textBlue500)}}>Chọn bàn</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.action}>
+        <TouchableOpacity style={{...styles.actionActive, ...styles.action}}>
           <TabBarIcon name='card' color={white[50]}/>
           <Text style={{...styleText.text, ...color.textWhite50}}>Thanh Toán</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.action}>
+        <TouchableOpacity 
+          disabled={currentTable == null}
+          onPress={placeTable}
+          style={{...styles.action, ...(currentTable == null ? styles.actionDisable : styles.actionActive)}}
+        >
           <TabBarIcon name='wine' color={white[50]}/>
           <Text style={{...styleText.text, ...color.textWhite50}}>Đặt bàn</Text>
         </TouchableOpacity>
       </View>
+      <Input placeholder="Ghi chú" onChangeText={onNoteChange} />
       <ModalChooseTable />
     </View>
   )
@@ -61,11 +109,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: pictonBlue[600],
     flex: 1,
     alignSelf: 'flex-start',
     padding: 10,
     borderRadius: 5
+  },
+  actionActive: {
+    backgroundColor: pictonBlue[600]
+  },
+  actionDisable: {
+    backgroundColor: white[500]
+
   },
   actionContainer: {
     flexDirection: 'row',
