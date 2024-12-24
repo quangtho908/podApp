@@ -1,7 +1,11 @@
 import moment from "moment";
 
 export function convertFromPattern(date: Date) {
-  return moment(date, ["MM/DD/YYYY, hh:mm:ss A"])
+  return moment(date, ["MM/DD/YYYY, HH:mm:ss A"])
+}
+
+export function convertToDatePattern(date: Date) {
+  return moment(date).format("MM/DD/YYYY, HH:mm:ss A")
 }
 
 export function getTime(date: Date) {

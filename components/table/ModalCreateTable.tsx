@@ -3,13 +3,23 @@ import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import useModalTable, {ModalTableType} from "./services/modalTable";
-import { useEffect} from "react";
+import { useEffect, useState} from "react";
 import { TextInput } from "react-native-gesture-handler";
+import setTableService from "@/service/tables/setTable";
+import merchantService from "@/service/merchant/merchantStore";
+import { postRequest } from "@/apis/common";
 
 export default function ModalCreateTable() {
   const {setModal, setProps, modals} = useModalTable()
+  const [name, setName] = useState("")
+  const {table, update, destroy} = setTableService()
+  const {currentMerchant} = merchantService()
   useEffect(() => {
-    setModal(ModalTableType.Create);
+    if(currentMerchant !== null) {
+      setModal(ModalTableType.Create);
+      table.merchantId = currentMerchant;
+      update(table)
+    }
   }, [])
 
   const cancel = () => {
@@ -19,7 +29,14 @@ export default function ModalCreateTable() {
     })
   }
 
-  const confirm = () => {
+  const confirm = async () => {
+    table.name = name
+    update(table)
+    const response = await postRequest("tables", table)
+    if(response.status !== 201) {
+      return;
+    }
+    destroy()
     setProps(ModalTableType.Create, {
       table: modals.get(ModalTableType.Create)?.table,
       visible: false
@@ -49,7 +66,7 @@ export default function ModalCreateTable() {
           <Text style={{paddingHorizontal: 20, paddingTop: 10}}>Thêm bàn mới</Text>
           <View style={{padding: 20, gap: 10}}>
             <Text>Tên bàn</Text>
-            <TextInput style={styles.input} />
+            <TextInput style={styles.input} onChangeText={(newText) => setName(newText)} />
           </View>
         </TouchableOpacity>
       </TouchableOpacity>

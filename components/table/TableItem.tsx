@@ -1,18 +1,24 @@
-import { pictonBlue, white } from "@/constants/Pallete";
-import { useState } from "react";
+import { white } from "@/constants/Pallete";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import useModalTable, { ModalTableType } from "./services/modalTable";
+import tablesService, { Table } from "@/service/tables/tablesStore";
 
-export default function TableItem() {
+export default function TableItem({table}: {table: Table}) {
   const {setProps, modals} = useModalTable()
   const modalAction: any = modals.get(ModalTableType.Action);
   const editAction: any = modals.get(ModalTableType.Edit);
+  const {setCurrentTable} = tablesService()
 
   const onFocus = () => {
+    setCurrentTable(table)
     setProps(ModalTableType.Edit, {...editAction, visible: true})
   }
 
   const onLongPress = () => {
+    if(table.isUsed) {
+      return;
+    }
+    setCurrentTable(table)
     setProps(ModalTableType.Action, {...modalAction, visible: true})
   }
 
@@ -23,7 +29,7 @@ export default function TableItem() {
       onLongPress={onLongPress}
     >
       <Image style={styles.image} source={require('@/assets/images/table_draw.jpg')} />
-      <Text>Bàn 1</Text>
+      <Text>{table.name}</Text>
     </TouchableOpacity>
   )
 }

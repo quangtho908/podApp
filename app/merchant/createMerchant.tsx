@@ -1,8 +1,26 @@
-import { Link, router } from "expo-router";
+import { postRequest } from "@/apis/common";
+import cache from "@/service/cache";
+import { AxiosResponse } from "axios";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 
 export default function MerchantSignupScreen() {
+  const [name, setName] = useState("")
+  const [address, setAddress] = useState("");
+  const router = useRouter();
+  const submitHandle = async () => {
+    const response = await postRequest("merchants", {
+      name,
+      address
+    })
+    if(response.status !== 200) {
+      return;
+    }  
+    const data = (response as AxiosResponse).data;
+    cache.set("currentMerchant", data.merchantId)
+    router.push('/(drawer)/(tabs)')
+  }
 
   return (
     <View style={styles.container}>
@@ -11,14 +29,16 @@ export default function MerchantSignupScreen() {
       <TextInput
         style={styles.input}
         placeholder="Tên cửa hàng"
+        onChangeText={setName}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Địa chỉ cửa hàng"
+        onChangeText={setAddress}
       />
 
-      <Button title="Next" onPress={() => router.push("/signup/verifyMail")} />
+      <Button title="Next" onPress={submitHandle} />
     </View>
   );
 }

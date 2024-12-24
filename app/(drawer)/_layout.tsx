@@ -45,7 +45,7 @@ export default function DrawerLayout() {
             headerRight: () => (
               <TouchableOpacity
                 style={{marginRight: 10}}
-                onPress={() => router.push("/addProduct")}
+                onPress={() => router.push("/products/addProduct")}
               >
                 <TabBarIcon name='add' />
               </TouchableOpacity>

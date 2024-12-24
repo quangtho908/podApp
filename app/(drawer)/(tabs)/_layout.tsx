@@ -8,7 +8,7 @@ import { NavigationProp } from '@react-navigation/native';
 
 export default function BottomNavigation() {
   const colorScheme = useColorScheme();
-  const navigation: NavigationProp<ReactNavigation.RootParamList> & {openDrawer: () => void} = useNavigation('../../(drawer)');
+  const navigation: NavigationProp<ReactNavigation.RootParamList> & {openDrawer: () => void} = useNavigation();
   return (
     <Tabs
       screenOptions={{

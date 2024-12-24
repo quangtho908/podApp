@@ -3,24 +3,46 @@ import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import useModalTable, {ModalTableType} from "./services/modalTable";
-import { useEffect} from "react";
+import { useEffect, useState} from "react";
 import { TextInput } from "react-native-gesture-handler";
+import tablesService from "@/service/tables/tablesStore";
+import setTableService from "@/service/tables/setTable";
+import merchantService from "@/service/merchant/merchantStore";
+import { putRequest } from "@/apis/common";
 
 export default function ModalEditTable() {
   const {setModal, setProps, modals} = useModalTable()
+  const {currentTable, resetCurrentTable} = tablesService()
+  const {table, update, destroy} = setTableService()
+  const {currentMerchant} = merchantService()
+  const [name, setName] = useState(currentTable.name);
   useEffect(() => {
-    setModal(ModalTableType.Edit);
-
+    if(currentMerchant !== null) {
+      setModal(ModalTableType.Edit);
+      table.merchantId = currentMerchant;
+      table.name = table.name;
+      update(table)
+    }
   }, [])
 
   const cancel = () => {
+    destroy()
+    resetCurrentTable()
     setProps(ModalTableType.Edit, {
       table: modals.get(ModalTableType.Edit)?.table,
       visible: false
     })
   }
 
-  const confirm = () => {
+  const confirm = async () => {
+    table.name = name;
+    update(table)
+    const response = await putRequest(`tables/${currentTable.id}`, table)
+    if(response.status === 200) {
+    }
+
+    destroy()
+    resetCurrentTable()
     setProps(ModalTableType.Edit, {
       table: modals.get(ModalTableType.Edit)?.table,
       visible: false
@@ -49,8 +71,8 @@ export default function ModalEditTable() {
           </View>
           <Text style={{paddingHorizontal: 20, paddingTop: 10}}>Chỉnh sửa bàn</Text>
           <View style={{padding: 20, gap: 10}}>
-            <Text>Tên bàn</Text>
-            <TextInput style={styles.input} />
+            <Text>{currentTable.name}</Text>
+            <TextInput style={styles.input} placeholder={currentTable.name} onChangeText={(text) => setName(text)} />
           </View>
         </TouchableOpacity>
       </TouchableOpacity>

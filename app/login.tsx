@@ -1,13 +1,43 @@
+import { postRequest } from "@/apis/common";
 import PasswordField from "@/components/PasswordField";
 import PrimaryButton from "@/components/PrimaryButton";
 import { pictonBlue, white } from "@/constants/Pallete";
+import cache from "@/service/cache";
+import { AxiosResponse } from "axios";
 import { router } from "expo-router";
-import React from "react"
+import _ from "lodash";
+import React, { useEffect, useState } from "react"
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native"
 
 export default function LoginScreen() {
-  
-  const handleSubmit = () => {
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    checkLogin()
+  }, [])
+
+  const checkLogin = async () => {
+    const token = await cache.get("token")
+    if(!_.isEmpty(token)) {
+      router.push('/(drawer)/(tabs)')
+    }
+  }
+
+  const handleSubmit = async () => {
+    const response = await postRequest("auth/login", {
+      phoneNumber: username,
+      password
+    })
+    if(response.status !== 200) {
+      return
+    }
+    cache.set("token", (response as AxiosResponse).data.token)
+    const pin = await cache.get("pin")
+    if(!pin) {
+      router.push("/pin/setup")
+      return
+    }
     router.push("/pin/input")
   }
 
@@ -26,9 +56,10 @@ export default function LoginScreen() {
         style={styles.input}
         placeholder="Email hoặc số điện thoại"
         placeholderTextColor={white[400]}
+        onChangeText={(newText) => setUsername(newText)}
       />
 
-      <PasswordField placeholder="Mật khẩu" />
+      <PasswordField placeholder="Mật khẩu" onChangeText={(newText) => setPassword(newText)} />
       <PrimaryButton title="Đăng nhập" onPress={handleSubmit} />
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>

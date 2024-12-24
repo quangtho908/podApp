@@ -1,4 +1,5 @@
 import { pictonBlue, white } from "@/constants/Pallete";
+import cache from "@/service/cache";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView, View, StyleSheet, Text, Button } from "react-native";
@@ -6,20 +7,28 @@ import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-
 
 export default function SetupPINScreen() {
   const [value, setValue] = useState('');
+  const [initValue, setInitValue] = useState('');
   const [isVerifing, setVerifing] = useState(false);
   const [title, setTitle] = useState('Tạo mã PIN');
   const ref = useBlurOnFulfill({value, cellCount: 6});
   const params = useLocalSearchParams<{ query?: string }>();
 
-  const submitHandle = () => {
+  const submitHandle = async () => {
     if(!isVerifing) {
+      setInitValue(value);
       setValue("");
       setVerifing(true);
       setTitle("Xác nhận lại")
       return;
     }
-
-    router.push("/login");
+    if(value === initValue) {
+      cache.set("pin", value)
+      router.push("/pin/input");
+      return;
+    }
+    setValue("");
+    setVerifing(false)
+    setTitle("Tạo mã PIN")
   }
 
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({

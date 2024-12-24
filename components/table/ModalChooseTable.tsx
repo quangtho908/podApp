@@ -13,13 +13,15 @@ export default function ModalChooseTable() {
   const visible = useModalChooseTable(state => state.visible)
   const setVisible = useModalChooseTable(state => state.setVisible)
   const {tables, filter} = tablesService()
-  const {merchant} = merchantService()
+  const {currentMerchant} = merchantService()
   useEffect(() => {
-    filter({merchantId: merchant.id})
+    reload()
   }, []);
 
   const reload = () => {
-    filter({merchantId: merchant.id})
+    if(currentMerchant !== null) {
+      filter({merchantId: currentMerchant})
+    }
   }
 
   return (

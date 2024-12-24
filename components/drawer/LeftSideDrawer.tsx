@@ -3,14 +3,30 @@ import { pictonBlue, white } from "@/constants/Pallete";
 import { Link, useRouter } from "expo-router";
 import ResetOnPullToRefresh from "../ResetOnPullRequest";
 import ItemStore from "../store/ItemStore";
+import { useEffect } from "react";
+import merchantService from "@/service/merchant/merchantStore";
+import * as _ from "lodash";
+import cache from "@/service/cache";
+import Logout from "../auth/logout";
 
 export default function LeftSideDrawer(props: any) {
   const router = useRouter();
+  const {filter, merchants} = merchantService()
+  useEffect(() => {
+    reloadMerchants()
+  }, [])
+  const reloadMerchants = async () => {
+    await filter()
+    const currentMerchant = await cache.get("currentMerchant")
+    if(_.isEmpty(merchants) && _.isEmpty(currentMerchant)) {
+      router.push("/merchant/createMerchant")
+    }
+  }
   return (
     <View style={{ flex: 1, flexDirection: 'row' }}>
       <View style={{flex: 2, paddingTop: 25, backgroundColor: white[100]}}>
-        <ResetOnPullToRefresh>
-          <ItemStore />
+        <ResetOnPullToRefresh reload={reloadMerchants}>
+          {merchants.map((merchant) => <ItemStore merchant={merchant} key={merchant.id} />)}
         </ResetOnPullToRefresh>
       </View>
       <View style={{ flex: 5, padding: 10, paddingTop: 25 }}>
@@ -19,6 +35,7 @@ export default function LeftSideDrawer(props: any) {
         <Link href="/login" style={{color: pictonBlue[500], marginTop: 20}}>Login</Link>
         <Link href="/(drawer)/table" style={{color: pictonBlue[500], marginTop: 20}}>Table</Link>
         <Link href="/(drawer)/menu" style={{color: pictonBlue[500], marginTop: 20}}>Menu</Link>
+        <Logout />
       </View>
     </View>
   )

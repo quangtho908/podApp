@@ -1,5 +1,6 @@
 import { pictonBlue, white } from "@/constants/Pallete";
-import { useLocalSearchParams } from "expo-router";
+import cache from "@/service/cache";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
@@ -7,12 +8,19 @@ import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-
 export default function InputPINScreen() {
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({value, cellCount: 6});
-  const params = useLocalSearchParams<{ query?: string }>();
-  
+  const router = useRouter();
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
+
+  const submitPin = async () => {
+    const pin = await cache.get("pin")
+    if(pin === value) {
+      router.push("/")
+      return
+    }
+  }
   return (
     <SafeAreaView style={styles.root}>
       <Text style={styles.title}>Nhập mã PIN</Text>
@@ -37,7 +45,7 @@ export default function InputPINScreen() {
         )}
       />
 
-      <Button title="Xác minh"/>
+      <Button title="Xác minh" onPress={submitPin}/>
     </SafeAreaView>
   )
 }

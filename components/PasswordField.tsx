@@ -9,12 +9,15 @@ export default function PasswordField(props: TextInputProps) {
   function toggleShowPassword() {
     setShowPassword(!showPassword)
   }
+
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
+        {...props}
         placeholder={props.placeholder}
-        onChange={props.onChange}
+        clearTextOnFocus={false}
+        {...props}
         secureTextEntry={showPassword}
       />
       <MaterialCommunityIcons

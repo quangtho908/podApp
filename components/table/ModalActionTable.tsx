@@ -3,14 +3,35 @@ import color from "@/styles/color";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import useModalTable, { ModalTableType } from "./services/modalTable";
 import { useEffect, useState } from "react";
+import { deleteRequest } from "@/apis/common";
+import tablesService from "@/service/tables/tablesStore";
+import merchantService from "@/service/merchant/merchantStore";
 
 export default function ModalActionTable() {
   const {setModal, setProps, modals} = useModalTable()
+  const {currentTable, resetCurrentTable} = tablesService()
+  const {currentMerchant} = merchantService()
   useEffect(()=> {
     setModal(ModalTableType.Action);
   }, [])
 
   const cancel = () => {
+    resetCurrentTable()
+    setProps(ModalTableType.Action, {
+      table: modals.get(ModalTableType.Action)?.table,
+      visible: false
+    })
+  }
+
+  const onDelete = async () => {
+    if(currentMerchant === null) return;
+    const response = await deleteRequest(`tables/${currentTable.id}`, {
+      merchantId: currentMerchant
+    })
+    if(response.status === 200) {
+
+    }
+    resetCurrentTable()
     setProps(ModalTableType.Action, {
       table: modals.get(ModalTableType.Action)?.table,
       visible: false
@@ -29,7 +50,7 @@ export default function ModalActionTable() {
         onPressOut={cancel}
       >
         <View style={styles.view}>
-          <TouchableOpacity style={styles.action}>
+          <TouchableOpacity style={styles.action} onPress={onDelete}>
             <Text style={{...color.textRed500}}>Xoá</Text>
           </TouchableOpacity>
         </View>

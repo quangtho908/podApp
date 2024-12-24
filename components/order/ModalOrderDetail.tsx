@@ -11,20 +11,24 @@ import setOrderService from "@/service/orders/setOrder";
 import merchantService from "@/service/merchant/merchantStore";
 import { putRequest } from "@/apis/common";
 import { ResponseError } from "@/apis/model";
+import productService from "@/service/product/productsStore";
+import * as _ from "lodash";
 
 export default function ModalOrderDetail() {
   const visible = useModalOrderDetail(state => state.visible)
   const setVisible = useModalOrderDetail(state => state.setVisible)
   const {currentOrder, resetCurrentOrder} = orderService()
-  const {order, update, destroy} = setOrderService()
-  const {merchant} = merchantService()
+  const {order, update, destroy, removeProducts} = setOrderService()
+  const {currentMerchant} = merchantService()
   const [isError, setIsError] = useState(false)
+  const {products} = productService()
   const [error, setError] = useState({
       title: "",
       message: "",
     })
   useEffect(() => {
-    order.merchantId = merchant.id
+    if(currentMerchant == null) return;
+    order.merchantId = currentMerchant
     order.note = currentOrder.note
     order.products = currentOrder.products.map(product => ({productId: product.id, quantity: product.quantity}))
     update(order)
@@ -38,8 +42,11 @@ export default function ModalOrderDetail() {
 
   const confirm = async () => {
     setVisible(false)
-    const response = await putRequest(`orders/${currentOrder.id}`, order)
-    if(response.status === 200) {
+    const [responseCreate, responseUpdate] = await Promise.all([
+      putRequest(`orders/${currentOrder.id}`, order),
+      putRequest(`orders/removeProduct/${currentOrder.id}`, {products: removeProducts})
+    ]) 
+    if(responseCreate.status === 200 || responseUpdate.status === 200) {
       destroy();
       resetCurrentOrder()
       return;
@@ -47,7 +54,16 @@ export default function ModalOrderDetail() {
     setIsError(true);
     setError({
       title: "Lỗi tạo đơn hàng",
-      message: (response as ResponseError).response?.data.message || ""
+      message: (responseCreate as ResponseError).response?.data.message || ""
+    })
+  }
+
+  const getProductNotOrder = () => {
+    return currentOrder.products.length === products.length ? [] : products.map(product =>  {
+      if(_.some(currentOrder.products, {id: product.id})) {
+        return;
+      }
+      return <CardProductOrder state={false} quantity={0} {...product} key={product.id}/>
     })
   }
 
@@ -78,7 +94,8 @@ export default function ModalOrderDetail() {
         <Text style={{...styleText.textTitle}} >Đơn hàng</Text>
       </View>
       <ResetOnPullToRefresh contentContainerStyle={styles.container}>
-        {currentOrder.products.map(product => <CardProductOrder state={true} {...product} key={product.id} />)}
+        {currentOrder.products.map(product => <CardProductOrder isEdit={true} state={true} {...product} key={product.id} />)}
+        {getProductNotOrder()}
       </ResetOnPullToRefresh>
     </Modal>
   )

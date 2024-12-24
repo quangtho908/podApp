@@ -7,13 +7,12 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import useModalOrderDetail from "@/service/modalOrderDetail";
 import { useRouter } from "expo-router";
 import orderService, { InProgressOrder } from "@/service/orders/orderStore";
-import moment from "moment";
 import { convertPrice, getDate, getTime } from "@/utils/converData";
 
 export default function OrderItem ({order}: {order: InProgressOrder}) {
   const setVisible = useModalOrderDetail(state => state.setVisible);
   const router = useRouter();
-  const {setCurrentOrder, currentOrder} = orderService()
+  const {setCurrentOrder} = orderService()
   const payment = () => {
     router.push("/payment");
   }
@@ -32,7 +31,7 @@ export default function OrderItem ({order}: {order: InProgressOrder}) {
         </View>
         <View style={styles.viewContent}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Text style={{...styleText.textTitle}}>Bàn 1</Text>
+            <Text style={{...styleText.textTitle}}>{order.table.name}</Text>
             <Text style={{...styleText.text, ...color.textBlue500}}>{convertPrice(order.totalPrice)}</Text>
           </View>
           <Text>Sản phẩm: {order.products.length}</Text>

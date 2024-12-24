@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useState } from "react";
 import setOrderService from "@/service/orders/setOrder";
+import _ from "lodash";
 
 type CardProductOrderProp = {
   id: number,
@@ -12,10 +13,10 @@ type CardProductOrderProp = {
   quantity: number
 }
 
-export default function CardProductOrder(props: CardProductOrderProp) {
+export default function CardProductOrder(props: CardProductOrderProp & {isEdit?: boolean}) {
   const [cardForcus, setCardFocus] = useState(!!props.state);
   let [count, setCount] = useState(props.quantity);
-  const {order, update} = setOrderService();
+  const {order, update, removeProducts, updateRemoveProducts} = setOrderService();
 
   function updateCount() {
     for(let i = 0; i < order.products.length; i++) {
@@ -36,6 +37,20 @@ export default function CardProductOrder(props: CardProductOrderProp) {
       }
     }
     update(order);
+    if(props.isEdit && !_.some(removeProducts, {productId: props.id})) {
+      removeProducts.push({productId: props.id})
+      updateRemoveProducts(removeProducts)
+    }
+  }
+
+  function clearFromRemoveList() {
+    for(let i = 0; i < removeProducts.length; i++) {
+      if(removeProducts[i].productId === props.id) {
+        removeProducts.splice(i, 1)
+        break;
+      }
+    }
+    updateRemoveProducts(removeProducts)
   }
 
   const inscrease = () => {
@@ -61,6 +76,9 @@ export default function CardProductOrder(props: CardProductOrderProp) {
         quantity: count
       })
       update(order);
+      if(props.isEdit) {
+        clearFromRemoveList()
+      }
       return
     }
     updateCount();

@@ -3,6 +3,7 @@ import { Product } from "../product/productsStore";
 import { create } from "zustand";
 import { getRequest } from "@/apis/common";
 import * as _ from "lodash";
+import { Table } from "../tables/tablesStore";
 
 export type StatusOrder = "waiting" | "progress" | "done" | "canceled";
 
@@ -16,8 +17,8 @@ export interface FilterInProgressOrderParams extends BaseDTO {
   id?: number
   merchantId: number
   statuses?: StatusOrder[]
-  fromDate?: Date,
-  toDate?: Date
+  fromDate?: string,
+  toDate?: string
 }
 
 export interface InProgressOrder extends BaseModel {
@@ -26,7 +27,8 @@ export interface InProgressOrder extends BaseModel {
   status: string
   totalPrice: number
   createdAt: Date
-  products: ProductOrder[]
+  products: ProductOrder[],
+  table: Table
 }
 
 type State = {
@@ -46,7 +48,12 @@ const initOrder: InProgressOrder = {
   status: "string",
   totalPrice: 0,
   createdAt: new Date(),
-  products: []
+  products: [],
+  table: {
+    id: 0,
+    name: "",
+    isUsed: false
+  }
 }
 
 const orderService = create<State & Action>((set) => ({

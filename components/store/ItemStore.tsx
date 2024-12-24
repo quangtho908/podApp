@@ -1,11 +1,29 @@
 import { pictonBlue, white } from "@/constants/Pallete";
+import cache from "@/service/cache";
+import merchantService, { Merchant } from "@/service/merchant/merchantStore";
+import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 
-export default function ItemStore() {
+export default function ItemStore({merchant}: {merchant: Merchant}) {
+  const [choosed, setChoosed] = useState(false)
+  const {currentMerchant, setCurrentMerchant} = merchantService();
+  useEffect(() => {
+    getMerchant()
+  }, [currentMerchant])
+
+  const getMerchant = async () => {
+    setChoosed(currentMerchant !== null && currentMerchant === merchant.id)
+  }
+
+  const chooseMerchant = () => {
+    cache.set("currentMerchant", merchant.id.toString())
+    setCurrentMerchant(merchant.id)
+  }
+
   return (
-    <TouchableOpacity style={{...styles.container, ...styles.active}}>
+    <TouchableOpacity onPress={chooseMerchant} style={{...styles.container, ...(choosed ? styles.active : {})}}>
       <Image source={require("@/assets/images/react-logo.png")} style={styles.image} />
-      <Text style={styles.text}>Store 1</Text>
+      <Text style={styles.text}>{merchant.name}</Text>
     </TouchableOpacity>
   )
 }

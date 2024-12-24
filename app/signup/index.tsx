@@ -1,3 +1,4 @@
+import signupService from "@/service/auth/signup";
 import { Link, router, useNavigation } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
@@ -6,11 +7,13 @@ export default function UserSignUpScreen() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
-
+  const {signup, setSignup} = signupService()
   const handleNext = () => {
-    console.log("Phone:", phone);
-    console.log("Email:", email);
-    console.log("Full Name:", fullName);
+    signup.phoneNumber = phone
+    signup.email = email
+    signup.fullName = fullName
+    setSignup(signup);
+    router.push("/signup/setPassword")
   };
 
   return (
@@ -39,7 +42,7 @@ export default function UserSignUpScreen() {
         value={fullName}
         onChangeText={setFullName}
       />
-      <Button title="Next" onPress={() => router.push("/signup/merchant")}/>
+      <Button title="Next" onPress={handleNext}/>
     </View>
   );
 }

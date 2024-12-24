@@ -10,13 +10,16 @@ import setOrderService from "@/service/orders/setOrder";
 export default function CreateOrderScreen() {
 
   const {products, filter} = productService()
-  const {merchant} = merchantService()
+  const {currentMerchant} = merchantService()
   const {order, update} = setOrderService()
 
   useEffect(() => { 
-    order.merchantId = merchant.id;
-    update(order);
-    filter({merchantId: merchant.id})
+    if(currentMerchant !== null) {
+      order.merchantId = currentMerchant;
+      update(order);
+      filter({merchantId: currentMerchant})
+    }
+
   }, [])
 
   return(

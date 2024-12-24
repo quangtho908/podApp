@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { Table } from "../tables/tablesStore";
 type ProductOrder = {
   productId: number,
-  quantity: number
+  quantity?: number
 }
 
 type Order = {
@@ -16,13 +16,15 @@ type Order = {
 
 type State = {
   order: Order,
-  currentTable: Table | null
+  currentTable: Table | null,
+  removeProducts: ProductOrder[]
 }
 
 type Action = {
   update: (order: Order) => void,
   updateCurrentTable: (table: Table | null) => void,
   isTakeOut: (state: boolean) =>  void,
+  updateRemoveProducts: (products: ProductOrder[]) => void
   destroy: () => void
 }
 
@@ -32,7 +34,8 @@ const initState: State = {
     note: "",
     products: []
   },
-  currentTable: null
+  currentTable: null,
+  removeProducts: []
 }
 
 const setOrderService = create<State & Action>(set => ({
@@ -48,6 +51,7 @@ const setOrderService = create<State & Action>(set => ({
     set({currentTable: table})
   },
   isTakeOut: (isTakeOut: boolean) => set(state => ({order: {...state.order, isTakeOut}})),
+  updateRemoveProducts: (products: ProductOrder[]) => set({removeProducts: products}),
   destroy: () => set(_.cloneDeep(initState))
 }))
 

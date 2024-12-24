@@ -1,10 +1,9 @@
-import { Modal, TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import ResetOnPullToRefresh from "../components/ResetOnPullRequest";
+import { View, Text, StyleSheet } from "react-native";
 import styleText from "@/styles/text";
 import { useRouter } from "expo-router";
-import color from "@/styles/color";
 import { white } from "@/constants/Pallete";
 import BankSelectItem from "@/components/payment/BankSelectItem";
+import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
 
 export default function ModalSelectBank() {
   const router = useRouter();
