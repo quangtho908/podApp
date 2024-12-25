@@ -19,18 +19,13 @@ export default function HomeScreen() {
   const {currentMerchant} = merchantService()
   const [currentDate, setCurrentDate] = useState(new Date());
   useEffect(() => {
-    reload()
+    filterProducs({merchantId: currentMerchant})
+    filterByDate()
   }, [])
+
   useEffect(() => {
     filterByDate()
-  }, [currentDate])
-
-  const reload = () => {
-    if(currentMerchant !== null) {
-      filter({merchantId: currentMerchant})
-      filterProducs({merchantId: currentMerchant})
-    }
-  }
+  }, [currentDate, JSON.stringify(orders)])
   
   const filterByDate = () => {
     const date = moment(currentDate).startOf('day').toDate()
@@ -51,10 +46,12 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <DatePicker onChange={onChageDatePicker} />
-      <ResetOnPullToRefresh reload={reload} contentContainerStyle={{gap: 20, paddingBottom: 70}}>
+      <ResetOnPullToRefresh reload={filterByDate} contentContainerStyle={{gap: 20, paddingBottom: 70}}>
         {orders.map(order => <OrderItem key={order.id} order={order}/> )}
       </ResetOnPullToRefresh>
-      <CreateOrderButton onPress={() => router.push('/orders/createOrder')} />
+      {(moment(currentDate).startOf("day").date() === moment(new Date()).startOf("day").date()) &&
+        <CreateOrderButton onPress={() => router.push('/orders/createOrder')} />       
+      }
       <ModalOrderDetail />
     </View>
   );

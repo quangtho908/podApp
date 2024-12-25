@@ -1,8 +1,16 @@
 import { white } from "@/constants/Pallete";
+import { Product } from "@/service/product/productsStore";
 import styleText from "@/styles/text";
+import { convertPrice } from "@/utils/converData";
 import { Image, StyleSheet, View, Text } from "react-native";
-
-export default function CardProductPayment() {
+type CardProductPaymentProp = {
+  id: number,
+  state?: boolean,
+  name?: string,
+  price?: number,
+  quantity: number
+}
+export default function CardProductPayment(props : CardProductPaymentProp) {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={require('@/assets/images/product-draw.jpg')}/>
@@ -12,11 +20,11 @@ export default function CardProductPayment() {
           justifyContent: 'space-between', 
           alignItems: 'center'
         }}>
-          <Text style={{...styleText.text}}>Hamburger</Text>
+          <Text style={{...styleText.text}}>{props.name}</Text>
           <Text>Số lượng: 2</Text>
         </View>
-        <Text>Đơn giá: 100.000</Text>
-        <Text style={{...styleText.text}}>TỔNG TIỀN: 200.000</Text>
+        <Text>Đơn giá: {convertPrice(props.price || 0)}</Text>
+        <Text style={{...styleText.text}}>TỔNG TIỀN: {convertPrice((props.price || 0) * props.quantity)}</Text>
       </View>
     </View>
   )

@@ -13,12 +13,16 @@ import { postRequest } from "@/apis/common";
 import { useNavigation } from "expo-router";
 import { AxiosError } from "axios";
 import { ResponseError } from "@/apis/model";
+import orderService from "@/service/orders/orderStore";
+import merchantService from "@/service/merchant/merchantStore";
 
 export default function ModalOrder() {
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
   const [note, setNote] = useState("")
   const {currentTable, order, update, destroy} = setOrderService()
   const [isError, setIsError] = useState(false)
+  const {filter} = orderService();
+  const {currentMerchant} = merchantService()
   const [error, setError] = useState({
     title: "",
     message: "",
@@ -35,6 +39,7 @@ export default function ModalOrder() {
     if(response.status === 200) {
       destroy();
       navigation.goBack();
+      await filter({merchantId: currentMerchant})
       return;
     }
     setIsError(true);

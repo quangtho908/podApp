@@ -1,20 +1,20 @@
 import { white } from "@/constants/Pallete";
 import bankAccountService, { BankAccount } from "@/service/bankAccounts/bankAccountsStore";
 import bankService from "@/service/vietQr/bankService";
-import color from "@/styles/color";
 import styleText from "@/styles/text";
-import { useRouter } from "expo-router";
 import * as _ from "lodash";
 import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
+import useModalBank from "./services/modalBank";
+import color from "@/styles/color";
 
-export default function BankSelectItem({bankAccount}: {bankAccount: BankAccount}) {
-  const router = useRouter();
-  const {banks} = bankService()
+export default function BankAccountItem({bankAccount}: {bankAccount: BankAccount}) {
+  const {banks} = bankService();
   const image = _.find(banks, {bin: bankAccount.bankBin})?.logo
-  const {setCurrentBankAccount, currentBankAccount} = bankAccountService()
+  const {setProps} = useModalBank()
+  const {setCurrentBankAccount} = bankAccountService()
   const onChoose = () => {
     setCurrentBankAccount(bankAccount)
-    router.back()
+    setProps("actionAccountBank", {visible: true})
   }
 
   return (
@@ -26,7 +26,7 @@ export default function BankSelectItem({bankAccount}: {bankAccount: BankAccount}
         }} 
       />
       <View style={{alignItems: 'flex-end', gap: 5}}>
-        {currentBankAccount.id === bankAccount.id && <Text style={{...color.textGreen500}}>Đang chọn</Text>}
+        {bankAccount.primary && <Text style={{...color.textGreen500}}>Mặc định</Text>}
         <Text style={{...styleText.text}}>{bankAccount.accountName}</Text>
         <Text>{bankAccount.accountNumber}</Text>
       </View>

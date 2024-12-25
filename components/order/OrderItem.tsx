@@ -8,13 +8,32 @@ import useModalOrderDetail from "@/service/modalOrderDetail";
 import { useRouter } from "expo-router";
 import orderService, { InProgressOrder } from "@/service/orders/orderStore";
 import { convertPrice, getDate, getTime } from "@/utils/converData";
+import { postRequest } from "@/apis/common";
+import merchantService from "@/service/merchant/merchantStore";
+import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 
 export default function OrderItem ({order}: {order: InProgressOrder}) {
   const setVisible = useModalOrderDetail(state => state.setVisible);
   const router = useRouter();
-  const {setCurrentOrder} = orderService()
+  const {setCurrentOrder, filter} = orderService()
+  const {currentMerchant} = merchantService()
+  const {setCurrentBankAccount, defaultAccount} = bankAccountService()
   const payment = () => {
-    router.push("/payment");
+    setCurrentOrder(order)
+    setCurrentBankAccount(defaultAccount)
+    router.push("/payments");
+  }
+
+  const cancel = async () => {
+    const response = await postRequest(`orders/changeStatus/${order.id}`, {
+      merchantId: currentMerchant,
+      status: "canceled"
+    })
+
+    if(response.status === 200){
+      await filter({merchantId: currentMerchant})
+      return
+    }
   }
 
   const select = () => {
@@ -42,7 +61,7 @@ export default function OrderItem ({order}: {order: InProgressOrder}) {
         </View>
       </TouchableOpacity>
       <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.action}>
+        <TouchableOpacity style={styles.action} onPress={cancel}>
           <Text style={{...styleText.text, ...color.textRed500}}>Huỷ</Text>
           <TabBarIcon name='backspace' color={red[500]}/>
         </TouchableOpacity>

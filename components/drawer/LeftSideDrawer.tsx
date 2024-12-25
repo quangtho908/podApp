@@ -14,7 +14,7 @@ export default function LeftSideDrawer(props: any) {
   const {filter, merchants} = merchantService()
   useEffect(() => {
     reloadMerchants()
-  }, [])
+  }, [JSON.stringify(merchants)])
   const reloadMerchants = async () => {
     await filter()
     const currentMerchant = await cache.get("currentMerchant")
@@ -35,6 +35,7 @@ export default function LeftSideDrawer(props: any) {
         <Link href="/login" style={{color: pictonBlue[500], marginTop: 20}}>Login</Link>
         <Link href="/(drawer)/table" style={{color: pictonBlue[500], marginTop: 20}}>Table</Link>
         <Link href="/(drawer)/menu" style={{color: pictonBlue[500], marginTop: 20}}>Menu</Link>
+        <Link href="/payments/bankAccounts" style={{color: pictonBlue[500], marginTop: 20}}>Bank Account</Link>
         <Logout />
       </View>
     </View>

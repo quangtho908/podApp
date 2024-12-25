@@ -5,7 +5,7 @@ import { View, Text, TextInput, StyleSheet, TextInputProps } from "react-native"
 export default function Input(props: TextInputProps & {label?: string}) {
   return (
     <View style={{gap: 10}}>
-      <Text>{props.label}</Text>
+      {props.label && <Text>{props.label}</Text>}
       <TextInput style={styles.input} {...props} />
     </View>
   )

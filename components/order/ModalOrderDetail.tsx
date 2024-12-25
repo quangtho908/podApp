@@ -90,8 +90,8 @@ export default function ModalOrderDetail() {
           <Text style={{...styleText.text, ...color.textBlue500}}>Xác nhận</Text>
         </TouchableOpacity>
       </View>
-      <View style={{margin: 'auto', paddingVertical: 15}}>
-        <Text style={{...styleText.textTitle}} >Đơn hàng</Text>
+      <View style={{paddingVertical: 15}}>
+        <Text style={{...styleText.textTitle, textAlign: "center"}}>Đơn hàng</Text>
       </View>
       <ResetOnPullToRefresh contentContainerStyle={styles.container}>
         {currentOrder.products.map(product => <CardProductOrder isEdit={true} state={true} {...product} key={product.id} />)}

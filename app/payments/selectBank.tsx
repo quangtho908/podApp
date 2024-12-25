@@ -1,28 +1,21 @@
 import { View, Text, StyleSheet } from "react-native";
 import styleText from "@/styles/text";
-import { useRouter } from "expo-router";
 import { white } from "@/constants/Pallete";
 import BankSelectItem from "@/components/payment/BankSelectItem";
 import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
+import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 
 export default function ModalSelectBank() {
-  const router = useRouter();
-
-  const cancel = () => {
-    router.back();
-  }
-
-  const accept = () => {
-    router.back();
-  }
+  const {bankAccounts, currentBankAccount} = bankAccountService();
 
   return (
     <View>
       <View style={{margin: 'auto', paddingVertical: 15}}>
-        <Text style={{...styleText.textTitle}} >Chọn ngân hàng</Text>
+        <Text style={{...styleText.textTitle, textAlign: 'center'}} >Chọn ngân hàng</Text>
       </View>
       <ResetOnPullToRefresh contentContainerStyle={styles.container}>
-        <BankSelectItem />
+        <BankSelectItem bankAccount={currentBankAccount} />
+        {bankAccounts.map(bankAccount => bankAccount.id !== currentBankAccount.id && <BankSelectItem bankAccount={bankAccount} key={bankAccount.id} />)}
       </ResetOnPullToRefresh>
     </View>
   )

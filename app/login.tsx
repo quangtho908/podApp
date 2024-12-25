@@ -5,7 +5,7 @@ import { pictonBlue, white } from "@/constants/Pallete";
 import cache from "@/service/cache";
 import { AxiosResponse } from "axios";
 import { router } from "expo-router";
-import _ from "lodash";
+import * as _ from "lodash";
 import React, { useEffect, useState } from "react"
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native"
 

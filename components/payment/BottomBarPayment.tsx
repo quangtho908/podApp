@@ -3,14 +3,20 @@ import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
-import ResetOnPullToRefresh from "../ResetOnPullRequest";
 import { useRouter } from "expo-router";
 import useModalConfirmPayment from "@/service/modalConfirmPayment";
+import orderService from "@/service/orders/orderStore";
+import { convertPrice } from "@/utils/converData";
+import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
+import bankService from "@/service/vietQr/bankService";
+import _ from "lodash";
 
 export default function BottomBarPayment () {
   const router = useRouter();
   const setModalConfirmPayment = useModalConfirmPayment(state => state.setVisible)
-
+  const {currentOrder} = orderService()
+  const {currentBankAccount} = bankAccountService()
+  const {banks} = bankService()
   const cash = () => {
     setModalConfirmPayment(true)
   }
@@ -24,7 +30,7 @@ export default function BottomBarPayment () {
       <View style={styles.titleContainer}>
         <Text style={{...styleText.text}}>Bàn số 1</Text>
         <Text style={{...styleText.text}}>
-          Tổng cộng: <Text style={{...color.textBlue500}}>100.000</Text>
+          Tổng cộng: <Text style={{...color.textBlue500}}>{convertPrice(currentOrder.totalPrice)}</Text>
         </Text>
       </View>
       <Text style={{
@@ -32,11 +38,11 @@ export default function BottomBarPayment () {
         paddingVertical: 10,
         ...styleText.text
       }}>THÔNG TIN THANH TOÁN</Text>
-      <TouchableOpacity style={styles.bankInfoContainer} onPress={() => router.push('/selectBank')}>
+      <TouchableOpacity style={styles.bankInfoContainer} onPress={() => router.push('/payments/selectBank')}>
         <Image 
           style={styles.bankImage}
           source={{
-            uri: 'https://api.vietqr.io/img/ACB.png'
+            uri: _.find(banks, {bin: currentBankAccount.bankBin})?.logo
           }} 
         />
         <Text>NGUYEN QUANG THO</Text>
@@ -83,7 +89,9 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingRight: 20,
     justifyContent: 'space-between',
-    backgroundColor: white[100]
+    backgroundColor: white[50],
+    borderWidth: 1,
+    borderColor: white[300]
   },
   bankImage: {
     width: 100,

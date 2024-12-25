@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useState } from "react";
 import setOrderService from "@/service/orders/setOrder";
-import _ from "lodash";
+import * as _ from "lodash";
 
 type CardProductOrderProp = {
   id: number,
