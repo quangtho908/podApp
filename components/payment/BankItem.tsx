@@ -6,7 +6,6 @@ import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
 import useModalBank from "./services/modalBank";
 
 export default function BankItem({bank}: {bank: Bank}) {
-  const router = useRouter();
   const {setCurrentBank} = bankService()
   const {setProps} = useModalBank()
   const onChoose = () => {

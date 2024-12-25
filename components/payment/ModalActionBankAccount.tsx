@@ -31,7 +31,6 @@ export default function ModalActionBankAccount() {
     if(response.status !== 200) {
 
     }
-    await filter(currentMerchant)
     resetCurrentBankAccount()
     setProps("actionAccountBank", {
       visible: false
@@ -43,8 +42,6 @@ export default function ModalActionBankAccount() {
     if(response.status !== 200) {
 
     }
-
-    await filter(currentMerchant)
     resetCurrentBankAccount()
     setProps("actionAccountBank", {
       visible: false
