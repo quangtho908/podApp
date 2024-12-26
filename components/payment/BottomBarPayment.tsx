@@ -4,25 +4,74 @@ import styleText from "@/styles/text";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useRouter } from "expo-router";
-import useModalConfirmPayment from "@/service/modalConfirmPayment";
 import orderService from "@/service/orders/orderStore";
 import { convertPrice } from "@/utils/converData";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
-import bankService from "@/service/vietQr/bankService";
-import _ from "lodash";
+import bankService from "@/service/banks/bankService";
+import * as _ from "lodash";
+import { useEffect, useState } from "react";
+import React from "react";
+import { postRequest } from "@/apis/common";
+import { AxiosResponse } from "axios";
+import merchantService from "@/service/merchant/merchantStore";
 
 export default function BottomBarPayment () {
   const router = useRouter();
-  const setModalConfirmPayment = useModalConfirmPayment(state => state.setVisible)
-  const {currentOrder} = orderService()
-  const {currentBankAccount} = bankAccountService()
-  const {banks} = bankService()
-  const cash = () => {
-    setModalConfirmPayment(true)
+  const {currentOrder, filter, resetCurrentOrder} = orderService()
+  const {currentBankAccount, resetCurrentBankAccount} = bankAccountService()
+  const {currentMerchant} = merchantService()
+  const [qr, setQr] = useState("")
+  useEffect(() => {
+    genQr()
+  }, [JSON.stringify(currentBankAccount)])
+  const genQr = async ( ) => {
+    if(currentBankAccount.id <= 0) return
+    const response = await postRequest("banks/genQr", {
+      acqId: currentBankAccount.bank.bin,
+      accountNo: currentBankAccount.accountNumber,
+      amount: currentOrder.totalPrice.toString(),
+      description: `Thanh toán đơn hàng số ${currentOrder.id}`,
+      accountName: currentBankAccount.accountName
+    })
+    if(response.status !== 200) {
+      return;
+    }
+    setQr((response as AxiosResponse).data.qrDataURL)
+  }
+  const cash = async () => {
+    const response = await postRequest("orderPayments", {
+      orderId: currentOrder.id,
+      merchantId: currentMerchant,
+      price: currentOrder.totalPrice,
+      paymentMethod: "cash"
+    })
+    if(response.status !== 200) {
+      return;
+    }
+    await filter({merchantId: currentMerchant})
+    resetCurrentBankAccount()
+    resetCurrentOrder()
+    router.push("/payments/paymentSuccess")
   }
 
-  const bank = () => {
-    setModalConfirmPayment(true)
+  const bank = async () => {
+    const response = await postRequest("orderPayments", {
+      orderId: currentOrder.id,
+      merchantId: currentMerchant,
+      price: currentOrder.totalPrice,
+      paymentMethod: "bank"
+    })
+    if(response.status !== 200) {
+      return;
+    }
+    await filter({merchantId: currentMerchant})
+    resetCurrentBankAccount()
+    resetCurrentOrder()
+    router.push("/payments/paymentSuccess")
+  }
+
+  const removeBankAccount = () => {
+    resetCurrentBankAccount()
   }
 
   return (
@@ -39,20 +88,40 @@ export default function BottomBarPayment () {
         ...styleText.text
       }}>THÔNG TIN THANH TOÁN</Text>
       <TouchableOpacity style={styles.bankInfoContainer} onPress={() => router.push('/payments/selectBank')}>
-        <Image 
-          style={styles.bankImage}
-          source={{
-            uri: _.find(banks, {bin: currentBankAccount.bankBin})?.logo
-          }} 
-        />
-        <Text>NGUYEN QUANG THO</Text>
+        {currentBankAccount.id > 0 && (
+          <>
+            <Image 
+              style={styles.bankImage}
+              source={{
+                uri: currentBankAccount.bank.logo
+              }} 
+            />
+            <Text>{currentBankAccount.accountName}</Text>
+            <TouchableOpacity onPress={removeBankAccount}>
+              <TabBarIcon name="close" />
+            </TouchableOpacity>
+          </>
+        )}
+        {currentBankAccount.id <= 0 && <Text style={{margin: "auto"}}>Chọn tài khoản thanh toán</Text>}
       </TouchableOpacity>
+      {currentBankAccount.id > 0 && !_.isEmpty(qr) && (
+        <View style={{alignItems: 'center', gap: 10}}>
+          <Image 
+            style={styles.qr}
+            source={{uri: qr}}
+          />
+          <TouchableOpacity style={{...styles.action, backgroundColor: pictonBlue[800]}}>
+          <TabBarIcon name="camera" color={white[50]}/>
+          <Text style={{...styleText.text, ...color.textWhite50}}>Chụp hình</Text>
+        </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.action} onPress={cash}>
+        <TouchableOpacity style={{...styles.action, backgroundColor: pictonBlue[800]}} onPress={cash}>
           <TabBarIcon name="wallet" color={white[50]}/>
           <Text style={{...styleText.text, ...color.textWhite50}}>Tiền mặt</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.action} onPress={bank}>
+        <TouchableOpacity style={{...styles.action, backgroundColor: (currentBankAccount.id > 0 ? pictonBlue[800] : white[300])}} onPress={bank} disabled={currentBankAccount.id <= 0}>
           <TabBarIcon name="card" color={white[50]} />
           <Text style={{...styleText.text, ...color.textWhite50}}>Chuyển khoản</Text>
         </TouchableOpacity>
@@ -89,12 +158,14 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     paddingRight: 20,
     justifyContent: 'space-between',
+    alignItems: "center",
     backgroundColor: white[50],
     borderWidth: 1,
     borderColor: white[300]
   },
   bankImage: {
     width: 100,
+    height: 20
   },
   actionContainer: {
     flexDirection: 'row',
@@ -107,9 +178,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: pictonBlue[800],
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5
+  },
+  qr: {
+    width: 300,
+    height: 350,
+    resizeMode: 'stretch'
   }
 })

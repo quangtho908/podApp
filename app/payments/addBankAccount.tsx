@@ -4,14 +4,15 @@ import { useRouter } from "expo-router";
 import { white } from "@/constants/Pallete";
 import BankSelectItem from "@/components/payment/BankSelectItem";
 import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
-import bankService from "@/service/vietQr/bankService";
+import bankService from "@/service/banks/bankService";
 import { useEffect, useState } from "react";
 import useModalBank from "@/components/payment/services/modalBank";
 import ModalChooseBank from "@/components/payment/ModalChooseBank";
 import Input from "@/components/Input";
-import { postRequest } from "@/apis/common";
+import { getRequest, postRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
+import { AxiosResponse } from "axios";
 
 export default function AddBankAccount() {
   const router = useRouter();
@@ -40,14 +41,31 @@ export default function AddBankAccount() {
     router.back();
   }
 
+  const accountNumberBlur = async () => {
+    // if(!currentBank?.lookupSupported) {
+    //   return;
+    // }
+    // const response = await postRequest("banks", {
+    //   bin: currentBank.bin,
+    //   accountNumber
+    // })
+    // console.log(response)
+
+    // if(response.status !== 200) {
+    //   return
+    // }
+
+    // setAccountName((response as AxiosResponse).data.accountName)
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.selectionBanks} onPress={() => setProps("chooseBank", {visible: true})}>
         {currentBank !== null && <Image style={styles.bankImage} source={{uri: currentBank.logo}} />}
         <Text>{currentBank !== null ? currentBank.shortName : "Chọn ngân hàng"}</Text>
       </TouchableOpacity>
-      <Input placeholder="Số tài khoản" onChangeText={setAccountNumber} />
-      <Input placeholder="Tên tài khoản" onChangeText={setAccountName} />
+      <Input placeholder="Số tài khoản" onChangeText={setAccountNumber} onBlur={accountNumberBlur} />
+      <Input placeholder="Tên tài khoản" onChangeText={setAccountName} value={accountName} />
       <Button title="Xác nhận" onPress={confirm} />
       <ModalChooseBank />
     </View>

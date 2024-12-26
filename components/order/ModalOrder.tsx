@@ -9,25 +9,27 @@ import useModalChooseTable from "@/service/modalChooseTable";
 import setOrderService from "@/service/orders/setOrder";
 import Input from "../Input";
 import { useEffect, useState } from "react";
-import { postRequest } from "@/apis/common";
-import { useNavigation } from "expo-router";
-import { AxiosError } from "axios";
+import { getRequest, postRequest } from "@/apis/common";
+import { useNavigation, useRouter } from "expo-router";
 import { ResponseError } from "@/apis/model";
-import orderService from "@/service/orders/orderStore";
+import orderService, { InProgressOrder } from "@/service/orders/orderStore";
 import merchantService from "@/service/merchant/merchantStore";
+import { AxiosResponse } from "axios";
 
 export default function ModalOrder() {
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
   const [note, setNote] = useState("")
   const {currentTable, order, update, destroy} = setOrderService()
   const [isError, setIsError] = useState(false)
-  const {filter} = orderService();
+  const [isTakeOut, setIsTakeOut] = useState(false)
+  const {filter, setCurrentOrder} = orderService();
   const {currentMerchant} = merchantService()
   const [error, setError] = useState({
     title: "",
     message: "",
   })
   const navigation = useNavigation();
+  const router = useRouter()
   const onNoteChange = (newText: string) => {
     setNote(newText)
   }
@@ -49,6 +51,27 @@ export default function ModalOrder() {
     })
   }
 
+  const payments = async () => {
+    order.note = note;
+    if(isTakeOut) order.isTakeOut = isTakeOut;
+    update(order)
+    const response = await postRequest("orders", order);
+    if(response.status !== 200) {
+      return
+    }
+
+    const data = (response as AxiosResponse).data
+    const responseOrder = await getRequest<InProgressOrder, {}>("orders", {
+      merchantId: currentMerchant,
+      id: data.id
+    })
+
+    setCurrentOrder(responseOrder)
+    router.push("/payments")
+    destroy();
+    return;
+  }
+
   useEffect(() => {
     if(isError) {
       Alert.alert(error.title, error.message, [
@@ -63,13 +86,13 @@ export default function ModalOrder() {
     <View style={styles.centeredView}>
       <Text>{currentTable == null ? "Chưa chọn bàn" : currentTable.name}</Text>
       <View style={styles.options}>
-        <OrderTypeBtn />
+        <OrderTypeBtn onChange={setIsTakeOut} />
         <TouchableOpacity disabled={order.isTakeOut} onPress={() => setModalChooseTable(true)}>
           <Text style={{...styleText.text, ...(order.isTakeOut ? color.textWhite500 : color.textBlue500)}}>Chọn bàn</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.actionContainer}>
-        <TouchableOpacity style={{...styles.actionActive, ...styles.action}}>
+        <TouchableOpacity style={{...styles.actionActive, ...styles.action}} onPress={payments}>
           <TabBarIcon name='card' color={white[50]}/>
           <Text style={{...styleText.text, ...color.textWhite50}}>Thanh Toán</Text>
         </TouchableOpacity>
@@ -96,6 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: white[50],
     padding: 20,
     shadowColor: '#000',
+    gap: 10,
     shadowOffset: {
       width: 0,
       height: 2,

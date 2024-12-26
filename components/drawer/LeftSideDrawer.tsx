@@ -32,7 +32,7 @@ export default function LeftSideDrawer(props: any) {
       <View style={{ flex: 5, padding: 10, paddingTop: 25 }}>
         <Text style={{ fontSize: 18, marginBottom: 10 }}>Menu</Text>
         <Button title="Home" onPress={() => router.push('/(drawer)/(tabs)')} />
-        <Link href="/login" style={{color: pictonBlue[500], marginTop: 20}}>Login</Link>
+        <Link href="/" style={{color: pictonBlue[500], marginTop: 20}}>Login</Link>
         <Link href="/(drawer)/table" style={{color: pictonBlue[500], marginTop: 20}}>Table</Link>
         <Link href="/(drawer)/menu" style={{color: pictonBlue[500], marginTop: 20}}>Menu</Link>
         <Link href="/payments/bankAccounts" style={{color: pictonBlue[500], marginTop: 20}}>Bank Account</Link>

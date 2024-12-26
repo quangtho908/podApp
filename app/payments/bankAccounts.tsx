@@ -2,7 +2,7 @@ import { View, StyleSheet } from "react-native";
 import { white } from "@/constants/Pallete";
 import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
 import { useEffect } from "react";
-import bankService from "@/service/vietQr/bankService";
+import bankService from "@/service/banks/bankService";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import merchantService from "@/service/merchant/merchantStore";
 import BankAccountItem from "@/components/payment/BankAccountItem";

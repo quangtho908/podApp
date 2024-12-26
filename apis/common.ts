@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { ResponseError } from "./model";
 import cache from "@/service/cache";
 
-const host = "http://192.168.9.200:8080/api"
+const host = "http://192.168.1.8:8080/api"
 export async function getRequest<R extends BaseModel, B extends BaseDTO>(paths: string, params: B): Promise<R> {
   const token = await cache.get("token");
   const response = await axios.get(`${host}/${paths}`, {

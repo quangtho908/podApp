@@ -1,5 +1,4 @@
 import BottomBarPayment from "@/components/payment/BottomBarPayment";
-import ModalConfirmPayment from "@/components/payment/ModalConfirmPayment";
 import CardProductPayment from "@/components/product/CardProductPayment";
 import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
 import orderService from "@/service/orders/orderStore";
@@ -14,7 +13,6 @@ export default function Payment() {
         {currentOrder.products.map(product => <CardProductPayment {...product} key={product.id} />)}
       </ResetOnPullToRefresh>
       <BottomBarPayment/>
-      <ModalConfirmPayment/>
     </View>
   )
 }

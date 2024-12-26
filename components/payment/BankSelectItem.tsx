@@ -1,6 +1,6 @@
 import { white } from "@/constants/Pallete";
 import bankAccountService, { BankAccount } from "@/service/bankAccounts/bankAccountsStore";
-import bankService from "@/service/vietQr/bankService";
+import bankService from "@/service/banks/bankService";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { useRouter } from "expo-router";
@@ -9,8 +9,6 @@ import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
 
 export default function BankSelectItem({bankAccount}: {bankAccount: BankAccount}) {
   const router = useRouter();
-  const {banks} = bankService()
-  const image = _.find(banks, {bin: bankAccount.bankBin})?.logo
   const {setCurrentBankAccount, currentBankAccount} = bankAccountService()
   const onChoose = () => {
     setCurrentBankAccount(bankAccount)
@@ -22,7 +20,7 @@ export default function BankSelectItem({bankAccount}: {bankAccount: BankAccount}
       <Image 
         style={styles.bankImage}
         source={{
-          uri: image
+          uri: bankAccount.bank.logo
         }} 
       />
       <View style={{alignItems: 'flex-end', gap: 5}}>

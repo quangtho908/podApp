@@ -17,10 +17,8 @@ export default function OrderItem ({order}: {order: InProgressOrder}) {
   const router = useRouter();
   const {setCurrentOrder, filter} = orderService()
   const {currentMerchant} = merchantService()
-  const {setCurrentBankAccount, defaultAccount} = bankAccountService()
   const payment = () => {
     setCurrentOrder(order)
-    setCurrentBankAccount(defaultAccount)
     router.push("/payments");
   }
 
@@ -50,24 +48,24 @@ export default function OrderItem ({order}: {order: InProgressOrder}) {
         </View>
         <View style={styles.viewContent}>
           <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
-            <Text style={{...styleText.textTitle}}>{order.table.name}</Text>
-            <Text style={{...styleText.text, ...color.textBlue500}}>{convertPrice(order.totalPrice)}</Text>
+            <Text style={{...styleText.textTitle}}>{order.table?.name || ""}</Text>
+            <Text style={{...styleText.text, ...color.textBlue700}}>{convertPrice(order.totalPrice)}</Text>
           </View>
           <Text>Sản phẩm: {order.products.length}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
-            <TabBarIcon name={"refresh-circle-outline"} color={orange[500]} />
-            <Text style={{...color.textOrange500}} >{order.status}</Text>
+            <TabBarIcon name={"refresh-circle-outline"} color={orange[600]} />
+            <Text style={{...color.textOrange600}} >{order.status}</Text>
           </View>
         </View>
       </TouchableOpacity>
       <View style={styles.actionContainer}>
         <TouchableOpacity style={styles.action} onPress={cancel}>
-          <Text style={{...styleText.text, ...color.textRed500}}>Huỷ</Text>
-          <TabBarIcon name='backspace' color={red[500]}/>
+          <Text style={{...styleText.text, ...color.textRed700}}>Huỷ</Text>
+          <TabBarIcon name='backspace' color={red[700]}/>
         </TouchableOpacity>
         <TouchableOpacity style={styles.action} onPress={payment}>
-          <TabBarIcon name='card' color={green[500]}/>
-          <Text style={{...styleText.text, ...color.textGreen500}}>Thanh Toán</Text>
+          <TabBarIcon name='card' color={green[700]}/>
+          <Text style={{...styleText.text, ...color.textGreen700}}>Thanh Toán</Text>
         </TouchableOpacity>
       </View>
     </View>

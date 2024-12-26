@@ -1,5 +1,5 @@
 import { white } from "@/constants/Pallete";
-import bankService, { Bank } from "@/service/vietQr/bankService";
+import bankService, { Bank } from "@/service/banks/bankService";
 import styleText from "@/styles/text";
 import { useRouter } from "expo-router";
 import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";

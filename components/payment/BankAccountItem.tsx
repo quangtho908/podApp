@@ -1,6 +1,6 @@
 import { white } from "@/constants/Pallete";
 import bankAccountService, { BankAccount } from "@/service/bankAccounts/bankAccountsStore";
-import bankService from "@/service/vietQr/bankService";
+import bankService from "@/service/banks/bankService";
 import styleText from "@/styles/text";
 import * as _ from "lodash";
 import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
@@ -8,8 +8,6 @@ import useModalBank from "./services/modalBank";
 import color from "@/styles/color";
 
 export default function BankAccountItem({bankAccount}: {bankAccount: BankAccount}) {
-  const {banks} = bankService();
-  const image = _.find(banks, {bin: bankAccount.bankBin})?.logo
   const {setProps} = useModalBank()
   const {setCurrentBankAccount} = bankAccountService()
   const onChoose = () => {
@@ -22,7 +20,7 @@ export default function BankAccountItem({bankAccount}: {bankAccount: BankAccount
       <Image 
         style={styles.bankImage}
         source={{
-          uri: image
+          uri: bankAccount.bank.logo
         }} 
       />
       <View style={{alignItems: 'flex-end', gap: 5}}>

@@ -3,17 +3,18 @@ import { View, Text, StyleSheet } from "react-native";
 import SwitchBtn from "../SwitchBtn";
 import setOrderService from "@/service/orders/setOrder";
 
-export default function OrderTypeBtn() {
+export default function OrderTypeBtn({onChange}: {onChange: (value: boolean) => void}) {
   const [isEnabled, setIsEnabled] = useState(false);
   const {order, updateCurrentTable, currentTable, isTakeOut} = setOrderService();
 
   useEffect(() => {
-    if(order.tableId > 0) {
+    if(order.tableId || 0 > 0) {
       setIsEnabled(false)
     }
   }, [currentTable])
 
   const toggleSwitch = () => {
+    onChange(!isEnabled)
     setIsEnabled(!isEnabled)
     if(!isEnabled) {
       updateCurrentTable(null)

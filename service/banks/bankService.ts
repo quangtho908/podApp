@@ -1,3 +1,4 @@
+import { getRequest } from "@/apis/common";
 import { BaseModel } from "@/constants/BaseModel";
 import axios from "axios";
 import * as _ from "lodash";
@@ -32,11 +33,11 @@ const bankService = create<State & Action>(set => ({
   banks: [],
   currentBank: null,
   get: async () => {
-    const response = await axios.get("https://api.vietqr.io/v2/banks")
+    const response = await getRequest<Bank[], {}>("banks", {})
     if(_.isEmpty(initBanks)) {
-      initBanks = response.data.data;
+      initBanks = response;
     }
-    return set({banks: response.data.data})
+    return set({banks: response})
   },
   filter: (name: string) => {
     const results = _.filter(_.cloneDeep(initBanks), (bank: Bank) => 

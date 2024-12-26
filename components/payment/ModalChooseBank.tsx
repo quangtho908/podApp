@@ -6,7 +6,7 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import useModalConfirmPayment from "@/service/modalConfirmPayment";
 import { useEffect } from "react";
 import useModalBank from "./services/modalBank";
-import bankService from "@/service/vietQr/bankService";
+import bankService from "@/service/banks/bankService";
 import BankItem from "./BankItem";
 import ResetOnPullToRefresh from "../ResetOnPullRequest";
 import Input from "../Input";

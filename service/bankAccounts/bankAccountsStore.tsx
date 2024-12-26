@@ -2,12 +2,13 @@ import { getRequest } from "@/apis/common";
 import { BaseModel } from "@/constants/BaseModel";
 import * as _ from "lodash";
 import { create } from "zustand";
+import { Bank } from "../banks/bankService";
 
 export interface BankAccount extends BaseModel {
   id: number,
-  bankBin: string,
   accountName: string,
   accountNumber: string,
+  bank: Bank
   primary: boolean
 }
 
@@ -26,10 +27,19 @@ type Action = {
 
 const initCurrentBankAccount: BankAccount = {
   id: 0,
-  bankBin: "",
   accountName: "",
   accountNumber: "",
-  primary: false
+  primary: false,
+  bank: {
+    id: 0,
+    code: "",
+    bin: "",
+    name: "",
+    shortName: "",
+    logo: "",
+    transferSupported: 0,
+    lookupSupported: 0
+  }
 }
 
 const bankAccountService = create<State & Action>(set => ({

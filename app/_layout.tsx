@@ -21,10 +21,10 @@ export default function RootLayout() {
 
   const checkLogin = async () => {
     const token = await cache.get("token")
-    if(_.isEmpty(token) && !publicRouter.some(rx => rx.test(pathname))) {
+    if((_.isNil(token) || _.isEmpty(token)) && !publicRouter.some(rx => rx.test(pathname))) {
+      router.push('/')
       cache.clearAll();
-      router.push('/login')
-      return;
+      return
     }
     const cacheMerchant = await cache.get("currentMerchant")
     if(_.toNumber(cacheMerchant)){
@@ -49,11 +49,13 @@ export default function RootLayout() {
   return (
       <ThemeProvider value={DefaultTheme}>
         <Stack>
-          <Stack.Screen name="login" options={{headerShown: false}} />
+          <Stack.Screen name="index" options={{headerShown: false}} />
           <Stack.Screen name='signup' options={{headerShown: false}} />
           <Stack.Screen name="payments" options={{headerShown: false}} />
           <Stack.Screen name="orders" options={{headerShown: false}} />
           <Stack.Screen name='pin' options={{headerShown: false}} />
+          <Stack.Screen name="merchant" options={{ headerShown: false }}/>
+          <Stack.Screen name="products" options={{ headerShown: false }}/>
           <Stack.Screen name="(drawer)" options={{ headerShown: false }}/>
           <Stack.Screen name="+not-found" />
         </Stack>

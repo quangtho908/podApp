@@ -1,7 +1,7 @@
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import orderService from "@/service/orders/orderStore";
-import bankService from "@/service/vietQr/bankService";
+import bankService from "@/service/banks/bankService";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Stack, useRouter } from "expo-router";
@@ -65,6 +65,7 @@ export default function PaymentLayout() {
           </TouchableOpacity>
         )
       }} />
+      <Stack.Screen name="paymentSuccess" />
     </Stack>
   )
 }
