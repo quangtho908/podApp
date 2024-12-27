@@ -21,7 +21,7 @@ export default function HomeScreen() {
   useEffect(() => {
     filterProducs({merchantId: currentMerchant})
     filterByDate()
-  }, [])
+  }, [JSON.stringify(currentMerchant)])
 
   useEffect(() => {
     filterByDate()

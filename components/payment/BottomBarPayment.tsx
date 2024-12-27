@@ -7,7 +7,6 @@ import { useRouter } from "expo-router";
 import orderService from "@/service/orders/orderStore";
 import { convertPrice } from "@/utils/converData";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
-import bankService from "@/service/banks/bankService";
 import * as _ from "lodash";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -17,7 +16,7 @@ import merchantService from "@/service/merchant/merchantStore";
 
 export default function BottomBarPayment () {
   const router = useRouter();
-  const {currentOrder, filter, resetCurrentOrder} = orderService()
+  const {currentOrder, filter} = orderService()
   const {currentBankAccount, resetCurrentBankAccount} = bankAccountService()
   const {currentMerchant} = merchantService()
   const [qr, setQr] = useState("")
@@ -49,8 +48,6 @@ export default function BottomBarPayment () {
       return;
     }
     await filter({merchantId: currentMerchant})
-    resetCurrentBankAccount()
-    resetCurrentOrder()
     router.push("/payments/paymentSuccess")
   }
 
@@ -65,8 +62,6 @@ export default function BottomBarPayment () {
       return;
     }
     await filter({merchantId: currentMerchant})
-    resetCurrentBankAccount()
-    resetCurrentOrder()
     router.push("/payments/paymentSuccess")
   }
 

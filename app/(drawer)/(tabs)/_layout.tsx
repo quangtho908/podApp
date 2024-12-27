@@ -15,7 +15,7 @@ export default function BottomNavigation() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerLeft: () => <HeaderButton onPress={() => navigation.openDrawer()} />,
       }}>
-      <Tabs.Screen name="index" options={{
+      <Tabs.Screen name="home" options={{
         headerTitle: '',
         title: 'Danh sách đơn',
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'home' : 'home-outline'} />,

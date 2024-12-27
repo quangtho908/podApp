@@ -24,7 +24,7 @@ export default function BanlAccounts() {
   return (
     <View>
       <ResetOnPullToRefresh reload={() => filter(currentMerchant)} contentContainerStyle={styles.container}>
-        <BankAccountItem bankAccount={defaultAccount} />
+        {defaultAccount.id > 0 && <BankAccountItem bankAccount={defaultAccount} />}
         {bankAccounts.map(bankAccount => !bankAccount.primary && <BankAccountItem bankAccount={bankAccount} key={bankAccount.id} />)}
       </ResetOnPullToRefresh>
       <ModalActionBankAccount />

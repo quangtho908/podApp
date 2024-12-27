@@ -1,40 +1,43 @@
-import cache from '@/service/cache';
+import authService from '@/service/auth/authStore';
 import merchantService from '@/service/merchant/merchantStore';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useNavigation, usePathname, useRouter } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as _ from 'lodash';
-import { useEffect } from 'react';
+import { useEffect} from 'react';
+import { AppState } from 'react-native';
 import 'react-native-reanimated';
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
-
-  const pathname = usePathname();
-  const router = useRouter();
-  const publicRouter = [/login/, /signup/]
+  const {logout} = authService()
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
   const {setCurrentMerchant} = merchantService();
 
-  const checkLogin = async () => {
-    const token = await cache.get("token")
-    if((_.isNil(token) || _.isEmpty(token)) && !publicRouter.some(rx => rx.test(pathname))) {
-      router.push('/')
-      cache.clearAll();
-      return
-    }
-    const cacheMerchant = await cache.get("currentMerchant")
+  const setup = async () => {
+    const cacheMerchant = await AsyncStorage.getItem("currentMerchant")
     if(_.toNumber(cacheMerchant)){
       setCurrentMerchant(_.toNumber(cacheMerchant))
     }
   }
 
   useEffect(() => {
-    checkLogin()
-  }, [pathname])
+    if(logout) {
+      router.replace("/")
+    }
+  }, [logout])
+
+  useEffect(() => {
+    setup()
+    const appState = AppState.addEventListener("change", (state) => {
+      AsyncStorage.removeItem("verify_pin")
+    })
+    return () => appState.remove();
+  }, [])
 
   useEffect(() => {
     if (loaded) {
@@ -48,7 +51,7 @@ export default function RootLayout() {
 
   return (
       <ThemeProvider value={DefaultTheme}>
-        <Stack>
+        <Stack initialRouteName='index'>
           <Stack.Screen name="index" options={{headerShown: false}} />
           <Stack.Screen name='signup' options={{headerShown: false}} />
           <Stack.Screen name="payments" options={{headerShown: false}} />

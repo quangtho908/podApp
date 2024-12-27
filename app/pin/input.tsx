@@ -1,9 +1,9 @@
 import { pictonBlue, white } from "@/constants/Pallete";
-import cache from "@/service/cache";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
+import { CodeField, Cursor, isLastFilledCell, MaskSymbol, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function InputPINScreen() {
   const [value, setValue] = useState('');
@@ -15,12 +15,42 @@ export default function InputPINScreen() {
   });
 
   const submitPin = async () => {
-    const pin = await cache.get("pin")
+    const pin = await AsyncStorage.getItem("pin")
     if(pin === value) {
-      router.push("/")
+      await AsyncStorage.setItem("verify_pin", "ok")
+      router.replace("/")
       return
     }
   }
+
+  const renderCell = (
+      {index, symbol, isFocused}: 
+      {index: number, symbol: string, isFocused: boolean}
+    ) => {
+      let textChild = null;
+  
+      if (symbol) {
+        textChild = (
+          <MaskSymbol
+            maskSymbol="•"
+            isLastFilledCell={isLastFilledCell({index, value})}>
+            {symbol}
+          </MaskSymbol>
+        );
+      } else if (isFocused) {
+        textChild = <Cursor />;
+      }
+  
+      return (
+        <Text
+          key={index}
+          style={[styles.cellRoot, styles.cellText, isFocused && styles.focusCell]}
+          onLayout={getCellOnLayoutHandler(index)}>
+          {textChild}
+        </Text>
+      );
+    };
+
   return (
     <SafeAreaView style={styles.root}>
       <Text style={styles.title}>Nhập mã PIN</Text>
@@ -33,16 +63,7 @@ export default function InputPINScreen() {
         rootStyle={styles.codeFieldRoot}
         keyboardType="number-pad"
         textContentType="oneTimeCode"
-        renderCell={({index, symbol, isFocused}) => (
-          <View
-            onLayout={getCellOnLayoutHandler(index)}
-            key={index}
-            style={[styles.cellRoot, isFocused && styles.focusCell]}>
-            <Text style={styles.cellText}>
-              {symbol || (isFocused ? <Cursor /> : null)}
-            </Text>
-          </View>
-        )}
+        renderCell={renderCell}
       />
 
       <Button title="Xác minh" onPress={submitPin}/>
@@ -51,7 +72,7 @@ export default function InputPINScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: {padding: 20, minHeight: 300, gap: 20},
+  root: {padding: 20, minHeight: 300, gap: 20, alignItems: "center"},
   title: {textAlign: 'center', fontSize: 30},
   resendText: {
     fontSize: 13,
@@ -65,23 +86,27 @@ const styles = StyleSheet.create({
     color: white[400]
   },
   codeFieldRoot: {
-    width: 280,
+    gap: 5,
   },
   cellRoot: {
-    width: 60,
-    height: 60,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
+    backgroundColor: white[50],
+    borderRadius: 5,
+    shadowColor: white[800],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 5,
   },
   cellText: {
     color: '#000',
-    fontSize: 36,
+    fontSize: 20,
     textAlign: 'center',
   },
   focusCell: {
-    borderBottomColor: pictonBlue[500],
-    borderBottomWidth: 2,
+    backgroundColor: pictonBlue[100],
   },
 });

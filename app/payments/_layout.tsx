@@ -6,6 +6,7 @@ import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity, Text } from "react-native";
+import { pictonBlue } from "@/constants/Pallete";
 
 export default function PaymentLayout() {
   const router = useRouter();
@@ -45,17 +46,6 @@ export default function PaymentLayout() {
           </TouchableOpacity>
         )}}
       />
-      <Stack.Screen
-        name="bankAccounts"
-        options={{
-          title: "Tài khoản ngân hàng",
-          headerRight: () => (
-            <TouchableOpacity onPress={() => router.push("/payments/addBankAccount")}>
-              <TabBarIcon name="add" />
-            </TouchableOpacity>
-          )
-        }}
-      />
       <Stack.Screen name="addBankAccount" options={{
         title: "thêm ngân hàng mới",
         headerTitleAlign: "center",
@@ -65,7 +55,15 @@ export default function PaymentLayout() {
           </TouchableOpacity>
         )
       }} />
-      <Stack.Screen name="paymentSuccess" />
+      <Stack.Screen name="paymentSuccess" options={{
+        title: "Thanh toán thành công",
+        headerTitleAlign: "center",
+        headerLeft: () => (
+          <TouchableOpacity onPress={cancelAddBankAccount}>
+            <TabBarIcon name="home" color={pictonBlue[900]} size={30} />
+          </TouchableOpacity>
+        )
+      }} />
     </Stack>
   )
 }

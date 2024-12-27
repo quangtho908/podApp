@@ -4,6 +4,7 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useState } from "react";
 import setOrderService from "@/service/orders/setOrder";
 import * as _ from "lodash";
+import { convertPrice } from "@/utils/converData";
 
 type CardProductOrderProp = {
   id: number,
@@ -111,7 +112,7 @@ export default function CardProductOrder(props: CardProductOrderProp & {isEdit?:
       </View>
       
       <Text style={{...styles.textCenter, ...styles.textBold}}>{props.name}</Text>
-      <Text style={styles.textCenter}>{props.price}</Text>
+      <Text style={styles.textCenter}>{convertPrice(props.price || 0)}</Text>
     </TouchableOpacity>
   )
 }

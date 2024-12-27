@@ -6,13 +6,31 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": { "buildType": "apk" },
+      "ios": { "simulator": true },
+      "env": {
+        "API_URL": "https://api.development.com",
+        "API_KEY": "your_development_api_key"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": { "buildType": "apk" },
+      "ios": {},
+      "env": {
+        "API_URL": "https://api.preview.com",
+        "API_KEY": "your_preview_api_key"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": { "buildType": "app-bundle" },
+      "ios": {},
+      "env": {
+        "API_URL": "https://api.production.com",
+        "API_KEY": "your_production_api_key"
+      }
     }
   },
   "submit": {

@@ -1,7 +1,7 @@
 import { postRequest } from "@/apis/common";
 import PasswordField from "@/components/PasswordField";
 import signupService from "@/service/auth/signup";
-import cache from "@/service/cache";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AxiosError, AxiosResponse } from "axios";
 import { router } from "expo-router";
 import * as _ from "lodash";
@@ -30,7 +30,7 @@ export default function SetPasswordScreen() {
     console.log(response)
 
     if(response.status === 200) {
-      cache.set("token", (response as AxiosResponse).data.token);
+      AsyncStorage.setItem("token", (response as AxiosResponse).data.token);
       router.push("/pin/setup")
       return
     }

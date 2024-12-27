@@ -9,6 +9,9 @@ const styleText = StyleSheet.create({
   textTitle: {
     fontSize: 18,
     fontWeight: '600'
+  },
+  sText: {
+    fontSize: 15
   }
 })
 

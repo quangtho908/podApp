@@ -1,9 +1,9 @@
 import { postRequest } from "@/apis/common";
-import cache from "@/service/cache";
 import { AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function MerchantSignupScreen() {
   const [name, setName] = useState("")
@@ -18,8 +18,8 @@ export default function MerchantSignupScreen() {
       return;
     }  
     const data = (response as AxiosResponse).data;
-    cache.set("currentMerchant", data.merchantId)
-    router.push('/(drawer)/(tabs)')
+    AsyncStorage.setItem("currentMerchant", data.merchantId)
+    router.push('/(drawer)/(tabs)/home')
   }
 
   return (

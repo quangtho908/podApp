@@ -3,27 +3,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import merchantService, { Merchant } from "@/service/merchant/merchantStore";
 import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { TabBarIcon } from "../navigation/TabBarIcon";
+import { useRoute } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
-export default function ItemStore({merchant}: {merchant: Merchant}) {
-  const [choosed, setChoosed] = useState(false)
-  const {currentMerchant, setCurrentMerchant} = merchantService();
-  useEffect(() => {
-    getMerchant()
-  }, [currentMerchant])
-
-  const getMerchant = async () => {
-    setChoosed(currentMerchant !== null && currentMerchant === merchant.id)
-  }
+export default function AddStoreBtn() {
+  const router = useRouter();
 
   const chooseMerchant = () => {
-    AsyncStorage.setItem("currentMerchant", merchant.id.toString())
-    setCurrentMerchant(merchant.id)
+    router.push("/merchant/createMerchant")
   }
 
   return (
-    <TouchableOpacity onPress={chooseMerchant} style={{...styles.container, ...(choosed ? styles.active : {})}}>
-      <Image source={require("@/assets/images/react-logo.png")} style={styles.image} />
-      <Text style={styles.text}>{merchant.name}</Text>
+    <TouchableOpacity onPress={chooseMerchant} style={styles.container}>
+      <TabBarIcon name="add" />
     </TouchableOpacity>
   )
 }
@@ -32,9 +25,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     alignItems: "center",
-    paddingVertical: 20,
+    paddingVertical: 30,
     width: "100%",
-    gap: 5
+    gap: 5,
+    backgroundColor: pictonBlue[100],
+    marginBottom: 5
   },
   image: {
     width: 40,
