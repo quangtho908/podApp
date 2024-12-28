@@ -7,7 +7,7 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import useModalOrderDetail from "@/service/modalOrderDetail";
 import { useRouter } from "expo-router";
 import orderService, { InProgressOrder } from "@/service/orders/orderStore";
-import { convertPrice, getDate, getTime } from "@/utils/converData";
+import { convertPrice, getDate, getTime } from "@/utils/convertData";
 import { postRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";

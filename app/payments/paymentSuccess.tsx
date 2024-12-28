@@ -4,7 +4,7 @@ import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import orderService from "@/service/orders/orderStore";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
-import { convertPrice } from "@/utils/converData";
+import { convertPrice } from "@/utils/convertData";
 import { useRouter } from "expo-router";
 import React from "react";
 import { useEffect } from "react";

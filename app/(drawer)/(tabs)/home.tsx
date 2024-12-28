@@ -6,7 +6,7 @@ import ResetOnPullToRefresh from '@/components/ResetOnPullRequest';
 import merchantService from '@/service/merchant/merchantStore';
 import orderService from '@/service/orders/orderStore';
 import productService from '@/service/product/productsStore';
-import { convertToDatePattern } from '@/utils/converData';
+import { convertToDatePattern } from '@/utils/convertData';
 import { useRouter } from 'expo-router';
 import moment from 'moment';
 import { useEffect, useState } from 'react';

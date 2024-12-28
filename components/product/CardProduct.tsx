@@ -1,23 +1,21 @@
-import { pictonBlue, white } from "@/constants/Pallete";
+import { white } from "@/constants/Pallete";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
-import { useState } from "react";
 import { useRouter } from "expo-router";
 import useModalProduct, { ModalProductType } from "./services/modalProduct";
-
-type CardProductOrderProp = {
-  state?: boolean,
-  name?: string,
-  price?: number,
-  amount: number
-}
+import productService, { Product } from "@/service/product/productsStore";
+import { convertPrice } from "@/utils/convertData";
+import _ from "lodash";
 
 
-export default function CardProduct() {
+export default function CardProduct({product}: {product: Product}) {
   const router = useRouter();
   const {modals, setProps} = useModalProduct()
   const modalActionProduct: any = modals.get(ModalProductType.Action);
+  const {setCurrentProduct} = productService()
   const onFocus = () => {
-    router.push('/updateProduct');
+    setCurrentProduct(product)
+    console.log(product.image)
+    router.push('/products/updateProduct');
   }
 
   const onLongPress = () => {
@@ -33,9 +31,13 @@ export default function CardProduct() {
       onPress={onFocus}
       onLongPress={onLongPress}
     >
-      <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} />
-      <Text style={{...styles.textCenter, ...styles.textBold}}>Hamburger</Text>
-      <Text style={styles.textCenter}>100.000</Text>
+      {_.isEmpty(product.image) 
+        ? <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} /> 
+        : <Image source={{uri: `${process.env.EXPO_PUBLIC_SERVER_HOST}/${product.image}`}} style={styles.image} />
+      }
+      
+      <Text style={{...styles.textCenter, ...styles.textBold}}>{product.name}</Text>
+      <Text style={styles.textCenter}>{convertPrice(product.price)}</Text>
     </TouchableOpacity>
   )
 }
@@ -54,11 +56,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    paddingBottom: 10, 
+    paddingBottom: 10,
+    width: 150
   },
   image: {
-    width: 100,
-    height: 100,
+    width: "100%",
+    height: 130,
     borderRadius: 5
   },
   textCenter: {

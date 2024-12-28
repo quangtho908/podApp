@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useRouter } from "expo-router";
 import orderService from "@/service/orders/orderStore";
-import { convertPrice } from "@/utils/converData";
+import { convertPrice } from "@/utils/convertData";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import * as _ from "lodash";
 import { useEffect, useState } from "react";

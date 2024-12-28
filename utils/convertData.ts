@@ -23,3 +23,15 @@ export function convertPrice(num: number) {
   }
   return num.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
 }
+
+export function convertImage(file: string) {
+  const fileName = file.split('/').pop();
+  const match = /\.(\w+)$/.exec(fileName || "");
+  const fileType = match ? `image/${match[1]}` : `image`;
+
+  return {
+    uri: file,
+    name: fileName,
+    type: fileType,
+  };
+}

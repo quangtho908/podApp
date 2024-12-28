@@ -55,6 +55,10 @@ export default function LeftSideDrawer(props: any) {
             <TabBarIcon name="receipt" color={orange[700]} />
             <Text style={{...styleText.sText}}>Quản lý bàn</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/(drawer)/menu")} style={styles.actionLink}>
+            <TabBarIcon name="fast-food" color={orange[700]} />
+            <Text style={{...styleText.sText}}>Quản lý thực đơn</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

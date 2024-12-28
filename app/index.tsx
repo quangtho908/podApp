@@ -20,6 +20,7 @@ export default function LoginScreen() {
 
   const checkLogin = async () => {
     const token = await AsyncStorage.getItem("token")
+    console.log(token)
     if((_.isEmpty(token))) {
       await AsyncStorage.clear();
       return
@@ -38,7 +39,7 @@ export default function LoginScreen() {
   }
 
   const handleSubmit = async () => {
-    const response = await postRequest("auth/login", {
+    const response = await postRequest("auth/u/login", {
       phoneNumber: username,
       password
     })

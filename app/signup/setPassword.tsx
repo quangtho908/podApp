@@ -26,7 +26,7 @@ export default function SetPasswordScreen() {
   const signupHandle = async () => {
     signup.password = password;
     setSignup(signup)
-    const response = await postRequest("auth/signup", signup)
+    const response = await postRequest("auth/u/signup", signup)
     console.log(response)
 
     if(response.status === 200) {
@@ -34,7 +34,6 @@ export default function SetPasswordScreen() {
       router.push("/pin/setup")
       return
     }
-    console.log((response as AxiosError).message)
   }
 
   return (

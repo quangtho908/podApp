@@ -1,16 +1,50 @@
+import { putRequest } from "@/apis/common";
 import ChooseIamge from "@/components/ChooseImage";
 import Input from "@/components/Input";
 import PrimaryButton from "@/components/PrimaryButton";
-import { View, StyleSheet } from "react-native";
+import merchantService from "@/service/merchant/merchantStore";
+import productService from "@/service/product/productsStore";
+import { useRouter } from "expo-router";
+import _ from "lodash";
+import { useState } from "react";
+import { View, StyleSheet, ScrollView } from "react-native";
 
 export default function updateProduct() {
+  const {currentProduct} = productService()
+  const {currentMerchant} = merchantService()
+  const [file, setFile] = useState("")
+  const [name, setName] = useState("")
+  const [price, setPrice] = useState("")
+  const router = useRouter();
+  const confirm = async () => {
+    const body = new FormData();
+    if(file === "delete") {
+      // delete image
+    }
+    if(!_.isEmpty(file)) {
+      const fileName = file.split('/').pop();
+      body.append("image", {name: fileName, uri: file, type: "image/*"} as any)
+    }
+    body.append("name", name || currentProduct.name);
+    body.append("price", price || currentProduct.price.toString())
+    body.append("merchantId", currentMerchant.toString())
+
+    const response = await putRequest(`products/${currentProduct.id}`, body, {
+      "Content-Type": "multipart/form-data"
+    })
+    if(response.status !== 200) {
+      return
+    }
+    router.back()
+  }
+
   return(
-    <View style={styles.container}>
-      <ChooseIamge />
-      <Input label="Tên sản phẩm" placeholder="Tên sản phẩm" />
-      <Input label="Giá" placeholder="Giá" />
-      <PrimaryButton title="Tạo món" />
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <ChooseIamge initFile={currentProduct.image} onChange={setFile} />
+      <Input label="Tên sản phẩm" placeholder={currentProduct.name} onChangeText={setName} />
+      <Input label="Giá" placeholder={currentProduct.price.toString()} onChangeText={setPrice} />
+      <PrimaryButton title="Cập nhật" onPress={confirm} />
+    </ScrollView>
   )
 }
 

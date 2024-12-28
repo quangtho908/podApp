@@ -4,14 +4,15 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useState } from "react";
 import setOrderService from "@/service/orders/setOrder";
 import * as _ from "lodash";
-import { convertPrice } from "@/utils/converData";
+import { convertPrice } from "@/utils/convertData";
 
 type CardProductOrderProp = {
   id: number,
   state?: boolean,
   name?: string,
   price?: number,
-  quantity: number
+  quantity: number,
+  image?: string
 }
 
 export default function CardProductOrder(props: CardProductOrderProp & {isEdit?: boolean}) {
@@ -94,8 +95,11 @@ export default function CardProductOrder(props: CardProductOrderProp & {isEdit?:
     <TouchableOpacity 
       style={{...styles.container, ...(cardForcus ? styles.containerActive : {})}}
       onPress={focusHandle}
-    >
-      <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} />
+    > 
+      {_.isEmpty(props.image) 
+        ? <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} /> 
+        : <Image source={{uri: `${process.env.EXPO_PUBLIC_SERVER_HOST}/${props.image}`}} style={styles.image} />
+      }
       <View style={{...styles.actionContainer, ...(!cardForcus ? styles.actionHide : {})}}>
         <View style={styles.countGroup}>
           <TouchableOpacity onPress={descrease}>

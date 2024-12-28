@@ -1,19 +1,24 @@
 import { white } from "@/constants/Pallete";
 import { Product } from "@/service/product/productsStore";
 import styleText from "@/styles/text";
-import { convertPrice } from "@/utils/converData";
+import { convertPrice } from "@/utils/convertData";
+import * as _ from "lodash";
 import { Image, StyleSheet, View, Text } from "react-native";
 type CardProductPaymentProp = {
   id: number,
   state?: boolean,
   name?: string,
   price?: number,
-  quantity: number
+  quantity: number,
+  image?: string
 }
 export default function CardProductPayment(props : CardProductPaymentProp) {
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require('@/assets/images/product-draw.jpg')}/>
+      {_.isEmpty(props.image) 
+        ? <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} /> 
+        : <Image source={{uri: `${process.env.EXPO_PUBLIC_SERVER_HOST}/${props.image}`}} style={styles.image} />
+      }
       <View style={styles.contentContainer}>
         <View style={{
           flexDirection: 'row', 
