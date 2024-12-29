@@ -1,5 +1,5 @@
 import { postRequest } from "@/apis/common";
-import ChooseIamge from "@/components/ChooseImage";
+import ChooseIamge from "@/components/common/ChooseImage";
 import Input from "@/components/Input";
 import PrimaryButton from "@/components/PrimaryButton";
 import merchantService from "@/service/merchant/merchantStore";

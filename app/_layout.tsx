@@ -9,6 +9,8 @@ import { useEffect} from 'react';
 import { AppState } from 'react-native';
 import 'react-native-reanimated';
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import Spinner from '@/components/common/Spinner';
+import useSpinner from '@/service/spinner';
 
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
@@ -17,7 +19,7 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
   const {setCurrentMerchant} = merchantService();
-
+  const {visible: visibleSpinner} = useSpinner()
   const setup = async () => {
     const cacheMerchant = await AsyncStorage.getItem("currentMerchant")
     if(_.toNumber(cacheMerchant)){
@@ -62,6 +64,7 @@ export default function RootLayout() {
           <Stack.Screen name="(drawer)" options={{ headerShown: false }}/>
           <Stack.Screen name="+not-found" />
         </Stack>
+      {visibleSpinner && <Spinner />} 
       </ThemeProvider>
   );
 }

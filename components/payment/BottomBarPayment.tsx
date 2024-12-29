@@ -1,7 +1,7 @@
 import { pictonBlue, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
-import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { useRouter } from "expo-router";
 import orderService from "@/service/orders/orderStore";
@@ -13,6 +13,7 @@ import React from "react";
 import { postRequest } from "@/apis/common";
 import { AxiosResponse } from "axios";
 import merchantService from "@/service/merchant/merchantStore";
+import ButtonCamera from "../camera/ButtonCamera";
 
 export default function BottomBarPayment () {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function BottomBarPayment () {
   const {currentBankAccount, resetCurrentBankAccount} = bankAccountService()
   const {currentMerchant} = merchantService()
   const [qr, setQr] = useState("")
+  const [uri, setUri] = useState("")
   useEffect(() => {
     genQr()
   }, [JSON.stringify(currentBankAccount)])
@@ -38,11 +40,13 @@ export default function BottomBarPayment () {
     setQr((response as AxiosResponse).data.qrDataURL)
   }
   const cash = async () => {
-    const response = await postRequest("orderPayments", {
-      orderId: currentOrder.id,
-      merchantId: currentMerchant,
-      price: currentOrder.totalPrice,
-      paymentMethod: "cash"
+    const data = new FormData()
+    data.append("orderId", currentOrder.id.toString())
+    data.append("merchantId", currentMerchant.toString())
+    data.append("price", currentOrder.totalPrice.toString())
+    data.append("paymentMethod", "CASH");
+    const response = await postRequest("orderPayments", data, {
+      "Content-Type": "multipart/form-data"
     })
     if(response.status !== 200) {
       return;
@@ -52,11 +56,17 @@ export default function BottomBarPayment () {
   }
 
   const bank = async () => {
-    const response = await postRequest("orderPayments", {
-      orderId: currentOrder.id,
-      merchantId: currentMerchant,
-      price: currentOrder.totalPrice,
-      paymentMethod: "bank"
+    const data = new FormData()
+    data.append("orderId", currentOrder.id.toString())
+    data.append("merchantId", currentMerchant.toString())
+    data.append("price", currentOrder.totalPrice.toString())
+    data.append("paymentMethod", "BANK");
+    if(!_.isEmpty(uri)) {
+      const fileName = uri.split('/').pop();
+      data.append("image", {name: fileName, uri, type: "image/*"} as any)
+    }
+    const response = await postRequest("orderPayments", data, {
+      "Content-Type": "multipart/form-data"
     })
     if(response.status !== 200) {
       return;
@@ -70,57 +80,56 @@ export default function BottomBarPayment () {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.titleContainer}>
-        <Text style={{...styleText.text}}>Bàn số 1</Text>
-        <Text style={{...styleText.text}}>
-          Tổng cộng: <Text style={{...color.textBlue500}}>{convertPrice(currentOrder.totalPrice)}</Text>
-        </Text>
-      </View>
-      <Text style={{
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        ...styleText.text
-      }}>THÔNG TIN THANH TOÁN</Text>
-      <TouchableOpacity style={styles.bankInfoContainer} onPress={() => router.push('/payments/selectBank')}>
-        {currentBankAccount.id > 0 && (
-          <>
-            <Image 
-              style={styles.bankImage}
-              source={{
-                uri: currentBankAccount.bank.logo
-              }} 
-            />
-            <Text>{currentBankAccount.accountName}</Text>
-            <TouchableOpacity onPress={removeBankAccount}>
-              <TabBarIcon name="close" />
-            </TouchableOpacity>
-          </>
-        )}
-        {currentBankAccount.id <= 0 && <Text style={{margin: "auto"}}>Chọn tài khoản thanh toán</Text>}
-      </TouchableOpacity>
-      {currentBankAccount.id > 0 && !_.isEmpty(qr) && (
-        <View style={{alignItems: 'center', gap: 10}}>
-          <Image 
-            style={styles.qr}
-            source={{uri: qr}}
-          />
-          <TouchableOpacity style={{...styles.action, backgroundColor: pictonBlue[800]}}>
-          <TabBarIcon name="camera" color={white[50]}/>
-          <Text style={{...styleText.text, ...color.textWhite50}}>Chụp hình</Text>
-        </TouchableOpacity>
+    <View>
+      <ScrollView style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={{...styleText.text}}>Bàn số 1</Text>
+          <Text style={{...styleText.text}}>
+            Tổng cộng: <Text style={{...color.textBlue500}}>{convertPrice(currentOrder.totalPrice)}</Text>
+          </Text>
         </View>
-      )}
-      <View style={styles.actionContainer}>
-        <TouchableOpacity style={{...styles.action, backgroundColor: pictonBlue[800]}} onPress={cash}>
-          <TabBarIcon name="wallet" color={white[50]}/>
-          <Text style={{...styleText.text, ...color.textWhite50}}>Tiền mặt</Text>
+        <Text style={{
+          paddingHorizontal: 20,
+          paddingVertical: 10,
+          ...styleText.text
+        }}>THÔNG TIN THANH TOÁN</Text>
+        <TouchableOpacity style={styles.bankInfoContainer} onPress={() => router.push('/payments/selectBank')}>
+          {currentBankAccount.id > 0 && (
+            <>
+              <Image 
+                style={styles.bankImage}
+                source={{
+                  uri: currentBankAccount.bank.logo
+                }} 
+              />
+              <Text>{currentBankAccount.accountName}</Text>
+              <TouchableOpacity onPress={removeBankAccount}>
+                <TabBarIcon name="close" />
+              </TouchableOpacity>
+            </>
+          )}
+          {currentBankAccount.id <= 0 && <Text style={{margin: "auto"}}>Chọn tài khoản thanh toán</Text>}
         </TouchableOpacity>
-        <TouchableOpacity style={{...styles.action, backgroundColor: (currentBankAccount.id > 0 ? pictonBlue[800] : white[300])}} onPress={bank} disabled={currentBankAccount.id <= 0}>
-          <TabBarIcon name="card" color={white[50]} />
-          <Text style={{...styleText.text, ...color.textWhite50}}>Chuyển khoản</Text>
-        </TouchableOpacity>
-      </View>
+        {currentBankAccount.id > 0 && !_.isEmpty(qr) && (
+          <View style={{alignItems: 'center', gap: 10}}>
+            <Image 
+              style={styles.qr}
+              source={{uri: qr}}
+            />
+            <ButtonCamera onChange={setUri} />
+          </View>
+        )}
+        <View style={styles.actionContainer}>
+          <TouchableOpacity style={{...styles.action, backgroundColor: pictonBlue[800]}} onPress={cash}>
+            <TabBarIcon name="wallet" color={white[50]}/>
+            <Text style={{...styleText.text, ...color.textWhite50}}>Tiền mặt</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{...styles.action, backgroundColor: (currentBankAccount.id > 0 ? pictonBlue[800] : white[300])}} onPress={bank} disabled={currentBankAccount.id <= 0}>
+            <TabBarIcon name="card" color={white[50]} />
+            <Text style={{...styleText.text, ...color.textWhite50}}>Chuyển khoản</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   )
 }
@@ -128,7 +137,7 @@ export default function BottomBarPayment () {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: white[50],
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 0,
     width: '100%',
     shadowColor: '#000',
@@ -166,7 +175,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 10,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    gap: 10,
   },
   action: {
     flexDirection: 'row',

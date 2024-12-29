@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { TabBarIcon } from "./navigation/TabBarIcon";
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { pictonBlue, red, white } from "@/constants/Pallete";
 import * as _ from "lodash";
 export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: string) => void, initFile?: string}) {
@@ -33,7 +33,7 @@ export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: str
   const removeImage = () => {
     setHaveInitFile(false)
     setFile("")
-    !_.isNil(onChange) && onChange("delete")
+    !_.isNil(onChange) && onChange("")
   }
   return (
     <View style={styles.container}>
@@ -51,7 +51,7 @@ export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: str
           <View style={styles.imageContainer}>
             {
               haveInitFile
-              ? <Image source={{uri: `${process.env.EXPO_PUBLIC_SERVER_HOST}/${initFile}`}} style={styles.image} />
+              ? <Image source={{uri: initFile}} style={styles.image} />
               : <Image source={require('@/assets/images/upload-placeholder.jpg')} style={styles.image} />
             }
           </View>

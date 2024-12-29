@@ -1,9 +1,11 @@
 import { putRequest } from "@/apis/common";
-import ChooseIamge from "@/components/ChooseImage";
+import ChooseIamge from "@/components/common/ChooseImage";
+import Spinner from "@/components/common/Spinner";
 import Input from "@/components/Input";
 import PrimaryButton from "@/components/PrimaryButton";
 import merchantService from "@/service/merchant/merchantStore";
 import productService from "@/service/product/productsStore";
+import useSpinner from "@/service/spinner";
 import { useRouter } from "expo-router";
 import _ from "lodash";
 import { useState } from "react";
@@ -15,12 +17,11 @@ export default function updateProduct() {
   const [file, setFile] = useState("")
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
+  const {setVisible: setSpinner} = useSpinner()
   const router = useRouter();
   const confirm = async () => {
+    setSpinner(true);
     const body = new FormData();
-    if(file === "delete") {
-      // delete image
-    }
     if(!_.isEmpty(file)) {
       const fileName = file.split('/').pop();
       body.append("image", {name: fileName, uri: file, type: "image/*"} as any)
@@ -28,13 +29,16 @@ export default function updateProduct() {
     body.append("name", name || currentProduct.name);
     body.append("price", price || currentProduct.price.toString())
     body.append("merchantId", currentMerchant.toString())
-
+    
     const response = await putRequest(`products/${currentProduct.id}`, body, {
       "Content-Type": "multipart/form-data"
     })
+
     if(response.status !== 200) {
+      setSpinner(false)
       return
     }
+    setSpinner(false)
     router.back()
   }
 

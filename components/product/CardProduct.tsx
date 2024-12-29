@@ -14,7 +14,6 @@ export default function CardProduct({product}: {product: Product}) {
   const {setCurrentProduct} = productService()
   const onFocus = () => {
     setCurrentProduct(product)
-    console.log(product.image)
     router.push('/products/updateProduct');
   }
 
@@ -33,7 +32,7 @@ export default function CardProduct({product}: {product: Product}) {
     >
       {_.isEmpty(product.image) 
         ? <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} /> 
-        : <Image source={{uri: `${process.env.EXPO_PUBLIC_SERVER_HOST}/${product.image}`}} style={styles.image} />
+        : <Image source={{uri: product.image}} style={styles.image} />
       }
       
       <Text style={{...styles.textCenter, ...styles.textBold}}>{product.name}</Text>

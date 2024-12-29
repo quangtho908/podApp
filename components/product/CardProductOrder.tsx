@@ -98,7 +98,7 @@ export default function CardProductOrder(props: CardProductOrderProp & {isEdit?:
     > 
       {_.isEmpty(props.image) 
         ? <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} /> 
-        : <Image source={{uri: `${process.env.EXPO_PUBLIC_SERVER_HOST}/${props.image}`}} style={styles.image} />
+        : <Image source={{uri: props.image}} style={styles.image} />
       }
       <View style={{...styles.actionContainer, ...(!cardForcus ? styles.actionHide : {})}}>
         <View style={styles.countGroup}>

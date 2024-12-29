@@ -27,7 +27,6 @@ export default function SetPasswordScreen() {
     signup.password = password;
     setSignup(signup)
     const response = await postRequest("auth/u/signup", signup)
-    console.log(response)
 
     if(response.status === 200) {
       AsyncStorage.setItem("token", (response as AxiosResponse).data.token);

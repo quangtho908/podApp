@@ -18,7 +18,7 @@ export default function InputPINScreen() {
     const pin = await AsyncStorage.getItem("pin")
     if(pin === value) {
       await AsyncStorage.setItem("verify_pin", "ok")
-      router.replace("/")
+      router.replace("/(drawer)/(tabs)/home")
       return
     }
   }

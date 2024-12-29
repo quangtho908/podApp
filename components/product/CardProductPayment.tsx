@@ -17,7 +17,7 @@ export default function CardProductPayment(props : CardProductPaymentProp) {
     <View style={styles.container}>
       {_.isEmpty(props.image) 
         ? <Image source={require("@/assets/images/product-draw.jpg")} style={styles.image} /> 
-        : <Image source={{uri: `${process.env.EXPO_PUBLIC_SERVER_HOST}/${props.image}`}} style={styles.image} />
+        : <Image source={{uri: props.image}} style={styles.image} />
       }
       <View style={styles.contentContainer}>
         <View style={{
