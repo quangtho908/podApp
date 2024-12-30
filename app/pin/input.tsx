@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { CodeField, Cursor, isLastFilledCell, MaskSymbol, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import _ from "lodash";
 
 export default function InputPINScreen() {
   const [value, setValue] = useState('');
@@ -16,11 +17,15 @@ export default function InputPINScreen() {
 
   const submitPin = async () => {
     const pin = await AsyncStorage.getItem("pin")
-    if(pin === value) {
-      await AsyncStorage.setItem("verify_pin", "ok")
-      router.replace("/(drawer)/(tabs)/home")
+    if(pin !== value) {
       return
     }
+    const currentMerchant = await AsyncStorage.getItem("currentMerchant")
+    if(_.isEmpty(currentMerchant)) {
+      router.replace("/merchant/chooseMerchant")
+      return;
+    }
+    router.replace("/(drawer)/(tabs)/home")
   }
 
   const renderCell = (

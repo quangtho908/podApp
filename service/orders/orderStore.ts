@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { getRequest } from "@/apis/common";
 import * as _ from "lodash";
 import { Table } from "../tables/tablesStore";
+import { AxiosResponse } from "axios";
 
 export type StatusOrder = "waiting" | "progress" | "done" | "canceled";
 
@@ -33,13 +34,15 @@ export interface InProgressOrder extends BaseModel {
 
 type State = {
   orders: InProgressOrder[]
-  currentOrder: InProgressOrder
+  currentOrder: InProgressOrder,
+  unauth: boolean
 }
 
 type Action = {
   filter: (params: FilterInProgressOrderParams) => void,
   setCurrentOrder: (order: InProgressOrder) => void,
-  resetCurrentOrder: () => void
+  resetCurrentOrder: () => void,
+  setUnauth: (state: boolean) => void
 }
 
 const initOrder: InProgressOrder = {
@@ -59,12 +62,19 @@ const initOrder: InProgressOrder = {
 const orderService = create<State & Action>((set) => ({
   orders: [],
   currentOrder: _.cloneDeep(initOrder),
+  unauth: false,
   filter: async (params: FilterInProgressOrderParams) => {
-    const orders = await getRequest<InProgressOrder[], FilterInProgressOrderParams>("orders", params)
-    return set({orders})
+    const response = await getRequest<FilterInProgressOrderParams>("orders", params)
+    if(response.status === 200) {
+      return set({orders: (response as AxiosResponse).data})
+    }else if(response.status === 401) {
+      return set({unauth: true})
+    }
+    return set({orders: []})
   },
   setCurrentOrder: (order: InProgressOrder) => set({currentOrder: order}),
-  resetCurrentOrder: () => set({currentOrder: _.cloneDeep(initOrder)})
+  resetCurrentOrder: () => set({currentOrder: _.cloneDeep(initOrder)}),
+  setUnauth: (unauth: boolean) => set({unauth})
 }))
 
 export default orderService;

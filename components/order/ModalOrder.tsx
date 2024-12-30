@@ -1,5 +1,5 @@
 import { pictonBlue, white } from "@/constants/Pallete";
-import { View,  StyleSheet, Button, TouchableOpacity, Text, Alert } from "react-native";
+import { View,  StyleSheet, TouchableOpacity, Text, Alert } from "react-native";
 import OrderTypeBtn from "./OrderTypeBtn";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import ModalChooseTable from "../table/ModalChooseTable";
@@ -12,9 +12,10 @@ import { useEffect, useState } from "react";
 import { getRequest, postRequest } from "@/apis/common";
 import { useNavigation, useRouter } from "expo-router";
 import { ResponseError } from "@/apis/model";
-import orderService, { InProgressOrder } from "@/service/orders/orderStore";
+import orderService from "@/service/orders/orderStore";
 import merchantService from "@/service/merchant/merchantStore";
 import { AxiosResponse } from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ModalOrder() {
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
@@ -22,7 +23,7 @@ export default function ModalOrder() {
   const {currentTable, order, update, destroy} = setOrderService()
   const [isError, setIsError] = useState(false)
   const [isTakeOut, setIsTakeOut] = useState(false)
-  const {filter, setCurrentOrder} = orderService();
+  const {setCurrentOrder} = orderService();
   const {currentMerchant} = merchantService()
   const [error, setError] = useState({
     title: "",
@@ -41,8 +42,10 @@ export default function ModalOrder() {
     if(response.status === 200) {
       destroy();
       navigation.goBack();
-      await filter({merchantId: currentMerchant})
       return;
+    }else if(response.status === 401) {
+      router.replace("/")
+      return
     }
     setIsError(true);
     setError({
@@ -56,17 +59,26 @@ export default function ModalOrder() {
     if(isTakeOut) order.isTakeOut = isTakeOut;
     update(order)
     const response = await postRequest("orders", order);
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
       return
     }
 
     const data = (response as AxiosResponse).data
-    const responseOrder = await getRequest<InProgressOrder, {}>("orders", {
+    const responseOrder = await getRequest<{}>("orders", {
       merchantId: currentMerchant,
       id: data.id
     })
+    if(responseOrder.status === 200) {
+      setCurrentOrder((responseOrder as AxiosResponse).data)
+    }else if(responseOrder.status === 401) {
+      await AsyncStorage.clear()
+      router.replace("/")
+      return;
+    }
 
-    setCurrentOrder(responseOrder)
     router.push("/payments")
     destroy();
     return;

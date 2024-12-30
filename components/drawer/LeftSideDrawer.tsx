@@ -6,7 +6,6 @@ import ItemStore from "../store/ItemStore";
 import { useEffect } from "react";
 import merchantService from "@/service/merchant/merchantStore";
 import * as _ from "lodash";
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import AddStoreBtn from "../store/AddStoreBtn";
 import { AvatarBtn } from "./AvatarBtn";
 import { TabBarIcon } from "../navigation/TabBarIcon";
@@ -14,15 +13,16 @@ import styleText from "@/styles/text";
 
 export default function LeftSideDrawer(props: any) {
   const router = useRouter();
-  const {filter, merchants} = merchantService()
+  const {filter, merchants, unauth, setUnauth} = merchantService()
   useEffect(() => {
     reloadMerchants()
   }, [JSON.stringify(merchants)])
   const reloadMerchants = async () => {
     await filter()
-    const currentMerchant = await AsyncStorage.getItem("currentMerchant")
-    if(_.isEmpty(merchants) && _.isEmpty(currentMerchant)) {
-      router.push("/merchant/createMerchant")
+    if(unauth) {
+      setUnauth(false)
+      router.replace("/")
+      return;
     }
   }
   return (
@@ -58,6 +58,10 @@ export default function LeftSideDrawer(props: any) {
           <TouchableOpacity onPress={() => router.push("/(drawer)/menu")} style={styles.actionLink}>
             <TabBarIcon name="fast-food" color={orange[700]} />
             <Text style={{...styleText.sText}}>Quản lý thực đơn</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/(drawer)/menu")} style={styles.actionLink}>
+            <TabBarIcon name="people" color={orange[700]} />
+            <Text style={{...styleText.sText}}>Quản lý nhân viên</Text>
           </TouchableOpacity>
         </View>
       </View>

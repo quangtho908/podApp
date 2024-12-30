@@ -14,12 +14,12 @@ import { StyleSheet, View } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter()
-  const {filter, orders} = orderService()
-  const {filter: filterProducs} = productService()
+  const {filter, orders, unauth: unauthOrder, setUnauth: setUnauthOrder} = orderService()
+  const {filter: filterProducs, unauth: unauthProduct, setUnauth: setUnauthProduct} = productService()
   const {currentMerchant} = merchantService()
   const [currentDate, setCurrentDate] = useState(new Date());
   useEffect(() => {
-    filterProducs({merchantId: currentMerchant})
+    loadProducts()
     filterByDate()
   }, [JSON.stringify(currentMerchant)])
 
@@ -27,15 +27,27 @@ export default function HomeScreen() {
     filterByDate()
   }, [currentDate, JSON.stringify(orders)])
   
-  const filterByDate = () => {
+  const loadProducts = async () => {
+    await filterProducs({merchantId: currentMerchant})
+    if(unauthProduct) {
+      setUnauthProduct(false)
+      router.replace("/")
+      return
+    }
+  }
+
+  const filterByDate = async () => {
     const date = moment(currentDate).startOf('day').toDate()
     const toDate = moment(date).add(1, 'day').toDate()
-    if(currentMerchant !== null) {
-      filter({
-        merchantId: currentMerchant,
-        fromDate: convertToDatePattern(date),
-        toDate: convertToDatePattern(toDate)
-      })
+    await filter({
+      merchantId: currentMerchant,
+      fromDate: convertToDatePattern(date),
+      toDate: convertToDatePattern(toDate)
+    })
+    if(unauthOrder) {
+      setUnauthOrder(false)
+      router.replace("/")
+      return
     }
   }
 

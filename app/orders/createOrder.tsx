@@ -6,21 +6,30 @@ import { useEffect } from "react";
 import productService from "@/service/product/productsStore";
 import merchantService from "@/service/merchant/merchantStore";
 import setOrderService from "@/service/orders/setOrder";
+import { useRouter } from "expo-router";
 
 export default function CreateOrderScreen() {
 
-  const {products, filter} = productService()
+  const {products, filter, unauth, setUnauth} = productService()
   const {currentMerchant} = merchantService()
   const {order, update} = setOrderService()
-
+  const router = useRouter();
   useEffect(() => { 
     if(currentMerchant !== null) {
       order.merchantId = currentMerchant;
       update(order);
-      filter({merchantId: currentMerchant})
+      reloadOrder()
     }
-
   }, [])
+
+  const reloadOrder = async () => {
+    await filter({merchantId: currentMerchant})
+    if(unauth) {
+      setUnauth(false)
+      router.replace("/")
+      return
+    }
+  }
 
   return(
     <View style={{flex: 1}}>

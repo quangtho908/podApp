@@ -1,17 +1,18 @@
 import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { deleteRequest, putRequest } from "@/apis/common";
-import tablesService from "@/service/tables/tablesStore";
 import merchantService from "@/service/merchant/merchantStore";
 import useModalBank from "./services/modalBank";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
+import { useRouter } from "expo-router";
 
 export default function ModalActionBankAccount() {
   const {setModal, setProps, modals} = useModalBank()
-  const {currentBankAccount, resetCurrentBankAccount, filter} = bankAccountService()
+  const {currentBankAccount, resetCurrentBankAccount} = bankAccountService()
   const {currentMerchant} = merchantService()
+  const router = useRouter()
   useEffect(()=> {
     setModal("actionAccountBank");
   }, [])
@@ -24,28 +25,33 @@ export default function ModalActionBankAccount() {
   }
 
   const onDelete = async () => {
+    setProps("actionAccountBank", {
+      visible: false
+    })
     if(currentMerchant === null) return;
     const response = await deleteRequest(`bankAccounts/${currentBankAccount.id}`, {
       merchantId: currentMerchant
     })
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
 
     }
     resetCurrentBankAccount()
-    setProps("actionAccountBank", {
-      visible: false
-    })
   }
 
   const onSetDefault = async () => {
-    const response = await putRequest(`bankAccounts/${currentBankAccount.id}?merchantId=${currentMerchant}`, {})
-    if(response.status !== 200) {
-
-    }
-    resetCurrentBankAccount()
     setProps("actionAccountBank", {
       visible: false
     })
+    const response = await putRequest(`bankAccounts/${currentBankAccount.id}?merchantId=${currentMerchant}`, {})
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
+    }
+    resetCurrentBankAccount()
   }
 
   return (

@@ -9,6 +9,7 @@ import tablesService from "@/service/tables/tablesStore";
 import setTableService from "@/service/tables/setTable";
 import merchantService from "@/service/merchant/merchantStore";
 import { putRequest } from "@/apis/common";
+import { useRouter } from "expo-router";
 
 export default function ModalEditTable() {
   const {setModal, setProps, modals} = useModalTable()
@@ -16,6 +17,7 @@ export default function ModalEditTable() {
   const {table, update, destroy} = setTableService()
   const {currentMerchant} = merchantService()
   const [name, setName] = useState(currentTable.name);
+  const router = useRouter()
   useEffect(() => {
     if(currentMerchant !== null) {
       setModal(ModalTableType.Edit);
@@ -38,7 +40,11 @@ export default function ModalEditTable() {
     table.name = name;
     update(table)
     const response = await putRequest(`tables/${currentTable.id}`, table)
-    if(response.status === 200) {
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
+      return
     }
 
     destroy()

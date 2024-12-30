@@ -1,4 +1,3 @@
-import authService from '@/service/auth/authStore';
 import merchantService from '@/service/merchant/merchantStore';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -11,10 +10,10 @@ import 'react-native-reanimated';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Spinner from '@/components/common/Spinner';
 import useSpinner from '@/service/spinner';
+import { addNotificationReceivedListener, getDevicePushTokenAsync, getExpoPushTokenAsync } from 'expo-notifications';
 
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
-  const {logout} = authService()
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -25,13 +24,17 @@ export default function RootLayout() {
     if(_.toNumber(cacheMerchant)){
       setCurrentMerchant(_.toNumber(cacheMerchant))
     }
+    console.log(await getDevicePushTokenAsync())
   }
 
   useEffect(() => {
-    if(logout) {
-      router.replace("/")
-    }
-  }, [logout])
+    const subscription = addNotificationReceivedListener(notification => {
+      // Xử lý khi nhận được thông báo
+      console.log(`Notification: ${notification.request.content.body}`);
+  });
+
+  return () => subscription.remove();
+  }, [])
 
   useEffect(() => {
     setup()

@@ -5,20 +5,24 @@ import ModalEditTable from "@/components/table/ModalEditTable"
 import TableItem from "@/components/table/TableItem"
 import merchantService from "@/service/merchant/merchantStore"
 import tablesService from "@/service/tables/tablesStore"
+import { useRouter } from "expo-router"
 import { useEffect } from "react"
 import { View, StyleSheet } from "react-native"
 
 export default function TableScreen() {
-  const {tables, filter} = tablesService()
+  const {tables, filter, unauth, setUnauth} = tablesService()
   const {currentMerchant} = merchantService();
-
+  const router = useRouter()
   useEffect(() => {
     reload()
   }, [])
 
-  const reload = () => {
-    if(currentMerchant !== null) {
-      filter({merchantId: currentMerchant})
+  const reload = async () => {
+    filter({merchantId: currentMerchant})
+    if(unauth) {
+      setUnauth(false)
+      router.replace("/")
+      return
     }
   }
 

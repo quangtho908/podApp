@@ -13,7 +13,7 @@ export function AvatarBtn() {
   const logout = async () => {
     await AsyncStorage.clear()
     setPopoverVisible(false)
-    router.push("/")
+    router.replace("/")
   }
 
   return (

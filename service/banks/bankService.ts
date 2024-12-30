@@ -1,6 +1,6 @@
 import { getRequest } from "@/apis/common";
 import { BaseModel } from "@/constants/BaseModel";
-import axios from "axios";
+import axios, { Axios, AxiosResponse } from "axios";
 import * as _ from "lodash";
 import { create } from "zustand";
 
@@ -17,14 +17,16 @@ export interface Bank extends BaseModel{
 
 type State = {
   banks: Bank[],
-  currentBank: Bank | null
+  currentBank: Bank | null,
+  unauth: boolean
 }
 
 type Action = {
   get: () => void,
   filter: (name: string) => void,
   setCurrentBank: (bank: Bank) => void,
-  resetCurrentBank: () => void
+  resetCurrentBank: () => void,
+  setUnauth: (state: boolean) => void
 }
 
 let initBanks: Bank[] = [];
@@ -32,12 +34,18 @@ let initBanks: Bank[] = [];
 const bankService = create<State & Action>(set => ({
   banks: [],
   currentBank: null,
+  unauth: false,
   get: async () => {
-    const response = await getRequest<Bank[], {}>("banks", {})
-    if(_.isEmpty(initBanks)) {
-      initBanks = response;
+    const response = await getRequest<{}>("banks/u", {})
+    if(response.status === 200) {
+      if(_.isEmpty(initBanks)) {
+        initBanks = (response as AxiosResponse).data;
+      }
+      return set({banks: (response as AxiosResponse).data})
+    }else if(response.status === 401) {
+      return set({unauth: true})
     }
-    return set({banks: response})
+    return set({banks: []})
   },
   filter: (name: string) => {
     const results = _.filter(_.cloneDeep(initBanks), (bank: Bank) => 
@@ -46,7 +54,8 @@ const bankService = create<State & Action>(set => ({
     return set({banks: results})
   },
   setCurrentBank: (bank: Bank) => set({currentBank: bank}),
-  resetCurrentBank: () => set({currentBank: null})
+  resetCurrentBank: () => set({currentBank: null}),
+  setUnauth: (unauth: boolean) => set({unauth})
 }))
 
 export default bankService;

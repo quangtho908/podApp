@@ -8,12 +8,14 @@ import { TextInput } from "react-native-gesture-handler";
 import setTableService from "@/service/tables/setTable";
 import merchantService from "@/service/merchant/merchantStore";
 import { postRequest } from "@/apis/common";
+import { useRouter } from "expo-router";
 
 export default function ModalCreateTable() {
   const {setModal, setProps, modals} = useModalTable()
   const [name, setName] = useState("")
   const {table, update, destroy} = setTableService()
   const {currentMerchant} = merchantService()
+  const router = useRouter()
   useEffect(() => {
     if(currentMerchant !== null) {
       setModal(ModalTableType.Create);
@@ -32,15 +34,18 @@ export default function ModalCreateTable() {
   const confirm = async () => {
     table.name = name
     update(table)
-    const response = await postRequest("tables", table)
-    if(response.status !== 201) {
-      return;
-    }
-    destroy()
     setProps(ModalTableType.Create, {
       table: modals.get(ModalTableType.Create)?.table,
       visible: false
     })
+    const response = await postRequest("tables", table)
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 201) {
+      return;
+    }
+    destroy()
   }
   
   return (

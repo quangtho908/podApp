@@ -9,7 +9,7 @@ import useSpinner from "@/service/spinner";
 import { useRouter } from "expo-router";
 import _ from "lodash";
 import { useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 
 export default function updateProduct() {
   const {currentProduct} = productService()
@@ -33,8 +33,11 @@ export default function updateProduct() {
     const response = await putRequest(`products/${currentProduct.id}`, body, {
       "Content-Type": "multipart/form-data"
     })
-
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      setSpinner(false)
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
       setSpinner(false)
       return
     }

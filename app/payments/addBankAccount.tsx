@@ -9,10 +9,10 @@ import { useEffect, useState } from "react";
 import useModalBank from "@/components/payment/services/modalBank";
 import ModalChooseBank from "@/components/payment/ModalChooseBank";
 import Input from "@/components/Input";
-import { getRequest, postRequest } from "@/apis/common";
+import { postRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
-import { AxiosResponse } from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AddBankAccount() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function AddBankAccount() {
   const [accountName, setAccountName] = useState("")
   const {setProps} = useModalBank()
   const {currentMerchant} = merchantService()
-  const {filter} = bankAccountService()
+  const {filter, unauth, setUnauth} = bankAccountService()
   useEffect(() => {
     get()
   }, [])
@@ -33,10 +33,18 @@ export default function AddBankAccount() {
       accountNumber,
       accountName
     })
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      router.replace("/")
+      return;
+    } else if(response.status !== 200) {
       return;
     }
     await filter(currentMerchant)
+    if(unauth) {
+      setUnauth(false)
+      router.replace("/")
+      return
+    }
     resetCurrentBank()
     router.back();
   }

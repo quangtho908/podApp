@@ -23,7 +23,7 @@ export default function SetupPINScreen() {
     if(value === initValue) {
       AsyncStorage.setItem("pin", value)
       AsyncStorage.setItem("verify_pin", "ok")
-      router.replace("/(drawer)/(tabs)/home");
+      router.replace("/merchant/chooseMerchant");
       return;
     }
     setValue("");

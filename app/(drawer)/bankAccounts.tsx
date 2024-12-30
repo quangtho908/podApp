@@ -7,23 +7,40 @@ import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import merchantService from "@/service/merchant/merchantStore";
 import BankAccountItem from "@/components/payment/BankAccountItem";
 import ModalActionBankAccount from "@/components/payment/ModalActionBankAccount";
+import { useRouter } from "expo-router";
 
-export default function BanlAccounts() {
+export default function BankAccounts() {
   const {get} = bankService()
   const {currentMerchant} = merchantService()
-  const {bankAccounts, filter, defaultAccount} = bankAccountService()
+  const {
+    bankAccounts,
+    filter,
+    defaultAccount,
+    unauth: unauthBankAccount,
+    setUnauth: setUnauthBankAccount
+  } = bankAccountService()
+  const router = useRouter();
   useEffect(() => {
     get()
-    filter(currentMerchant)
+    loadAccount()
   }, [])
 
   useEffect(() => {
-    filter(currentMerchant)
-  }, [JSON.stringify(bankAccounts)])
+    loadAccount()
+  }, [JSON.stringify(currentMerchant)])
+
+  const loadAccount = async () => {
+    await filter(currentMerchant)
+    if(unauthBankAccount) {
+      setUnauthBankAccount(false)
+      router.replace("/")
+      return;
+    }
+  }
 
   return (
     <View>
-      <ResetOnPullToRefresh reload={() => filter(currentMerchant)} contentContainerStyle={styles.container}>
+      <ResetOnPullToRefresh reload={loadAccount} contentContainerStyle={styles.container}>
         {defaultAccount.id > 0 && <BankAccountItem bankAccount={defaultAccount} />}
         {bankAccounts.map(bankAccount => !bankAccount.primary && <BankAccountItem bankAccount={bankAccount} key={bankAccount.id} />)}
       </ResetOnPullToRefresh>

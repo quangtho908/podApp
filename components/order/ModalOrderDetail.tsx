@@ -13,6 +13,7 @@ import { putRequest } from "@/apis/common";
 import { ResponseError } from "@/apis/model";
 import productService from "@/service/product/productsStore";
 import * as _ from "lodash";
+import { useRouter } from "expo-router";
 
 export default function ModalOrderDetail() {
   const visible = useModalOrderDetail(state => state.visible)
@@ -22,6 +23,7 @@ export default function ModalOrderDetail() {
   const {currentMerchant} = merchantService()
   const [isError, setIsError] = useState(false)
   const {products} = productService()
+  const router = useRouter()
   const [error, setError] = useState({
       title: "",
       message: "",
@@ -49,6 +51,9 @@ export default function ModalOrderDetail() {
     if(responseCreate.status === 200 || responseUpdate.status === 200) {
       destroy();
       resetCurrentOrder()
+      return;
+    }else if(responseCreate.status === 401 || responseUpdate.status == 401) {
+      router.replace("/")
       return;
     }
     setIsError(true);

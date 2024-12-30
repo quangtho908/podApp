@@ -8,19 +8,24 @@ import ChooseTableItem from "./ChooseTableItem";
 import { useEffect } from "react";
 import tablesService from "@/service/tables/tablesStore";
 import merchantService from "@/service/merchant/merchantStore";
+import { useRouter } from "expo-router";
 
 export default function ModalChooseTable() {
   const visible = useModalChooseTable(state => state.visible)
   const setVisible = useModalChooseTable(state => state.setVisible)
-  const {tables, filter} = tablesService()
+  const {tables, filter, unauth, setUnauth} = tablesService()
   const {currentMerchant} = merchantService()
+  const router = useRouter()
   useEffect(() => {
     reload()
   }, []);
 
-  const reload = () => {
-    if(currentMerchant !== null) {
-      filter({merchantId: currentMerchant})
+  const reload = async () => {
+    await filter({merchantId: currentMerchant})
+    if(unauth) {
+      setUnauth(false)
+      router.replace("/")
+      return
     }
   }
 

@@ -2,7 +2,6 @@ import { postRequest } from "@/apis/common";
 import PasswordField from "@/components/PasswordField";
 import PrimaryButton from "@/components/PrimaryButton";
 import { pictonBlue, white } from "@/constants/Pallete";
-import authService from "@/service/auth/authStore";
 import { AxiosResponse } from "axios";
 import { router } from "expo-router";
 import * as _ from "lodash";
@@ -13,14 +12,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 export default function LoginScreen() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("");
-  const {setLogout} = authService();
   useEffect(() => {
     checkLogin()
   }, [])
 
   const checkLogin = async () => {
     const token = await AsyncStorage.getItem("token")
-    console.log(token)
     if((_.isEmpty(token))) {
       await AsyncStorage.clear();
       return
@@ -35,7 +32,7 @@ export default function LoginScreen() {
       router.replace("/pin/input")
       return;
     }
-    router.push("/(drawer)/(tabs)/home")
+    router.replace("/merchant/chooseMerchant")
   }
 
   const handleSubmit = async () => {
@@ -47,7 +44,7 @@ export default function LoginScreen() {
       return
     }
     await AsyncStorage.setItem("token", (response as AxiosResponse).data.token)
-    setLogout(false)
+    await AsyncStorage.setItem("refreshToken", (response as AxiosResponse).data.refreshToken)
     const pin = await AsyncStorage.getItem("pin")
     if(!pin) {
       router.push("/pin/setup")

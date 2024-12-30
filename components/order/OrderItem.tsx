@@ -10,12 +10,12 @@ import orderService, { InProgressOrder } from "@/service/orders/orderStore";
 import { convertPrice, getDate, getTime } from "@/utils/convertData";
 import { postRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
-import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function OrderItem ({order}: {order: InProgressOrder}) {
   const setVisible = useModalOrderDetail(state => state.setVisible);
   const router = useRouter();
-  const {setCurrentOrder, filter} = orderService()
+  const {setCurrentOrder} = orderService()
   const {currentMerchant} = merchantService()
   const payment = () => {
     setCurrentOrder(order)
@@ -29,7 +29,9 @@ export default function OrderItem ({order}: {order: InProgressOrder}) {
     })
 
     if(response.status === 200){
-      await filter({merchantId: currentMerchant})
+      return
+    }else if(response.status === 401) {
+      router.replace("/")
       return
     }
   }

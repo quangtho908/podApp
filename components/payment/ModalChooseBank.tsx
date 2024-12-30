@@ -1,9 +1,7 @@
 import { white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
-import { Modal, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
-import { TabBarIcon } from "../navigation/TabBarIcon";
-import useModalConfirmPayment from "@/service/modalConfirmPayment";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useEffect } from "react";
 import useModalBank from "./services/modalBank";
 import bankService from "@/service/banks/bankService";

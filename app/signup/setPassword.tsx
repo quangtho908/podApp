@@ -32,6 +32,9 @@ export default function SetPasswordScreen() {
       AsyncStorage.setItem("token", (response as AxiosResponse).data.token);
       router.push("/pin/setup")
       return
+    }else if(response.status === 401) {
+      router.replace("/")
+      return
     }
   }
 

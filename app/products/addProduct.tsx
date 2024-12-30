@@ -3,6 +3,7 @@ import ChooseIamge from "@/components/common/ChooseImage";
 import Input from "@/components/Input";
 import PrimaryButton from "@/components/PrimaryButton";
 import merchantService from "@/service/merchant/merchantStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import * as _ from "lodash";
 import { useState } from "react";
@@ -26,8 +27,11 @@ export default function addProduct() {
     const response = await postRequest("products", body, {
       "Content-Type": "multipart/form-data"
     })
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      router.replace("/")
       return
+    }else if(response.status !== 200) {
+      return;
     }
     router.back()
   }

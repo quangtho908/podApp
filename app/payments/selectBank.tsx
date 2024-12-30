@@ -7,14 +7,24 @@ import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import _ from "lodash";
 import { useEffect } from "react";
 import merchantService from "@/service/merchant/merchantStore";
+import { useRouter } from "expo-router";
 
 export default function ModalSelectBank() {
-  const {bankAccounts, currentBankAccount, filter} = bankAccountService();
+  const {bankAccounts, currentBankAccount, filter, unauth, setUnauth} = bankAccountService();
   const {currentMerchant} = merchantService()
-
+  const router = useRouter()
   useEffect(() => {
-    filter(currentMerchant)
-  },)
+    reloadAccount()
+  },[])
+
+  const reloadAccount = async () => {
+    await filter(currentMerchant)
+    if(unauth) {
+      setUnauth(false)
+      router.replace("/")
+      return
+    }
+  }
 
   return (
     <View>

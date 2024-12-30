@@ -3,19 +3,26 @@ import ModalActionProduct from "@/components/product/ModalActionProduct";
 import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
 import merchantService from "@/service/merchant/merchantStore";
 import productService from "@/service/product/productsStore";
+import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
 export default function Menu() {
   const {currentMerchant} = merchantService()
-  const {products, filter} = productService()
-
+  const {products, filter, unauth, setUnauth} = productService()
+  const router = useRouter()
   useEffect(() => {
     reload()
   }, [JSON.stringify(products)])
 
   const reload = async () => {
+    
     await filter({merchantId: currentMerchant})
+    if(unauth) {
+      setUnauth(false)
+      router.replace("/")
+      return
+    }
   }
 
 

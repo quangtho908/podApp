@@ -14,10 +14,11 @@ import { postRequest } from "@/apis/common";
 import { AxiosResponse } from "axios";
 import merchantService from "@/service/merchant/merchantStore";
 import ButtonCamera from "../camera/ButtonCamera";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BottomBarPayment () {
   const router = useRouter();
-  const {currentOrder, filter} = orderService()
+  const {currentOrder} = orderService()
   const {currentBankAccount, resetCurrentBankAccount} = bankAccountService()
   const {currentMerchant} = merchantService()
   const [qr, setQr] = useState("")
@@ -27,15 +28,18 @@ export default function BottomBarPayment () {
   }, [JSON.stringify(currentBankAccount)])
   const genQr = async ( ) => {
     if(currentBankAccount.id <= 0) return
-    const response = await postRequest("banks/genQr", {
+    const response = await postRequest("banks/u/genQr", {
       acqId: currentBankAccount.bank.bin,
       accountNo: currentBankAccount.accountNumber,
       amount: currentOrder.totalPrice.toString(),
       description: `Thanh toán đơn hàng số ${currentOrder.id}`,
       accountName: currentBankAccount.accountName
     })
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      router.replace("/")
       return;
+    }else if(response.status !== 200) {
+      return
     }
     setQr((response as AxiosResponse).data.qrDataURL)
   }
@@ -48,10 +52,12 @@ export default function BottomBarPayment () {
     const response = await postRequest("orderPayments", data, {
       "Content-Type": "multipart/form-data"
     })
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
       return;
     }
-    await filter({merchantId: currentMerchant})
     router.push("/payments/paymentSuccess")
   }
 
@@ -68,10 +74,12 @@ export default function BottomBarPayment () {
     const response = await postRequest("orderPayments", data, {
       "Content-Type": "multipart/form-data"
     })
-    if(response.status !== 200) {
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
       return;
     }
-    await filter({merchantId: currentMerchant})
     router.push("/payments/paymentSuccess")
   }
 

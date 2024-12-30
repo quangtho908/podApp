@@ -4,22 +4,28 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import merchantService from "@/service/merchant/merchantStore";
 
 export default function MerchantSignupScreen() {
   const [name, setName] = useState("")
   const [address, setAddress] = useState("");
+  const {setCurrentMerchant} = merchantService()
   const router = useRouter();
   const submitHandle = async () => {
     const response = await postRequest("merchants", {
       name,
       address
     })
-    if(response.status !== 200) {
-      return;
-    }  
-    const data = (response as AxiosResponse).data;
-    AsyncStorage.setItem("currentMerchant", data.merchantId)
-    router.push('/(drawer)/(tabs)/home')
+    if(response.status === 200) {
+      const data = (response as AxiosResponse).data;
+      AsyncStorage.setItem("currentMerchant", data.merchantId)
+      setCurrentMerchant(data.merchantId)
+      router.replace('/(drawer)/(tabs)/home')
+      return
+    }else if(response.status === 401) {
+      router.replace("/")
+      return
+    }
   }
 
   return (

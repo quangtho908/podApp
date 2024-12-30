@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { deleteRequest } from "@/apis/common";
 import tablesService from "@/service/tables/tablesStore";
 import merchantService from "@/service/merchant/merchantStore";
+import { useRouter } from "expo-router";
 
 export default function ModalActionTable() {
   const {setModal, setProps, modals} = useModalTable()
   const {currentTable, resetCurrentTable} = tablesService()
   const {currentMerchant} = merchantService()
+  const router = useRouter()
   useEffect(()=> {
     setModal(ModalTableType.Action);
   }, [])
@@ -25,17 +27,20 @@ export default function ModalActionTable() {
 
   const onDelete = async () => {
     if(currentMerchant === null) return;
-    const response = await deleteRequest(`tables/${currentTable.id}`, {
-      merchantId: currentMerchant
-    })
-    if(response.status === 200) {
-
-    }
-    resetCurrentTable()
     setProps(ModalTableType.Action, {
       table: modals.get(ModalTableType.Action)?.table,
       visible: false
     })
+    const response = await deleteRequest(`tables/${currentTable.id}`, {
+      merchantId: currentMerchant
+    })
+    if(response.status === 401){
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
+
+    }
+    resetCurrentTable()
   }
 
   return (
