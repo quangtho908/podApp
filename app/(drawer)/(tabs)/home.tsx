@@ -7,7 +7,10 @@ import merchantService from '@/service/merchant/merchantStore';
 import orderService from '@/service/orders/orderStore';
 import productService from '@/service/product/productsStore';
 import { convertToDatePattern } from '@/utils/convertData';
+import { registerForPushNotificationsAsync } from '@/utils/registerNotifications';
+import { getDevicePushTokenAsync, getExpoPushTokenAsync } from 'expo-notifications';
 import { useRouter } from 'expo-router';
+import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -18,6 +21,11 @@ export default function HomeScreen() {
   const {filter: filterProducs, unauth: unauthProduct, setUnauth: setUnauthProduct} = productService()
   const {currentMerchant} = merchantService()
   const [currentDate, setCurrentDate] = useState(new Date());
+  useEffect(() => {
+    // if(!_.isEmpty(currentMerchant)) {
+      registerForPushNotificationsAsync("")
+    // }
+  }, [])
   useEffect(() => {
     loadProducts()
     filterByDate()

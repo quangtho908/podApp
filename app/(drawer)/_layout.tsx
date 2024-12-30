@@ -67,6 +67,20 @@ export default function DrawerLayout() {
             )
           }}
         />
+        <Drawer.Screen
+          name="employee"
+          options={{
+            title: "Quản lý nhân viên",
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => router.push("/staff/invite")}
+                style={{marginRight: 10}}
+              >
+                <TabBarIcon name="add" color={pictonBlue[800]} />
+              </TouchableOpacity>
+            )
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   )

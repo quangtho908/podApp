@@ -10,7 +10,7 @@ import 'react-native-reanimated';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Spinner from '@/components/common/Spinner';
 import useSpinner from '@/service/spinner';
-import { addNotificationReceivedListener, getDevicePushTokenAsync, getExpoPushTokenAsync } from 'expo-notifications';
+import ToastApp from '@/components/common/Toast';
 
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
@@ -24,17 +24,7 @@ export default function RootLayout() {
     if(_.toNumber(cacheMerchant)){
       setCurrentMerchant(_.toNumber(cacheMerchant))
     }
-    console.log(await getDevicePushTokenAsync())
   }
-
-  useEffect(() => {
-    const subscription = addNotificationReceivedListener(notification => {
-      // Xử lý khi nhận được thông báo
-      console.log(`Notification: ${notification.request.content.body}`);
-  });
-
-  return () => subscription.remove();
-  }, [])
 
   useEffect(() => {
     setup()
@@ -59,6 +49,7 @@ export default function RootLayout() {
         <Stack initialRouteName='index'>
           <Stack.Screen name="index" options={{headerShown: false}} />
           <Stack.Screen name='signup' options={{headerShown: false}} />
+          <Stack.Screen name='staff' options={{headerShown: false}} />
           <Stack.Screen name="payments" options={{headerShown: false}} />
           <Stack.Screen name="orders" options={{headerShown: false}} />
           <Stack.Screen name='pin' options={{headerShown: false}} />
@@ -68,6 +59,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
       {visibleSpinner && <Spinner />} 
+      <ToastApp />
       </ThemeProvider>
   );
 }
