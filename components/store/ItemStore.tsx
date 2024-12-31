@@ -3,10 +3,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import merchantService, { Merchant } from "@/service/merchant/merchantStore";
 import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { registerForPushNotificationsAsync } from "@/utils/registerNotifications";
+import { postRequest } from "@/apis/common";
+import { useRouter } from "expo-router";
+import useSpinner from "@/service/spinner";
+import Toast from "react-native-toast-message";
 
 export default function ItemStore({merchant}: {merchant: Merchant}) {
   const [choosed, setChoosed] = useState(false)
   const {currentMerchant, setCurrentMerchant} = merchantService();
+  const {setVisible} = useSpinner()
+
+  const router = useRouter();
   useEffect(() => {
     getMerchant()
   }, [currentMerchant])
@@ -15,9 +23,29 @@ export default function ItemStore({merchant}: {merchant: Merchant}) {
     setChoosed(currentMerchant !== null && currentMerchant === merchant.id)
   }
 
-  const chooseMerchant = () => {
-    AsyncStorage.setItem("currentMerchant", merchant.id.toString())
+  const chooseMerchant = async () => {
+    setVisible(true)
+    await AsyncStorage.setItem("currentMerchant", merchant.id.toString())
     setCurrentMerchant(merchant.id)
+    const token = await registerForPushNotificationsAsync()
+    const response = await postRequest("users/setMerchant", {
+      merchantId: merchant.id,
+      expoToken: token
+    })
+    if(response.status === 401) {
+      router.replace("/")
+      setVisible(false)
+      return;
+    }else if(response.status !== 200) {
+      setVisible(false)
+      Toast.show({
+        text1: "Đã xảy ra lỗi",
+        text2: "Bạn bị xoá khỏi cửa hàng hoặc cửa hàng đã đóng",
+        type: "error"
+      })
+      return
+    }
+    setVisible(false)
   }
 
   return (
