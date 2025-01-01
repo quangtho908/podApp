@@ -24,12 +24,13 @@ export default function HomeScreen() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
-    addNotificationReceivedListener(notification => {
+    const notiEvent = addNotificationReceivedListener(notification => {
       Toast.show({
         text1: notification.request.content.title || "Thông báo cửa hàng",
         text2: notification.request.content.body || "Cửa hàng có hoạt động mới"
       })
     })
+    return () => notiEvent.remove()
   }, [])
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     filterByDate()
-  }, [currentDate, JSON.stringify(orders)])
+  }, [currentDate])
   
   const loadProducts = async () => {
     await filterProducs({merchantId: currentMerchant})

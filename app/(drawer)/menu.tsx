@@ -13,7 +13,7 @@ export default function Menu() {
   const router = useRouter()
   useEffect(() => {
     reload()
-  }, [JSON.stringify(products)])
+  }, [JSON.stringify(currentMerchant)])
 
   const reload = async () => {
     

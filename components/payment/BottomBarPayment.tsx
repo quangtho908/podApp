@@ -15,6 +15,7 @@ import { AxiosResponse } from "axios";
 import merchantService from "@/service/merchant/merchantStore";
 import ButtonCamera from "../camera/ButtonCamera";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useSpinner from "@/service/spinner";
 
 export default function BottomBarPayment () {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function BottomBarPayment () {
   const {currentMerchant} = merchantService()
   const [qr, setQr] = useState("")
   const [uri, setUri] = useState("")
+  const {setVisible} = useSpinner()
   useEffect(() => {
     genQr()
   }, [JSON.stringify(currentBankAccount)])
@@ -44,6 +46,7 @@ export default function BottomBarPayment () {
     setQr((response as AxiosResponse).data.qrDataURL)
   }
   const cash = async () => {
+    setVisible(true)
     const data = new FormData()
     data.append("orderId", currentOrder.id.toString())
     data.append("merchantId", currentMerchant.toString())
@@ -53,15 +56,19 @@ export default function BottomBarPayment () {
       "Content-Type": "multipart/form-data"
     })
     if(response.status === 401) {
+      setVisible(false)
       router.replace("/")
       return
     }else if(response.status !== 200) {
+      setVisible(false)
       return;
     }
+    setVisible(false)
     router.push("/payments/paymentSuccess")
   }
 
   const bank = async () => {
+    setVisible(true)
     const data = new FormData()
     data.append("orderId", currentOrder.id.toString())
     data.append("merchantId", currentMerchant.toString())
@@ -75,11 +82,14 @@ export default function BottomBarPayment () {
       "Content-Type": "multipart/form-data"
     })
     if(response.status === 401) {
+      setVisible(false)
       router.replace("/")
       return
     }else if(response.status !== 200) {
+      setVisible(false)
       return;
     }
+    setVisible(false)
     router.push("/payments/paymentSuccess")
   }
 

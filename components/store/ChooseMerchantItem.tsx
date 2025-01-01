@@ -4,6 +4,7 @@ import merchantService, { Merchant } from "@/service/merchant/merchantStore";
 import useSpinner from "@/service/spinner";
 import { registerForPushNotificationsAsync } from "@/utils/registerNotifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AxiosResponse } from "axios";
 import { useRouter } from "expo-router";
 import { Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import Toast from "react-native-toast-message";
@@ -35,7 +36,10 @@ export default function ChooseMerchantItem ({merchant}: {merchant: Merchant}) {
       })
       return
     }
+    
     setVisible(false)
+    const data = (response as AxiosResponse).data
+    await AsyncStorage.setItem("role", data.role)
     router.replace("/(drawer)/(tabs)/home")
   }
   return (

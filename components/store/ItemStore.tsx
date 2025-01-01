@@ -8,6 +8,7 @@ import { postRequest } from "@/apis/common";
 import { useRouter } from "expo-router";
 import useSpinner from "@/service/spinner";
 import Toast from "react-native-toast-message";
+import { AxiosResponse } from "axios";
 
 export default function ItemStore({merchant}: {merchant: Merchant}) {
   const [choosed, setChoosed] = useState(false)
@@ -45,6 +46,8 @@ export default function ItemStore({merchant}: {merchant: Merchant}) {
       })
       return
     }
+    const data = (response as AxiosResponse).data
+    await AsyncStorage.setItem("role", data.role)
     setVisible(false)
   }
 

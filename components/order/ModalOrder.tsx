@@ -16,6 +16,7 @@ import orderService from "@/service/orders/orderStore";
 import merchantService from "@/service/merchant/merchantStore";
 import { AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import useSpinner from "@/service/spinner";
 
 export default function ModalOrder() {
   const setModalChooseTable = useModalChooseTable(state => state.setVisible)
@@ -31,22 +32,27 @@ export default function ModalOrder() {
   })
   const navigation = useNavigation();
   const router = useRouter()
+  const {setVisible} = useSpinner()
   const onNoteChange = (newText: string) => {
     setNote(newText)
   }
 
   const placeTable = async () => {
+    setVisible(true)
     order.note = note;
     update(order)
     const response = await postRequest("orders", order);
     if(response.status === 200) {
       destroy();
       navigation.goBack();
+      setVisible(false)
       return;
     }else if(response.status === 401) {
+      setVisible(false)
       router.replace("/")
       return
     }
+    setVisible(false)
     setIsError(true);
     setError({
       title: "Lỗi tạo đơn hàng",
@@ -55,14 +61,17 @@ export default function ModalOrder() {
   }
 
   const payments = async () => {
+    setVisible(true)
     order.note = note;
     if(isTakeOut) order.isTakeOut = isTakeOut;
     update(order)
     const response = await postRequest("orders", order);
     if(response.status === 401) {
+      setVisible(false)
       router.replace("/")
       return
     }else if(response.status !== 200) {
+      setVisible(false)
       return
     }
 
@@ -75,10 +84,11 @@ export default function ModalOrder() {
       setCurrentOrder((responseOrder as AxiosResponse).data)
     }else if(responseOrder.status === 401) {
       await AsyncStorage.clear()
+      setVisible(false)
       router.replace("/")
       return;
     }
-
+    setVisible(false)
     router.push("/payments")
     destroy();
     return;
