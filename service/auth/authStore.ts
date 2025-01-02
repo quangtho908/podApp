@@ -1,16 +1,16 @@
 import { create } from "zustand"
 
 type State = {
-  logout: boolean
+  role: string
 }
 
 type Action = {
-  setLogout: (state: boolean) => void
+  setRole: (state: string) => void
 }
 
 const authService = create<State & Action>(set => ({
-  logout: false,
-  setLogout: (state: boolean) => set({logout: state})
+  role: "",
+  setRole: (state: string) => set({role: state})
 }))
 
 export default authService;

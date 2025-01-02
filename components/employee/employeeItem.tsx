@@ -1,10 +1,22 @@
 import { white } from "@/constants/Pallete";
-import { Employee } from "@/service/employee/employee";
+import authService from "@/service/auth/authStore";
+import employeesService, { Employee } from "@/service/employee/employee";
+import useModal from "@/service/modal/modal";
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 
 export default function EmployeeItem ({employee}: {employee: Employee}) {
+  const {setProps} = useModal()
+  const {setCurrentEmployee} = employeesService()
+  const {role} = authService()
+  const onPress = () => {
+    setCurrentEmployee(employee)
+    setProps("employee_action", {
+      visible: true
+    })
+  }
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress} disabled={employee.role === "OWNER" || role !== "OWNER"}>
       <View style={{flex: 1}}>
         <Text>{employee.phoneNumber}</Text>
         <Text>{employee.email}</Text>

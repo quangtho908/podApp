@@ -9,6 +9,7 @@ export interface EmployeeFilterParams extends BaseDTO {
 }
 
 export interface Employee extends BaseModel {
+  id: number,
   phoneNumber: string,
   email: string,
   role: string
@@ -27,6 +28,7 @@ type Action = {
   setUnauth: (state: boolean) => void
 }
 const initCurrentEmployee: Employee = {
+  id: 0,
   phoneNumber: "",
   email: "",
   role: ""

@@ -3,20 +3,28 @@ import { orange, pictonBlue, white } from "@/constants/Pallete";
 import { Link, useRouter } from "expo-router";
 import ResetOnPullToRefresh from "../ResetOnPullRequest";
 import ItemStore from "../store/ItemStore";
-import { useEffect } from "react";
+import { JSX, useEffect } from "react";
 import merchantService from "@/service/merchant/merchantStore";
 import * as _ from "lodash";
 import AddStoreBtn from "../store/AddStoreBtn";
 import { AvatarBtn } from "./AvatarBtn";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import styleText from "@/styles/text";
+import authService from "@/service/auth/authStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function LeftSideDrawer(props: any) {
+export default function LeftSideDrawer() {
   const router = useRouter();
-  const {filter, merchants, unauth, setUnauth} = merchantService()
+  const {filter, merchants, unauth, setUnauth, currentMerchant} = merchantService()
+  const {role, setRole} = authService()
   useEffect(() => {
     reloadMerchants()
-  }, [JSON.stringify(merchants)])
+  }, [])
+
+  useEffect(() => {
+    loadMenu()
+  }, [JSON.stringify(currentMerchant)])
+
   const reloadMerchants = async () => {
     await filter()
     if(unauth) {
@@ -25,12 +33,32 @@ export default function LeftSideDrawer(props: any) {
       return;
     }
   }
+
+  const loadMenu = async () => {
+    const role = await AsyncStorage.getItem("role")
+    if(!_.isEmpty(role)) {
+      setRole(role || "STAFF")
+    }
+  }
+
+  const renderMerchant = () => {
+    const current: JSX.Element[] = []
+    const list = merchants.map((merchant) => {
+      if(merchant.id === currentMerchant) {
+        current.push(<ItemStore merchant={merchant} key={merchant.id} />)
+        return
+      }
+      return <ItemStore merchant={merchant} key={merchant.id} />
+    })
+    return [...current, ...list]
+  }
+
   return (
     <View style={{ flex: 1, flexDirection: 'row' }}>
       <View style={{flex: 2, backgroundColor: white[100]}}>
         <AddStoreBtn />
         <ResetOnPullToRefresh reload={reloadMerchants}>
-          {merchants.map((merchant) => <ItemStore merchant={merchant} key={merchant.id} />)}
+          {renderMerchant()}
         </ResetOnPullToRefresh>
         <AvatarBtn />
       </View>
@@ -47,10 +75,12 @@ export default function LeftSideDrawer(props: any) {
             <TabBarIcon name="home" color={orange[700]} />
             <Text style={{...styleText.sText}}>Trang chủ</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/(drawer)/bankAccounts")} style={styles.actionLink}>
-            <TabBarIcon name="card" color={orange[700]} />
-            <Text style={{...styleText.sText}}>Quản lý thanh toán</Text>
-          </TouchableOpacity>
+          {role === "OWNER" && (
+            <TouchableOpacity onPress={() => router.push("/(drawer)/bankAccounts")} style={styles.actionLink}>
+              <TabBarIcon name="card" color={orange[700]} />
+              <Text style={{...styleText.sText}}>Quản lý thanh toán</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={() => router.push("/(drawer)/table")} style={styles.actionLink}>
             <TabBarIcon name="receipt" color={orange[700]} />
             <Text style={{...styleText.sText}}>Quản lý bàn</Text>

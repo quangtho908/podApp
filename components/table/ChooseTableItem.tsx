@@ -1,8 +1,9 @@
-import { pictonBlue, white } from "@/constants/Pallete";
+import { pictonBlue, transparent, white } from "@/constants/Pallete";
 import useModalChooseTable from "@/service/modalChooseTable";
 import setOrderService from "@/service/orders/setOrder";
+import color from "@/styles/color";
 import { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type ChooseTableItemProps = {
   id: number,
@@ -23,12 +24,18 @@ export default function ChooseTableItem(props: ChooseTableItemProps) {
 
   return (
     <TouchableOpacity 
-      style={{...styles.container, ...(cardForcus ? styles.containerActive : {})}}
+      style={{
+        ...styles.container, 
+        ...(cardForcus ? styles.containerActive : {})
+      }}
       onPress={onFocus}
       disabled={props.isUsed}
     >
       <Image style={styles.image} source={require('@/assets/images/table_draw.jpg')} />
       <Text>{props.name}</Text>
+      {props.isUsed && (<View style={styles.isUsed}>
+        <Text style={{textAlign: "center", ...color.textWhite50}}>Đang sử dụng</Text>
+      </View>)}
     </TouchableOpacity>
   )
 }
@@ -56,5 +63,14 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 10,
+  },
+  isUsed: {
+    backgroundColor: transparent[50],
+    width: "100%",
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
+    borderRadius: 10
   }
 })

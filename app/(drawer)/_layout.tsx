@@ -6,11 +6,13 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import useModalTable, { ModalTableType } from "@/components/table/services/modalTable";
 import { useRouter } from "expo-router";
 import { pictonBlue } from "@/constants/Pallete";
+import authService from "@/service/auth/authStore";
 
 export default function DrawerLayout() {
   const {setProps, modals} = useModalTable()
   const modalCreateTable: any = modals.get(ModalTableType.Create);
   const router = useRouter();
+  const {role} = authService()
   const onAddTable = () => {
     setProps(ModalTableType.Create, {
       ...modalCreateTable,
@@ -71,7 +73,7 @@ export default function DrawerLayout() {
           name="employee"
           options={{
             title: "Quản lý nhân viên",
-            headerRight: () => (
+            headerRight: () => ( role === "OWNER" &&
               <TouchableOpacity
                 onPress={() => router.push("/staff/invite")}
                 style={{marginRight: 10}}

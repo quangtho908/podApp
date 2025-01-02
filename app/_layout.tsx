@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import Spinner from '@/components/common/Spinner';
 import useSpinner from '@/service/spinner';
 import ToastApp from '@/components/common/Toast';
+import authService from '@/service/auth/authStore';
 
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
@@ -18,7 +19,7 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
   const {setCurrentMerchant} = merchantService();
-  const {visible: visibleSpinner} = useSpinner()
+  const {visible: visibleSpinner} = useSpinner();
   const setup = async () => {
     const cacheMerchant = await AsyncStorage.getItem("currentMerchant")
     if(_.toNumber(cacheMerchant)){

@@ -27,7 +27,6 @@ export default function ItemStore({merchant}: {merchant: Merchant}) {
   const chooseMerchant = async () => {
     setVisible(true)
     await AsyncStorage.setItem("currentMerchant", merchant.id.toString())
-    setCurrentMerchant(merchant.id)
     const token = await registerForPushNotificationsAsync()
     const response = await postRequest("users/setMerchant", {
       merchantId: merchant.id,
@@ -49,6 +48,8 @@ export default function ItemStore({merchant}: {merchant: Merchant}) {
     const data = (response as AxiosResponse).data
     await AsyncStorage.setItem("role", data.role)
     setVisible(false)
+    setCurrentMerchant(merchant.id)
+    router.replace("/(drawer)/(tabs)/home")
   }
 
   return (
