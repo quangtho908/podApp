@@ -1,16 +1,14 @@
 import { white } from "@/constants/Pallete";
 import bankService, { Bank } from "@/service/banks/bankService";
-import styleText from "@/styles/text";
-import { useRouter } from "expo-router";
-import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
-import useModalBank from "./services/modalBank";
+import { StyleSheet, TouchableOpacity, Image, Text } from "react-native";
+import useModal from "@/service/modal/modal";
 
 export default function BankItem({bank}: {bank: Bank}) {
   const {setCurrentBank} = bankService()
-  const {setProps} = useModalBank()
+  const {setVisible} = useModal()
   const onChoose = () => {
     setCurrentBank(bank)
-    setProps("chooseBank", {visible: false})
+    setVisible("choose_bank", false)
   }
 
   return (

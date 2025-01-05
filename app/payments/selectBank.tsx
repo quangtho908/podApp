@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import styleText from "@/styles/text";
 import { white } from "@/constants/Pallete";
 import BankSelectItem from "@/components/payment/BankSelectItem";
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
+import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import _ from "lodash";
 import { useEffect } from "react";

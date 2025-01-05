@@ -1,6 +1,6 @@
 import { postRequest } from "@/apis/common";
-import Input from "@/components/Input";
-import PrimaryButton from "@/components/PrimaryButton";
+import Input from "@/components/common/Input";
+import PrimaryButton from "@/components/common/PrimaryButton";
 import merchantService from "@/service/merchant/merchantStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";

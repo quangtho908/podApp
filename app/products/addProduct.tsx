@@ -1,7 +1,7 @@
 import { postRequest } from "@/apis/common";
 import ChooseIamge from "@/components/common/ChooseImage";
-import Input from "@/components/Input";
-import PrimaryButton from "@/components/PrimaryButton";
+import Input from "@/components/common/Input";
+import PrimaryButton from "@/components/common/PrimaryButton";
 import merchantService from "@/service/merchant/merchantStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";

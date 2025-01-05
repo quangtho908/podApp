@@ -1,5 +1,5 @@
 import { postRequest } from "@/apis/common";
-import PasswordField from "@/components/PasswordField";
+import PasswordField from "@/components/common/PasswordField";
 import signupService from "@/service/auth/signup";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AxiosError, AxiosResponse } from "axios";

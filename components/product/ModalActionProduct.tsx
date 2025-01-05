@@ -1,25 +1,21 @@
 import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useEffect, useState } from "react";
-import useModalProduct, { ModalProductType } from "./services/modalProduct";
+import useModal from "@/service/modal/modal";
+import productService from "@/service/product/productsStore";
 
 export default function ModalActionProduct() {
-  const {setModal, setProps, modals} = useModalProduct()
-  useEffect(()=> {
-    setModal(ModalProductType.Action);
-  }, [])
+  const {setVisible, modals} = useModal()
+  const {resetCurrentProduct} = productService()
 
   const cancel = () => {
-    setProps(ModalProductType.Action, {
-      product: modals.get(ModalProductType.Action)?.product,
-      visible: false
-    })
+    setVisible("action_product", false)
+    resetCurrentProduct()
   }
 
   return (
     <Modal
-      visible={modals.get(ModalProductType.Action)?.visible}
+      visible={modals.get("action_product")?.visible || false}
       animationType="fade"
       onRequestClose={cancel}
       transparent={true}

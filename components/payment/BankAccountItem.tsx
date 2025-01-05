@@ -4,15 +4,15 @@ import bankService from "@/service/banks/bankService";
 import styleText from "@/styles/text";
 import * as _ from "lodash";
 import { StyleSheet, TouchableOpacity, Image, Text, View } from "react-native";
-import useModalBank from "./services/modalBank";
 import color from "@/styles/color";
+import useModal from "@/service/modal/modal";
 
 export default function BankAccountItem({bankAccount}: {bankAccount: BankAccount}) {
-  const {setProps} = useModalBank()
+  const {setVisible} = useModal()
   const {setCurrentBankAccount} = bankAccountService()
   const onChoose = () => {
     setCurrentBankAccount(bankAccount)
-    setProps("actionAccountBank", {visible: true})
+    setVisible("action_account_bank", true)
   }
 
   return (

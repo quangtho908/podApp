@@ -5,9 +5,8 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import ModalChooseTable from "../table/ModalChooseTable";
 import styleText from "@/styles/text";
 import color from "@/styles/color";
-import useModalChooseTable from "@/service/modalChooseTable";
 import setOrderService from "@/service/orders/setOrder";
-import Input from "../Input";
+import Input from "../common/Input";
 import { useEffect, useState } from "react";
 import { getRequest, postRequest } from "@/apis/common";
 import { useNavigation, useRouter } from "expo-router";
@@ -17,9 +16,10 @@ import merchantService from "@/service/merchant/merchantStore";
 import { AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useSpinner from "@/service/spinner";
+import useModal from "@/service/modal/modal";
 
 export default function ModalOrder() {
-  const setModalChooseTable = useModalChooseTable(state => state.setVisible)
+  const {setVisible: modalChooseTableVisible} = useModal()
   const [note, setNote] = useState("")
   const {currentTable, order, update, destroy} = setOrderService()
   const [isError, setIsError] = useState(false)
@@ -109,7 +109,7 @@ export default function ModalOrder() {
       <Text>{currentTable == null ? "Chưa chọn bàn" : currentTable.name}</Text>
       <View style={styles.options}>
         <OrderTypeBtn onChange={setIsTakeOut} />
-        <TouchableOpacity disabled={order.isTakeOut} onPress={() => setModalChooseTable(true)}>
+        <TouchableOpacity disabled={order.isTakeOut} onPress={() => modalChooseTableVisible("choose_table", true)}>
           <Text style={{...styleText.text, ...(order.isTakeOut ? color.textWhite500 : color.textBlue500)}}>Chọn bàn</Text>
         </TouchableOpacity>
       </View>

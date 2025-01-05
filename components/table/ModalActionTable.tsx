@@ -1,36 +1,26 @@
 import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import useModalTable, { ModalTableType } from "./services/modalTable";
-import { useEffect, useState } from "react";
 import { deleteRequest } from "@/apis/common";
 import tablesService from "@/service/tables/tablesStore";
 import merchantService from "@/service/merchant/merchantStore";
 import { useRouter } from "expo-router";
+import useModal from "@/service/modal/modal";
 
 export default function ModalActionTable() {
-  const {setModal, setProps, modals} = useModalTable()
+  const {modals, setVisible} = useModal()
   const {currentTable, resetCurrentTable} = tablesService()
   const {currentMerchant} = merchantService()
   const router = useRouter()
-  useEffect(()=> {
-    setModal(ModalTableType.Action);
-  }, [])
 
   const cancel = () => {
     resetCurrentTable()
-    setProps(ModalTableType.Action, {
-      table: modals.get(ModalTableType.Action)?.table,
-      visible: false
-    })
+    setVisible("action_table", false)
   }
 
   const onDelete = async () => {
     if(currentMerchant === null) return;
-    setProps(ModalTableType.Action, {
-      table: modals.get(ModalTableType.Action)?.table,
-      visible: false
-    })
+    setVisible("action_table", false)
     const response = await deleteRequest(`tables/${currentTable.id}`, {
       merchantId: currentMerchant
     })
@@ -45,7 +35,7 @@ export default function ModalActionTable() {
 
   return (
     <Modal
-      visible={modals.get(ModalTableType.Action)?.visible}
+      visible={modals.get("action_table")?.visible || false}
       animationType="fade"
       onRequestClose={cancel}
       transparent={true}

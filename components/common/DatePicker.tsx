@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import InputIcon from "../InputIcon";
+import InputIcon from "./InputIcon";
 import { getDate } from "@/utils/convertData";
 import { useState } from "react";
 import RNDateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";

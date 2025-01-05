@@ -3,28 +3,25 @@ import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useEffect } from "react";
-import useModalBank from "./services/modalBank";
 import bankService from "@/service/banks/bankService";
 import BankItem from "./BankItem";
-import ResetOnPullToRefresh from "../ResetOnPullRequest";
-import Input from "../Input";
+import ResetOnPullToRefresh from "../common/ResetOnPullRequest";
+import Input from "../common/Input";
+import useModal from "@/service/modal/modal";
 
 export default function ModalChooseBank() {
-  const {setModal, setProps, modals} = useModalBank()
+  const {setVisible, modals} = useModal()
   const {banks, get, filter} = bankService()
   useEffect(() => {
-    setModal("chooseBank")
     get()
   }, [])
 
   const cancel = () => {
-    setProps("chooseBank", {visible: false})
+    setVisible("choose_bank", false)
   }
 
   return (
-    <Modal
-      visible={modals.get("chooseBank")?.visible}
-    >
+    <Modal visible={modals.get("choose_bank")?.visible || false}>
       <View style={{...styles.title}}>
         <Text style={{...styleText.textTitle}}>Chọn bàn</Text>
         <TouchableOpacity onPress={cancel}>

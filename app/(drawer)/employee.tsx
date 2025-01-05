@@ -1,6 +1,6 @@
 import EmployeeItem from "@/components/employee/employeeItem";
 import ModalActionEmployee from "@/components/employee/ModalActionEmployee";
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
+import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest";
 import employeesService from "@/service/employee/employee";
 import merchantService from "@/service/merchant/merchantStore";
 import { useRouter } from "expo-router";

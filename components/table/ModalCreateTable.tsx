@@ -2,42 +2,35 @@ import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import useModalTable, {ModalTableType} from "./services/modalTable";
 import { useEffect, useState} from "react";
 import { TextInput } from "react-native-gesture-handler";
 import setTableService from "@/service/tables/setTable";
 import merchantService from "@/service/merchant/merchantStore";
 import { postRequest } from "@/apis/common";
 import { useRouter } from "expo-router";
+import useModal from "@/service/modal/modal";
 
 export default function ModalCreateTable() {
-  const {setModal, setProps, modals} = useModalTable()
+  const {modals, setVisible} = useModal()
   const [name, setName] = useState("")
   const {table, update, destroy} = setTableService()
   const {currentMerchant} = merchantService()
   const router = useRouter()
   useEffect(() => {
     if(currentMerchant !== null) {
-      setModal(ModalTableType.Create);
       table.merchantId = currentMerchant;
       update(table)
     }
   }, [])
 
   const cancel = () => {
-    setProps(ModalTableType.Create, {
-      table: modals.get(ModalTableType.Create)?.table,
-      visible: false
-    })
+    setVisible("create_table", false)
   }
 
   const confirm = async () => {
     table.name = name
     update(table)
-    setProps(ModalTableType.Create, {
-      table: modals.get(ModalTableType.Create)?.table,
-      visible: false
-    })
+    setVisible("create_table", false)
     const response = await postRequest("tables", table)
     if(response.status === 401) {
       router.replace("/")
@@ -51,7 +44,7 @@ export default function ModalCreateTable() {
   return (
     <Modal
       animationType="fade"
-      visible={modals.get(ModalTableType.Create)?.visible}
+      visible={modals.get("create_table")?.visible || false}
       transparent={true}
       onRequestClose={cancel}
     >

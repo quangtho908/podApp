@@ -1,7 +1,7 @@
 import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { orange, pictonBlue, white } from "@/constants/Pallete";
 import { Link, useRouter } from "expo-router";
-import ResetOnPullToRefresh from "../ResetOnPullRequest";
+import ResetOnPullToRefresh from "../common/ResetOnPullRequest";
 import ItemStore from "../store/ItemStore";
 import { JSX, useEffect } from "react";
 import merchantService from "@/service/merchant/merchantStore";

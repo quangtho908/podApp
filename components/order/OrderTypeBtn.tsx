@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import SwitchBtn from "../SwitchBtn";
+import SwitchBtn from "../common/SwitchBtn";
 import setOrderService from "@/service/orders/setOrder";
 
 export default function OrderTypeBtn({onChange}: {onChange: (value: boolean) => void}) {

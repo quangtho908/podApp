@@ -1,6 +1,6 @@
 import { postRequest } from "@/apis/common";
-import PasswordField from "@/components/PasswordField";
-import PrimaryButton from "@/components/PrimaryButton";
+import PasswordField from "@/components/common/PasswordField";
+import PrimaryButton from "@/components/common/PrimaryButton";
 import { pictonBlue, white } from "@/constants/Pallete";
 import { AxiosResponse } from "axios";
 import { router } from "expo-router";

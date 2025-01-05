@@ -4,16 +4,15 @@ import styleText from "@/styles/text";
 import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TabBarIcon } from "../navigation/TabBarIcon";
-import useModalOrderDetail from "@/service/modalOrderDetail";
 import { useRouter } from "expo-router";
 import orderService, { InProgressOrder } from "@/service/orders/orderStore";
 import { convertPrice, getDate, getTime } from "@/utils/convertData";
 import { postRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useModal from "@/service/modal/modal";
 
 export default function OrderItem ({order}: {order: InProgressOrder}) {
-  const setVisible = useModalOrderDetail(state => state.setVisible);
+  const {setVisible} = useModal()
   const router = useRouter();
   const {setCurrentOrder} = orderService()
   const {currentMerchant} = merchantService()
@@ -37,7 +36,7 @@ export default function OrderItem ({order}: {order: InProgressOrder}) {
   }
 
   const select = () => {
-    setVisible(true)
+    setVisible('order_detail',true)
     setCurrentOrder(order)
   }
 

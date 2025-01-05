@@ -14,7 +14,6 @@ import { postRequest } from "@/apis/common";
 import { AxiosResponse } from "axios";
 import merchantService from "@/service/merchant/merchantStore";
 import ButtonCamera from "../camera/ButtonCamera";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import useSpinner from "@/service/spinner";
 
 export default function BottomBarPayment () {

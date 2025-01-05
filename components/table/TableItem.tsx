@@ -1,17 +1,15 @@
 import { white } from "@/constants/Pallete";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
-import useModalTable, { ModalTableType } from "./services/modalTable";
 import tablesService, { Table } from "@/service/tables/tablesStore";
+import useModal from "@/service/modal/modal";
 
 export default function TableItem({table}: {table: Table}) {
-  const {setProps, modals} = useModalTable()
-  const modalAction: any = modals.get(ModalTableType.Action);
-  const editAction: any = modals.get(ModalTableType.Edit);
+  const {modals, setVisible} = useModal()
   const {setCurrentTable} = tablesService()
 
   const onFocus = () => {
     setCurrentTable(table)
-    setProps(ModalTableType.Edit, {...editAction, visible: true})
+    setVisible("edit_table", true)
   }
 
   const onLongPress = () => {
@@ -19,7 +17,7 @@ export default function TableItem({table}: {table: Table}) {
       return;
     }
     setCurrentTable(table)
-    setProps(ModalTableType.Action, {...modalAction, visible: true})
+    setVisible("action_table", true)
   }
 
   return (

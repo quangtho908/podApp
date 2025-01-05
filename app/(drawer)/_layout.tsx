@@ -3,21 +3,17 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {Drawer} from "expo-router/drawer"
 import { TouchableOpacity } from "react-native";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import useModalTable, { ModalTableType } from "@/components/table/services/modalTable";
 import { useRouter } from "expo-router";
 import { pictonBlue } from "@/constants/Pallete";
 import authService from "@/service/auth/authStore";
+import useModal from "@/service/modal/modal";
 
 export default function DrawerLayout() {
-  const {setProps, modals} = useModalTable()
-  const modalCreateTable: any = modals.get(ModalTableType.Create);
+  const {setVisible} = useModal()
   const router = useRouter();
   const {role} = authService()
   const onAddTable = () => {
-    setProps(ModalTableType.Create, {
-      ...modalCreateTable,
-      visible: true
-    })
+    setVisible("create_table", true)
   }
 
   return (

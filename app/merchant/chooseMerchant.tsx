@@ -1,5 +1,5 @@
-import PrimaryButton from "@/components/PrimaryButton";
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
+import PrimaryButton from "@/components/common/PrimaryButton";
+import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest";
 import ChooseMerchantItem from "@/components/store/ChooseMerchantItem";
 import merchantService from "@/service/merchant/merchantStore";
 import { useRouter } from "expo-router";

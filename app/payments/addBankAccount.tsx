@@ -1,25 +1,21 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image, Button } from "react-native";
-import styleText from "@/styles/text";
 import { useRouter } from "expo-router";
 import { white } from "@/constants/Pallete";
-import BankSelectItem from "@/components/payment/BankSelectItem";
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
 import bankService from "@/service/banks/bankService";
 import { useEffect, useState } from "react";
-import useModalBank from "@/components/payment/services/modalBank";
 import ModalChooseBank from "@/components/payment/ModalChooseBank";
-import Input from "@/components/Input";
+import Input from "@/components/common/Input";
 import { postRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import useModal from "@/service/modal/modal";
 
 export default function AddBankAccount() {
   const router = useRouter();
   const {get, currentBank, resetCurrentBank} = bankService()
   const [accountNumber, setAccountNumber] = useState("") 
   const [accountName, setAccountName] = useState("")
-  const {setProps} = useModalBank()
+  const {setVisible} = useModal()
   const {currentMerchant} = merchantService()
   const {filter, unauth, setUnauth} = bankAccountService()
   useEffect(() => {
@@ -68,7 +64,7 @@ export default function AddBankAccount() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.selectionBanks} onPress={() => setProps("chooseBank", {visible: true})}>
+      <TouchableOpacity style={styles.selectionBanks} onPress={() => setVisible("choose_bank", true)}>
         {currentBank !== null && <Image style={styles.bankImage} source={{uri: currentBank.logo}} />}
         <Text>{currentBank !== null ? currentBank.shortName : "Chọn ngân hàng"}</Text>
       </TouchableOpacity>

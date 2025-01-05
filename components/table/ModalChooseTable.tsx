@@ -2,17 +2,16 @@ import { white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import ResetOnPullToRefresh from "../ResetOnPullRequest";
-import useModalChooseTable from "@/service/modalChooseTable";
+import ResetOnPullToRefresh from "../common/ResetOnPullRequest";
 import ChooseTableItem from "./ChooseTableItem";
 import { useEffect } from "react";
 import tablesService from "@/service/tables/tablesStore";
 import merchantService from "@/service/merchant/merchantStore";
 import { useRouter } from "expo-router";
+import useModal from "@/service/modal/modal";
 
 export default function ModalChooseTable() {
-  const visible = useModalChooseTable(state => state.visible)
-  const setVisible = useModalChooseTable(state => state.setVisible)
+  const {setVisible, modals} = useModal()
   const {tables, filter, unauth, setUnauth} = tablesService()
   const {currentMerchant} = merchantService()
   const router = useRouter()
@@ -32,11 +31,11 @@ export default function ModalChooseTable() {
   return (
     <Modal
       animationType="slide"
-      visible={visible}
+      visible={modals.get("choose_table")?.visible || false}
     >
       <View style={{...styles.title}}>
         <Text style={{...styleText.textTitle}}>Chọn bàn</Text>
-        <TouchableOpacity onPress={() => setVisible(false)}>
+        <TouchableOpacity onPress={() => setVisible("choose_table",false)}>
           <Text style={{...styleText.text, ...color.textBlue500}}>Huỷ</Text>
         </TouchableOpacity>
       </View>

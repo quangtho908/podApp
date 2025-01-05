@@ -57,6 +57,7 @@ export default function RootLayout() {
           <Stack.Screen name="merchant" options={{ headerShown: false }}/>
           <Stack.Screen name="products" options={{ headerShown: false }}/>
           <Stack.Screen name="(drawer)" options={{ headerShown: false }}/>
+          <Stack.Screen name="orderPayments" options={{ headerShown: false }}/>
           <Stack.Screen name="+not-found" />
         </Stack>
       {visibleSpinner && <Spinner />} 

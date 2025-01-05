@@ -1,6 +1,6 @@
 import CardProduct from "@/components/product/CardProduct";
 import ModalActionProduct from "@/components/product/ModalActionProduct";
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
+import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest";
 import merchantService from "@/service/merchant/merchantStore";
 import productService from "@/service/product/productsStore";
 import { useRouter } from "expo-router";

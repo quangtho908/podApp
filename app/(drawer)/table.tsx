@@ -1,4 +1,4 @@
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest"
+import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest"
 import ModalActionTable from "@/components/table/ModalActionTable"
 import ModalCreateTable from "@/components/table/ModalCreateTable"
 import ModalEditTable from "@/components/table/ModalEditTable"

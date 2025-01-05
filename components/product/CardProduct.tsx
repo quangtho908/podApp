@@ -1,16 +1,15 @@
 import { white } from "@/constants/Pallete";
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import useModalProduct, { ModalProductType } from "./services/modalProduct";
 import productService, { Product } from "@/service/product/productsStore";
 import { convertPrice } from "@/utils/convertData";
 import _ from "lodash";
+import useModal from "@/service/modal/modal";
 
 
 export default function CardProduct({product}: {product: Product}) {
   const router = useRouter();
-  const {modals, setProps} = useModalProduct()
-  const modalActionProduct: any = modals.get(ModalProductType.Action);
+  const {setVisible} = useModal()
   const {setCurrentProduct} = productService()
   const onFocus = () => {
     setCurrentProduct(product)
@@ -18,10 +17,8 @@ export default function CardProduct({product}: {product: Product}) {
   }
 
   const onLongPress = () => {
-    setProps(ModalProductType.Action, {
-      ...modalActionProduct,
-      visible: true
-    })
+    setVisible("action_product", true)
+    setCurrentProduct(product)
   }
 
   return (

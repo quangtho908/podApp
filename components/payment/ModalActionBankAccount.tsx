@@ -1,33 +1,25 @@
 import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useEffect } from "react";
 import { deleteRequest, putRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
-import useModalBank from "./services/modalBank";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import { useRouter } from "expo-router";
+import useModal from "@/service/modal/modal";
 
 export default function ModalActionBankAccount() {
-  const {setModal, setProps, modals} = useModalBank()
+  const {setVisible, modals} = useModal()
   const {currentBankAccount, resetCurrentBankAccount} = bankAccountService()
   const {currentMerchant} = merchantService()
   const router = useRouter()
-  useEffect(()=> {
-    setModal("actionAccountBank");
-  }, [])
 
   const cancel = () => {
     resetCurrentBankAccount()
-    setProps("actionAccountBank", {
-      visible: false
-    })
+    setVisible("action_account_bank", false)
   }
 
   const onDelete = async () => {
-    setProps("actionAccountBank", {
-      visible: false
-    })
+    setVisible("action_account_bank", false)
     if(currentMerchant === null) return;
     const response = await deleteRequest(`bankAccounts/${currentBankAccount.id}`, {
       merchantId: currentMerchant
@@ -42,9 +34,7 @@ export default function ModalActionBankAccount() {
   }
 
   const onSetDefault = async () => {
-    setProps("actionAccountBank", {
-      visible: false
-    })
+    setVisible("action_account_bank", false)
     const response = await putRequest(`bankAccounts/${currentBankAccount.id}?merchantId=${currentMerchant}`, {})
     if(response.status === 401) {
       router.replace("/")
@@ -56,7 +46,7 @@ export default function ModalActionBankAccount() {
 
   return (
     <Modal
-      visible={modals.get("actionAccountBank")?.visible}
+      visible={modals.get("action_account_bank")?.visible || false}
       animationType="fade"
       onRequestClose={cancel}
       transparent={true}

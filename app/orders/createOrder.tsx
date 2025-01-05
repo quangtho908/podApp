@@ -1,6 +1,6 @@
 import CardProductOrder from "@/components/product/CardProductOrder";
 import ModalOrder from "@/components/order/ModalOrder";
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
+import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest";
 import { View, StyleSheet } from "react-native";
 import { useEffect } from "react";
 import productService from "@/service/product/productsStore";

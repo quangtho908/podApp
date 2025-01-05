@@ -1,6 +1,6 @@
 import BottomBarPayment from "@/components/payment/BottomBarPayment";
 import CardProductPayment from "@/components/product/CardProductPayment";
-import ResetOnPullToRefresh from "@/components/ResetOnPullRequest";
+import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest";
 import orderService from "@/service/orders/orderStore";
 import { StyleSheet, View } from "react-native";
 

@@ -2,7 +2,6 @@ import { transparent, white } from "@/constants/Pallete";
 import color from "@/styles/color";
 import styleText from "@/styles/text";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import useModalTable, {ModalTableType} from "./services/modalTable";
 import { useEffect, useState} from "react";
 import { TextInput } from "react-native-gesture-handler";
 import tablesService from "@/service/tables/tablesStore";
@@ -10,9 +9,11 @@ import setTableService from "@/service/tables/setTable";
 import merchantService from "@/service/merchant/merchantStore";
 import { putRequest } from "@/apis/common";
 import { useRouter } from "expo-router";
+import useModal from "@/service/modal/modal";
+import Toast from "react-native-toast-message";
 
 export default function ModalEditTable() {
-  const {setModal, setProps, modals} = useModalTable()
+  const {modals, setVisible} = useModal()
   const {currentTable, resetCurrentTable} = tablesService()
   const {table, update, destroy} = setTableService()
   const {currentMerchant} = merchantService()
@@ -20,20 +21,16 @@ export default function ModalEditTable() {
   const router = useRouter()
   useEffect(() => {
     if(currentMerchant !== null) {
-      setModal(ModalTableType.Edit);
       table.merchantId = currentMerchant;
       table.name = table.name;
       update(table)
     }
-  }, [])
+  }, [JSON.stringify(currentTable)])
 
   const cancel = () => {
     destroy()
     resetCurrentTable()
-    setProps(ModalTableType.Edit, {
-      table: modals.get(ModalTableType.Edit)?.table,
-      visible: false
-    })
+    setVisible("edit_table", false)
   }
 
   const confirm = async () => {
@@ -44,21 +41,23 @@ export default function ModalEditTable() {
       router.replace("/")
       return
     }else if(response.status !== 200) {
+      Toast.show({
+        type: "error",
+        text1: "Không thể chỉnh sử bàn",
+        text2: "Bàn đã bị xoá"
+      })
       return
     }
 
     destroy()
     resetCurrentTable()
-    setProps(ModalTableType.Edit, {
-      table: modals.get(ModalTableType.Edit)?.table,
-      visible: false
-    })
+    setVisible("edit_table", false)
   }
   
   return (
     <Modal
       animationType="fade"
-      visible={modals.get(ModalTableType.Edit)?.visible}
+      visible={modals.get("edit_table")?.visible || false}
       transparent={true}
       onRequestClose={cancel}
     >
