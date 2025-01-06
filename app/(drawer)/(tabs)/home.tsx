@@ -10,11 +10,13 @@ import { convertToDatePattern } from '@/utils/convertData';
 import { registerForPushNotificationsAsync } from '@/utils/registerNotifications';
 import { addNotificationReceivedListener, getDevicePushTokenAsync, getExpoPushTokenAsync } from 'expo-notifications';
 import { useRouter } from 'expo-router';
-import _ from 'lodash';
+import _, { times } from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+import notiService from '@/service/notifications/notificationStore';
+import { notiColor } from '@/utils/notiColor';
 
 export default function HomeScreen() {
   const router = useRouter()
@@ -22,12 +24,22 @@ export default function HomeScreen() {
   const {filter: filterProducs, unauth: unauthProduct, setUnauth: setUnauthProduct} = productService()
   const {currentMerchant} = merchantService()
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const {put} = notiService();
   useEffect(() => {
     const notiEvent = addNotificationReceivedListener(notification => {
+      if(_.isEmpty(notification.request.content.title) || _.isEmpty(notification.request.content.body)) {
+        return
+      }
       Toast.show({
         text1: notification.request.content.title || "Thông báo cửa hàng",
         text2: notification.request.content.body || "Cửa hàng có hoạt động mới"
+      })
+      put({
+        id: notification.request.identifier,
+        title: notification.request.content.title || "Thông báo cửa hàng",
+        body: notification.request.content.body || "Cửa hàng có hoạt động mới",
+        createdAt: new Date(),
+        type: notification.request.content.data.type || "default"
       })
     })
     return () => notiEvent.remove()

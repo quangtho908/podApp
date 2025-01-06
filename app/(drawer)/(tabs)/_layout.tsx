@@ -5,6 +5,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Tabs, useNavigation } from 'expo-router';
 import HeaderButton from '@/components/HeaderButton';
 import { NavigationProp } from '@react-navigation/native';
+import NotificationBtn from '@/components/notifications/NotificationBtn';
 
 export default function BottomNavigation() {
   const colorScheme = useColorScheme();
@@ -19,6 +20,7 @@ export default function BottomNavigation() {
         headerTitle: '',
         title: 'Danh sách đơn',
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'home' : 'home-outline'} />,
+        headerRight: () => <NotificationBtn />
       }}/>
 
       <Tabs.Screen name='history' options={{

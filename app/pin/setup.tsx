@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView, View, StyleSheet, Text, Button } from "react-native";
 import { CodeField, Cursor, isLastFilledCell, MaskSymbol, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
+import Toast from "react-native-toast-message";
 
 export default function SetupPINScreen() {
   const [value, setValue] = useState('');
@@ -28,6 +29,11 @@ export default function SetupPINScreen() {
     }
     setValue("");
     setVerifing(false)
+    Toast.show({
+      type: "error",
+      text1: "Xác thực mã pin sai",
+      text2: "Tạo lại mã pin từ đầu"
+    })
     setTitle("Tạo mã PIN")
   }
   const renderCell = (

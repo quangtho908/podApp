@@ -20,7 +20,7 @@ export default function PaymentLayout() {
   }
   const cancelAddBankAccount = () => {
     resetCurrentBank()
-    router.back()
+    router.replace("/(drawer)/(tabs)/home")
   }
 
   return (

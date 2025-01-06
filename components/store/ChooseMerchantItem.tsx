@@ -20,7 +20,7 @@ export default function ChooseMerchantItem ({merchant}: {merchant: Merchant}) {
     setCurrentMerchant(merchant.id)
     const token = await registerForPushNotificationsAsync()
     const response = await postRequest("users/setMerchant", {
-      merchantId: currentMerchant,
+      merchantId: merchant.id,
       expoToken: token
     })
     if(response.status === 401) {

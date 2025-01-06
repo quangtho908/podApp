@@ -23,9 +23,9 @@ export default function ChooseMerchant () {
     }
   }
   return (
-    <View>
+    <View style={styles.container}>
       <PrimaryButton title="Tạo merchant mới" onPress={() => router.push("/merchant/createMerchant")} />
-      <ResetOnPullToRefresh contentContainerStyle={styles.container}>
+      <ResetOnPullToRefresh contentContainerStyle={{gap: 10}}>
         {merchants.map(merchant => <ChooseMerchantItem merchant={merchant} key={merchant.id} />)}
       </ResetOnPullToRefresh>
     </View>

@@ -8,6 +8,7 @@ import * as _ from "lodash";
 import React, { useEffect, useState } from "react"
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import Toast from "react-native-toast-message";
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("")
@@ -21,6 +22,12 @@ export default function LoginScreen() {
     if((_.isEmpty(token))) {
       await AsyncStorage.clear();
       return
+    }
+    const active = await AsyncStorage.getItem("active")
+    if(_.isEmpty(active)) {
+      await postRequest("users/reqVerify", {verifyAction: "activeAccount"})
+      router.push("/signup/verifyMail")
+      return;
     }
     const pin = await AsyncStorage.getItem("pin")
     if(!pin) {
@@ -41,10 +48,23 @@ export default function LoginScreen() {
       password
     })
     if(response.status !== 200) {
+      Toast.show({
+        type: "error",
+        text1: "Lỗi đăng nhập",
+        text2: "Số điện thoại hoặc mật khẩu sai"
+      })
       return
     }
-    await AsyncStorage.setItem("token", (response as AxiosResponse).data.token)
-    await AsyncStorage.setItem("refreshToken", (response as AxiosResponse).data.refreshToken)
+    const data = (response as AxiosResponse).data;
+    await AsyncStorage.setItem("token", data.token)
+    await AsyncStorage.setItem("refreshToken", data.refreshToken)
+    await AsyncStorage.setItem("active", data.active ? "ok" : "");
+    const active = await AsyncStorage.getItem("active")
+    if(_.isEmpty(active)) {
+      await postRequest("users/reqVerify", {verifyAction: "activeAccount"})
+      router.push("/signup/verifyMail")
+      return;
+    }
     const pin = await AsyncStorage.getItem("pin")
     if(!pin) {
       router.push("/pin/setup")

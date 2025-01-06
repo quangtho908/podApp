@@ -18,7 +18,7 @@ export default function MerchantSignupScreen() {
     })
     if(response.status === 200) {
       const data = (response as AxiosResponse).data;
-      AsyncStorage.setItem("currentMerchant", data.merchantId)
+      AsyncStorage.setItem("currentMerchant", data.merchantId.toString())
       setCurrentMerchant(data.merchantId)
       router.replace('/(drawer)/(tabs)/home')
       return

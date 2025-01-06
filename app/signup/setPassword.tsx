@@ -27,10 +27,13 @@ export default function SetPasswordScreen() {
     signup.password = password;
     setSignup(signup)
     const response = await postRequest("auth/u/signup", signup)
-
+    setPassword("")
     if(response.status === 200) {
-      AsyncStorage.setItem("token", (response as AxiosResponse).data.token);
-      router.push("/pin/setup")
+      const data = (response as AxiosResponse).data
+      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("refreshToken", data.refreshToken)
+      await postRequest("users/reqVerify", {verifyAction: "activeAccount"})
+      router.push("/signup/verifyMail")
       return
     }else if(response.status === 401) {
       router.replace("/")

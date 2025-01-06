@@ -5,6 +5,7 @@ import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { CodeField, Cursor, isLastFilledCell, MaskSymbol, useBlurOnFulfill, useClearByFocusCell } from "react-native-confirmation-code-field";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import _ from "lodash";
+import Toast from "react-native-toast-message";
 
 export default function InputPINScreen() {
   const [value, setValue] = useState('');
@@ -18,6 +19,12 @@ export default function InputPINScreen() {
   const submitPin = async () => {
     const pin = await AsyncStorage.getItem("pin")
     if(pin !== value) {
+      setValue("")
+      Toast.show({
+        type: "error",
+        text1: "Mã pin sai",
+        text2: "Vui lòng thử lại"
+      })
       return
     }
     const currentMerchant = await AsyncStorage.getItem("currentMerchant")
