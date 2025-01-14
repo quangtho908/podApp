@@ -16,6 +16,11 @@ export function AvatarBtn() {
     router.replace("/")
   }
 
+  const routeToSetting = () => {
+    setPopoverVisible(false)
+    router.push("/(drawer)/userSetting")
+  }
+
   return (
       <Popover
         placement={Placement.TOP}
@@ -27,7 +32,7 @@ export function AvatarBtn() {
           </TouchableOpacity>
         )}
       >
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={routeToSetting}>
           <TabBarIcon name="settings" color={white[500]} />
           <Text>Cài đặt</Text>
         </TouchableOpacity>

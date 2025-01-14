@@ -79,6 +79,9 @@ export default function DrawerLayout() {
             )
           }}
         />
+        <Drawer.Screen
+          name="userSetting"
+        />
       </Drawer>
     </GestureHandlerRootView>
   )

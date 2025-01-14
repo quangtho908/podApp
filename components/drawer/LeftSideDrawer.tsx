@@ -93,6 +93,10 @@ export default function LeftSideDrawer() {
             <TabBarIcon name="people" color={orange[700]} />
             <Text style={{...styleText.sText}}>Quản lý nhân viên</Text>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/changePassword")} style={styles.actionLink}>
+            <TabBarIcon name="people" color={orange[700]} />
+            <Text style={{...styleText.sText}}>Quản lý nhân viên</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

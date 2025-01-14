@@ -9,10 +9,12 @@ import React, { useEffect, useState } from "react"
 import { View, Text, StyleSheet, TextInput, Pressable } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Toast from "react-native-toast-message";
+import verifyService from "@/service/auth/verifyStore";
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("");
+  const {setVerify} = verifyService()
   useEffect(() => {
     checkLogin()
   }, [])
@@ -26,6 +28,7 @@ export default function LoginScreen() {
     const active = await AsyncStorage.getItem("active")
     if(_.isEmpty(active)) {
       await postRequest("users/reqVerify", {verifyAction: "activeAccount"})
+      setVerify("activeAccount")
       router.push("/signup/verifyMail")
       return;
     }
@@ -62,6 +65,7 @@ export default function LoginScreen() {
     const active = await AsyncStorage.getItem("active")
     if(_.isEmpty(active)) {
       await postRequest("users/reqVerify", {verifyAction: "activeAccount"})
+      setVerify("activeAccount")
       router.push("/signup/verifyMail")
       return;
     }

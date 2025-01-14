@@ -1,5 +1,8 @@
 import { postRequest } from "@/apis/common";
+import { VerifyPath } from "@/constants/BaseModel";
 import { pictonBlue, white } from "@/constants/Pallete";
+import verifyService, { verifyRouter } from "@/service/auth/verifyStore";
+import useSpinner from "@/service/spinner";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { replace } from "lodash";
@@ -12,11 +15,16 @@ export default function VerifyMailPage() {
   const [value, setValue] = useState('');
   const [isResend, setIsResend] = useState(false);
   let [countDown, setCountDown] = useState(59);
+  const {verify} = verifyService()
   const ref = useBlurOnFulfill({value, cellCount: 6});
   const router = useRouter()
-  const resend = () => {
+  const {setVisible} = useSpinner()
+  const resend = async () => {
+    setVisible(true)
     setCountDown(59);
     setIsResend(false);
+    await postRequest("users/reqVerify", {verifyAction: verify})
+    setVisible(false)
   }
   
   useEffect(() => {
@@ -65,8 +73,9 @@ export default function VerifyMailPage() {
   const submit = async () => {
     const response = await postRequest("users/verify", {
       code: value,
-      verifyAction: "activeAccount"
+      verifyAction: verify
     })
+    
     if(response.status === 401) {
       router.replace("/")
       return
@@ -80,7 +89,7 @@ export default function VerifyMailPage() {
       return;
     }
     await AsyncStorage.setItem("active", "ok")
-    router.replace("/pin/setup")
+    router.replace(verifyRouter[verify])
   }
 
   return (

@@ -18,6 +18,7 @@ export default function EmployeeItem ({employee}: {employee: Employee}) {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} disabled={employee.role === "OWNER" || role !== "OWNER"}>
       <View style={{flex: 1}}>
+        <Text>{employee.fullName}</Text>
         <Text>{employee.phoneNumber}</Text>
         <Text>{employee.email}</Text>
       </View>

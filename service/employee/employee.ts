@@ -12,7 +12,9 @@ export interface Employee extends BaseModel {
   id: number,
   phoneNumber: string,
   email: string,
-  role: string
+  role: string,
+  avatar: string,
+  fullName: string
 }
 
 type State = {
@@ -31,7 +33,9 @@ const initCurrentEmployee: Employee = {
   id: 0,
   phoneNumber: "",
   email: "",
-  role: ""
+  role: "",
+  avatar: "",
+  fullName: ""
 }
 
 const employeesService = create<State & Action>(set => ({

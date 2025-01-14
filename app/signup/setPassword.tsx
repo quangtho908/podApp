@@ -1,6 +1,7 @@
 import { postRequest } from "@/apis/common";
 import PasswordField from "@/components/common/PasswordField";
 import signupService from "@/service/auth/signup";
+import verifyService from "@/service/auth/verifyStore";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AxiosError, AxiosResponse } from "axios";
 import { router } from "expo-router";
@@ -13,6 +14,7 @@ export default function SetPasswordScreen() {
   const [verifyPassword, setVerifyPassword] = useState("")
   const [disabledNext, setDisabledNext] = useState(true)
   const {signup, setSignup} = signupService()
+  const {setVerify} = verifyService()
   const compareVerfiy = (newPass: string) => {
     setPassword(newPass)
     setDisabledNext(_.isEmpty(newPass) || _.isEmpty(verifyPassword) ||  newPass !== verifyPassword)
@@ -33,6 +35,7 @@ export default function SetPasswordScreen() {
       await AsyncStorage.setItem("token", data.token);
       await AsyncStorage.setItem("refreshToken", data.refreshToken)
       await postRequest("users/reqVerify", {verifyAction: "activeAccount"})
+      setVerify("activeAccount")
       router.push("/signup/verifyMail")
       return
     }else if(response.status === 401) {

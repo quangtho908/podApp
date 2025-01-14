@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
@@ -6,9 +6,7 @@ import { pictonBlue, red, white } from "@/constants/Pallete";
 import * as _ from "lodash";
 export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: string) => void, initFile?: string}) {
   const [file, setFile] = useState("");
-  const [haveInitFile, setHaveInitFile] = useState(!_.isEmpty(initFile))
   const [error, setError] = useState(null);
-
   const pickImage = async () => {
     const { status } = await ImagePicker.
         requestMediaLibraryPermissionsAsync();
@@ -31,7 +29,6 @@ export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: str
   };
 
   const removeImage = () => {
-    setHaveInitFile(false)
     setFile("")
     !_.isNil(onChange) && onChange("")
   }
@@ -50,7 +47,7 @@ export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: str
           <Text style={styles.errorText}>{error}</Text>
           <View style={styles.imageContainer}>
             {
-              haveInitFile
+              !_.isEmpty(initFile)
               ? <Image source={{uri: initFile}} style={styles.image} />
               : <Image source={require('@/assets/images/upload-placeholder.jpg')} style={styles.image} />
             }
@@ -59,7 +56,11 @@ export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: str
           
       )}
       <View style={{flexDirection: "row", gap: 10}}>
-        <TouchableOpacity style={{...styles.button, backgroundColor: red[700]}} onPress={removeImage}>
+        <TouchableOpacity
+          style={{...styles.button, ..._.isEmpty(file) ? {backgroundColor: white[300]} : {backgroundColor: red[700]}}}
+          onPress={removeImage}
+          disabled={_.isEmpty(file)}
+        >
           <TabBarIcon name='trash' color={white[50]} />
           <Text style={styles.buttonText}>
               Xoá
