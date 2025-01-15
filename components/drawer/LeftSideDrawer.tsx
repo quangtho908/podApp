@@ -12,11 +12,13 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import styleText from "@/styles/text";
 import authService from "@/service/auth/authStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import userService from "@/service/user/userStore";
 
 export default function LeftSideDrawer() {
   const router = useRouter();
   const {filter, merchants, unauth, setUnauth, currentMerchant} = merchantService()
   const {role, setRole} = authService()
+  const {unauth: userUnauth, get} = userService()
   useEffect(() => {
     reloadMerchants()
   }, [])
@@ -26,8 +28,11 @@ export default function LeftSideDrawer() {
   }, [JSON.stringify(currentMerchant)])
 
   const reloadMerchants = async () => {
-    await filter()
-    if(unauth) {
+    await Promise.all([
+      filter(),
+      get()
+    ])
+    if(unauth || userUnauth) {
       setUnauth(false)
       router.replace("/")
       return;
@@ -90,10 +95,6 @@ export default function LeftSideDrawer() {
             <Text style={{...styleText.sText}}>Quản lý thực đơn</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => router.push("/(drawer)/employee")} style={styles.actionLink}>
-            <TabBarIcon name="people" color={orange[700]} />
-            <Text style={{...styleText.sText}}>Quản lý nhân viên</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("/changePassword")} style={styles.actionLink}>
             <TabBarIcon name="people" color={orange[700]} />
             <Text style={{...styleText.sText}}>Quản lý nhân viên</Text>
           </TouchableOpacity>

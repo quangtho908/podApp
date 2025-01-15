@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import Popover from "react-native-popover-view";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { pictonBlue, white } from "@/constants/Pallete";
@@ -9,10 +9,12 @@ import { useRouter } from "expo-router";
 import { postRequest } from "@/apis/common";
 import _ from "lodash";
 import Toast from "react-native-toast-message";
+import userService from "@/service/user/userStore";
 
 export function AvatarBtn() {
   const [popoverVisible, setPopoverVisible] = useState(false);
   const router = useRouter()
+  const {user} = userService()
   const logout = async () => {
     const refreshToken = await AsyncStorage.getItem("refreshToken")
     if(_.isEmpty(refreshToken)) {
@@ -51,7 +53,12 @@ export function AvatarBtn() {
         onRequestClose={() => setPopoverVisible(false)}
         from={(
           <TouchableOpacity style={styles.action} onPress={() => setPopoverVisible(true)}>
-            <TabBarIcon name="image" color={white[50]} />
+            {
+              _.isEmpty(user.avatar) ?
+              <TabBarIcon name="image" color={white[50]} /> :
+              <Image source={{uri: user.avatar}} style={styles.image} />
+            }
+            
           </TouchableOpacity>
         )}
       >
@@ -83,5 +90,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10
+  },
+  image: {
+    width: 30,
+    height: 30
   }
 })

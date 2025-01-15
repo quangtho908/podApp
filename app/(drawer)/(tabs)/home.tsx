@@ -27,10 +27,12 @@ export default function HomeScreen() {
   const {put} = notiService();
   useEffect(() => {
     const notiEvent = addNotificationReceivedListener(notification => {
+      console.log(1)
       if(_.isEmpty(notification.request.content.title) || _.isEmpty(notification.request.content.body)) {
         return
       }
       Toast.show({
+        type:"info",
         text1: notification.request.content.title || "Thông báo cửa hàng",
         text2: notification.request.content.body || "Cửa hàng có hoạt động mới"
       })
