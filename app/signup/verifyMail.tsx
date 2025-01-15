@@ -23,7 +23,21 @@ export default function VerifyMailPage() {
     setVisible(true)
     setCountDown(59);
     setIsResend(false);
-    await postRequest("users/reqVerify", {verifyAction: verify})
+    const response = await postRequest("users/reqVerify", {verifyAction: verify})
+    if(response.status === 401) {
+      setVisible(false)
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
+      Toast.show({
+        type: "error",
+        text1: "Có lỗi xảy ra",
+        text2: "Quá trình yêu cầu bị lỗi"
+      })
+      setValue("")
+      setVisible(false)
+      return;
+    }
     setVisible(false)
   }
   
@@ -71,6 +85,7 @@ export default function VerifyMailPage() {
   };
 
   const submit = async () => {
+    setVisible(true)
     const response = await postRequest("users/verify", {
       code: value,
       verifyAction: verify
@@ -78,6 +93,7 @@ export default function VerifyMailPage() {
     
     if(response.status === 401) {
       router.replace("/")
+      setVisible(false)
       return
     }else if(response.status !== 200) {
       Toast.show({
@@ -86,10 +102,12 @@ export default function VerifyMailPage() {
         text2: "Mã xác thực sai hoặc hết hạn"
       })
       setValue("")
+      setVisible(false)
       return;
     }
     await AsyncStorage.setItem("active", "ok")
     router.replace(verifyRouter[verify])
+    setVisible(false)
   }
 
   return (

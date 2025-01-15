@@ -6,11 +6,34 @@ import { Placement } from "react-native-popover-view/dist/Types";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useRouter } from "expo-router";
+import { postRequest } from "@/apis/common";
+import _ from "lodash";
+import Toast from "react-native-toast-message";
 
 export function AvatarBtn() {
   const [popoverVisible, setPopoverVisible] = useState(false);
   const router = useRouter()
   const logout = async () => {
+    const refreshToken = await AsyncStorage.getItem("refreshToken")
+    if(_.isEmpty(refreshToken)) {
+      await AsyncStorage.clear()
+      setPopoverVisible(false)
+      router.replace("/")
+      return
+    }
+    const response = await postRequest("auth/logout", {
+      refreshToken
+    })
+    if(response.status === 401) {
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
+      Toast.show({
+        type: "error",
+        text1: "Xảy ra lỗi"
+      })
+      return;
+    }
     await AsyncStorage.clear()
     setPopoverVisible(false)
     router.replace("/")

@@ -1,9 +1,12 @@
-import { addNotificationReceivedListener, AndroidImportance, getExpoPushTokenAsync, getPermissionsAsync, requestPermissionsAsync, setNotificationChannelAsync } from "expo-notifications";
+import { isDevice } from "expo-device";
+import { AndroidImportance, getExpoPushTokenAsync, getPermissionsAsync, requestPermissionsAsync, setNotificationChannelAsync } from "expo-notifications";
 import { Platform } from "react-native";
 
 export async function registerForPushNotificationsAsync() {
   let token;
-
+  if(!isDevice) {
+    return ""
+  }
   if (Platform.OS === 'android') {
     await setNotificationChannelAsync('default', {
       name: 'default',
