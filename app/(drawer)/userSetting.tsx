@@ -82,9 +82,19 @@ export default function UserSetting() {
   }
 
   const changePassword = async () => {
-    await postRequest("users/reqVerify", {verifyAction: "setPassword"})
+    setSpinner(true)
+    const response = await postRequest("users/reqVerify", {verifyAction: "setPassword"})
+    if(response.status === 401) {
+      setSpinner(false)
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
+      setSpinner(false)
+      return
+    }
     setVerify("setPassword")
     router.push("/signup/verifyMail")
+    setSpinner(false)
   }
 
   return (

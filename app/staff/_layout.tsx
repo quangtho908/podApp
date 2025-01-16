@@ -2,8 +2,8 @@ import { Stack } from "expo-router";
 
 export default function StaffLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="invite" />
+    <Stack screenOptions={{headerTitleAlign: "center"}}>
+      <Stack.Screen name="invite" options={{title: "Thêm nhân viên mới"}} />
     </Stack>
   )
 }

@@ -23,7 +23,7 @@ export default function ModalChooseBank() {
   return (
     <Modal visible={modals.get("choose_bank")?.visible || false}>
       <View style={{...styles.title}}>
-        <Text style={{...styleText.textTitle}}>Chọn bàn</Text>
+        <Text style={{...styleText.textTitle}}>Chọn ngân hàng</Text>
         <TouchableOpacity onPress={cancel}>
           <Text style={{...styleText.text, ...color.textBlue500}}>Huỷ</Text>
         </TouchableOpacity>

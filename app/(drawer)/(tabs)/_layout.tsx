@@ -15,16 +15,16 @@ export default function BottomNavigation() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerLeft: () => <HeaderButton onPress={() => navigation.openDrawer()} />,
+        headerTitleAlign: "center"
       }}>
       <Tabs.Screen name="home" options={{
-        headerTitle: '',
+        headerTitle: 'IPOD',
         title: 'Danh sách đơn',
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'home' : 'home-outline'} />,
         headerRight: () => <NotificationBtn />
       }}/>
 
       <Tabs.Screen name='history' options={{
-        headerTitle: '',
         title: 'Lịch sử đơn',
         tabBarIcon: ({focused}) => <TabBarIcon name={focused ? 'time' : 'time-outline'} />
       }}/>

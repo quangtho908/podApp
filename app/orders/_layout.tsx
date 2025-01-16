@@ -3,12 +3,11 @@ import { Stack } from "expo-router";
 
 export default function OrdersLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{headerTitleAlign: "center"}}>
       <Stack.Screen name="createOrder"  options={{
-            headerLeft: () => <CancelCreateOrderBtn />,
-            title: "Tạo đơn hàng",
-            headerTitleAlign: "center"
-          }} />
+        headerLeft: () => <CancelCreateOrderBtn />,
+        title: "Tạo đơn hàng",
+      }} />
     </Stack>
   )
 }

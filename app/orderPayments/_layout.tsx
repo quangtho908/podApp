@@ -1,9 +1,11 @@
+import orderPaymentService from "@/service/orderPayments/orderPaymentStore";
 import { Stack } from "expo-router";
 
 export default function OrderPaymentLayout () {
+  const {currentOrderPayment} = orderPaymentService()
   return (
-    <Stack>
-      <Stack.Screen name="orderPaymentDetail" />
+    <Stack screenOptions={{headerTitleAlign: "center"}}>
+      <Stack.Screen name="orderPaymentDetail" options={{title: `Đơn hàng ${currentOrderPayment.order.id}`}} />
     </Stack>
   )
 }

@@ -20,16 +20,15 @@ export default function PaymentLayout() {
   }
   const cancelAddBankAccount = () => {
     resetCurrentBank()
-    router.replace("/(drawer)/(tabs)/home")
+    router.back()
   }
 
   return (
-    <Stack>
+    <Stack screenOptions={{headerTitleAlign: "center"}}>
       <Stack.Screen
         name="index"
         options={{
           headerTitle: "Thanh toán đơn hàng",
-          headerTitleAlign: "center",
           headerLeft: () => (
             <TouchableOpacity onPress={cancelPayment}>
               <Text style={{...color.textBlue500, ...styleText.text}}>Huỷ</Text>
@@ -39,7 +38,7 @@ export default function PaymentLayout() {
       />
       <Stack.Screen name="selectBank"
         options={{
-          headerTitle: 'Quay lại',
+          headerTitle: 'Chọn tài khoản',
           headerRight: () => (
           <TouchableOpacity onPress={() => router.push('/payments')}>
             <TabBarIcon name='add' />
@@ -47,8 +46,7 @@ export default function PaymentLayout() {
         )}}
       />
       <Stack.Screen name="addBankAccount" options={{
-        title: "thêm ngân hàng mới",
-        headerTitleAlign: "center",
+        title: "Thêm ngân hàng mới",
         headerLeft: () => (
           <TouchableOpacity onPress={cancelAddBankAccount}>
             <Text style={{...color.textBlue500, ...styleText.text}}>Huỷ</Text>
@@ -57,7 +55,6 @@ export default function PaymentLayout() {
       }} />
       <Stack.Screen name="paymentSuccess" options={{
         title: "Thanh toán thành công",
-        headerTitleAlign: "center",
         headerLeft: () => (
           <TouchableOpacity onPress={cancelAddBankAccount}>
             <TabBarIcon name="home" color={pictonBlue[900]} size={30} />

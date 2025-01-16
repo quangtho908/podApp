@@ -27,6 +27,9 @@ export default function DrawerLayout() {
     <GestureHandlerRootView>
       <Drawer 
         drawerContent={(props: any) => (<LeftSideDrawer {...props} />)}
+        screenOptions={{
+          headerTitleAlign: "center"
+        }}
       >
         <Drawer.Screen 
           name="(tabs)"
@@ -42,7 +45,8 @@ export default function DrawerLayout() {
               >
                 <TabBarIcon name='add' color={pictonBlue[800]} />
               </TouchableOpacity>
-            )
+            ),
+            title: "Quản lý bàn"
           }}
         />
         <Drawer.Screen
@@ -55,7 +59,8 @@ export default function DrawerLayout() {
               >
                 <TabBarIcon name='add' color={pictonBlue[800]} />
               </TouchableOpacity>
-            )
+            ),
+            title: "Quản lý thực đơn"
           }}
         />
         <Drawer.Screen
@@ -88,17 +93,7 @@ export default function DrawerLayout() {
         />
         <Drawer.Screen
           name="merchantSetting"
-          options={{
-            title: "Cài đặt cửa hàng",
-            headerRight: () => ( role === "OWNER" &&
-              <TouchableOpacity
-                onPress={() => router.push("/staff/invite")}
-                style={{marginRight: 10}}
-              >
-                <TabBarIcon name="add" color={pictonBlue[800]} />
-              </TouchableOpacity>
-            )
-          }}
+          options={{ title: "Cài đặt cửa hàng" }}
         />
         <Drawer.Screen
           name="userSetting"

@@ -5,7 +5,7 @@ import { Stack, useRouter } from "expo-router";
 import { TouchableOpacity, Text } from "react-native";
 
 export default function ProductsLayout() {
-  const {resetCurrentProduct} = productService()
+  const {resetCurrentProduct, currentProduct} = productService()
   const router = useRouter();
   const cancelUpdateProduct = () => {
     resetCurrentProduct()
@@ -13,13 +13,12 @@ export default function ProductsLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="addProduct" options={{headerTitle: "Cài đặt mã PIN"}} />
+    <Stack screenOptions={{headerTitleAlign: "center"}}>
+      <Stack.Screen name="addProduct" options={{headerTitle: "Thêm sản phẩm mới"}} />
       <Stack.Screen
         name="updateProduct"
         options={{
-          headerTitle: "Nhập mã PIN",
-          headerTitleAlign: "center",
+          headerTitle: currentProduct.name,
           headerLeft: () => (
             <TouchableOpacity onPress={cancelUpdateProduct}>
               <Text style={{...color.textBlue500, ...styleText.text}}>Huỷ</Text>
