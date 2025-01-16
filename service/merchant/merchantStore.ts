@@ -11,7 +11,8 @@ export interface Merchant extends BaseModel {
   name: string,
   address: string,
   phoneNumber: string,
-  role: string
+  role: string,
+  avatar: string,
   createdAt: Date,
   updatedAt: Date
 }

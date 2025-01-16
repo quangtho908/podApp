@@ -2,6 +2,7 @@ import { postRequest } from "@/apis/common";
 import ChooseIamge from "@/components/common/ChooseImage";
 import Input from "@/components/common/Input";
 import PrimaryButton from "@/components/common/PrimaryButton";
+import useChooseImage from "@/service/chooseImage";
 import merchantService from "@/service/merchant/merchantStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
@@ -10,7 +11,7 @@ import { useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
 
 export default function addProduct() {
-  const [file, setFile] = useState("")
+  const {file} = useChooseImage()
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const {currentMerchant} = merchantService()
@@ -38,7 +39,7 @@ export default function addProduct() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <ChooseIamge onChange={setFile} />
+      <ChooseIamge />
       <Input label="Tên sản phẩm" placeholder="Tên sản phẩm" onChangeText={setName} />
       <Input label="Giá" placeholder="Giá" onChangeText={setPrice} />
       <PrimaryButton title="Tạo món" onPress={confirm} />

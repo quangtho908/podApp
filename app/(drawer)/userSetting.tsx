@@ -4,6 +4,7 @@ import Input from "@/components/common/Input";
 import PrimaryButton from "@/components/common/PrimaryButton";
 import ResetOnPullToRefresh from "@/components/common/ResetOnPullRequest";
 import verifyService from "@/service/auth/verifyStore";
+import useChooseImage from "@/service/chooseImage";
 import useSpinner from "@/service/spinner";
 import userService from "@/service/user/userStore";
 import styleText from "@/styles/text";
@@ -16,7 +17,7 @@ export default function UserSetting() {
   const router = useRouter()
   const {user, get, unauth, setUnauth} = userService()
   const {setVisible: setSpinner} = useSpinner()
-  const [file, setFile] = useState("")
+  const {file, setFile} = useChooseImage()
   const [fullName, setFullname] = useState("")
   const {setVerify} = verifyService()
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function UserSetting() {
       router.replace("/")
       return
     }
+    setFile(user.avatar)
   }
 
   const onSaveAvatar = async () => {
@@ -37,6 +39,8 @@ export default function UserSetting() {
     if(!_.isEmpty(file)) {
       const fileName = file.split('/').pop();
       body.append("image", {name: fileName, uri: file, type: "image/*"} as any)
+    }else {
+      body.append("empty", "")
     }
     
     const response = await postRequest("users/avatar", body, {
@@ -87,7 +91,7 @@ export default function UserSetting() {
     <ResetOnPullToRefresh contentContainerStyle={styles.container} reload={getUser}>
       <View>
         <Text style={{...styleText.textTitle}}>Ảnh đại diện</Text>
-        <ChooseIamge initFile={user.avatar} onChange={setFile} />
+        <ChooseIamge />
         <PrimaryButton title="Lưu ảnh" onPress={onSaveAvatar} />
       </View>
       

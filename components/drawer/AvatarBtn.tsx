@@ -55,7 +55,7 @@ export function AvatarBtn() {
           <TouchableOpacity style={styles.action} onPress={() => setPopoverVisible(true)}>
             {
               _.isEmpty(user.avatar) ?
-              <TabBarIcon name="image" color={white[50]} /> :
+              <TabBarIcon name="image" color={white[50]} style={{margin: 10}} /> :
               <Image source={{uri: user.avatar}} style={styles.image} />
             }
             
@@ -76,7 +76,6 @@ export function AvatarBtn() {
 
 const styles = StyleSheet.create({
   action: {
-    padding: 10,
     backgroundColor: pictonBlue[800],
     borderRadius: 50,
     width: 50,
@@ -92,7 +91,8 @@ const styles = StyleSheet.create({
     gap: 10
   },
   image: {
-    width: 30,
-    height: 30
+    width: "100%",
+    height: "100%",
+    borderRadius: 50
   }
 })

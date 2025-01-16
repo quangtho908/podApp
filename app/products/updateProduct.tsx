@@ -10,11 +10,12 @@ import { useRouter } from "expo-router";
 import _ from "lodash";
 import { useState } from "react";
 import { StyleSheet, ScrollView } from "react-native";
+import useChooseImage from "@/service/chooseImage";
 
 export default function updateProduct() {
   const {currentProduct} = productService()
   const {currentMerchant} = merchantService()
-  const [file, setFile] = useState("")
+  const {file, setFile} = useChooseImage()
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const {setVisible: setSpinner} = useSpinner()
@@ -47,7 +48,7 @@ export default function updateProduct() {
 
   return(
     <ScrollView contentContainerStyle={styles.container}>
-      <ChooseIamge initFile={currentProduct.image} onChange={setFile} />
+      <ChooseIamge />
       <Input label="Tên sản phẩm" placeholder={currentProduct.name} onChangeText={setName} />
       <Input label="Giá" placeholder={currentProduct.price.toString()} onChangeText={setPrice} />
       <PrimaryButton title="Cập nhật" onPress={confirm} />

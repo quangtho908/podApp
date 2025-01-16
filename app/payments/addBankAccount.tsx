@@ -9,6 +9,10 @@ import { postRequest } from "@/apis/common";
 import merchantService from "@/service/merchant/merchantStore";
 import bankAccountService from "@/service/bankAccounts/bankAccountsStore";
 import useModal from "@/service/modal/modal";
+import { AxiosResponse } from "axios";
+import useSpinner from "@/service/spinner";
+import Toast from "react-native-toast-message";
+import _ from "lodash";
 
 export default function AddBankAccount() {
   const router = useRouter();
@@ -18,9 +22,17 @@ export default function AddBankAccount() {
   const {setVisible} = useModal()
   const {currentMerchant} = merchantService()
   const {filter, unauth, setUnauth} = bankAccountService()
+  const {setVisible: setSpinner} = useSpinner();
+  const [disabelName, setDisableName] = useState(false)
   useEffect(() => {
     get()
   }, [])
+
+  useEffect(() => {
+    setDisableName(false)
+    setAccountName("")
+    setAccountNumber("")
+  }, [JSON.stringify(currentBank)])
 
   const confirm = async () => {
     const response = await postRequest("bankAccounts", {
@@ -45,21 +57,37 @@ export default function AddBankAccount() {
     router.back();
   }
 
+  const onChageAccountNumber = (text: string) => {
+    setDisableName(false)
+    setAccountNumber(text)
+  }
+
   const accountNumberBlur = async () => {
-    // if(!currentBank?.lookupSupported) {
-    //   return;
-    // }
-    // const response = await postRequest("banks", {
-    //   bin: currentBank.bin,
-    //   accountNumber
-    // })
-    // console.log(response)
-
-    // if(response.status !== 200) {
-    //   return
-    // }
-
-    // setAccountName((response as AxiosResponse).data.accountName)
+    setSpinner(true)
+    if(!currentBank?.lookupSupported) {
+      setDisableName(false);
+      setSpinner(false)
+      return;
+    }
+    const response = await postRequest("banks", {
+      bank: currentBank.code,
+      account: accountNumber
+    })
+    if(response.status === 401) {
+      setSpinner(false)
+      router.replace("/")
+      return
+    }else if(response.status !== 200) {
+      Toast.show({
+        type: "error",
+        text1: "Số tài khoản bị sai hoặc không tồn tại"
+      })
+      setSpinner(false)
+      return
+    }
+    setSpinner(false)
+    setAccountName((response as AxiosResponse).data.ownerName)
+    setDisableName(true)
   }
 
   return (
@@ -68,9 +96,9 @@ export default function AddBankAccount() {
         {currentBank !== null && <Image style={styles.bankImage} source={{uri: currentBank.logo}} />}
         <Text>{currentBank !== null ? currentBank.shortName : "Chọn ngân hàng"}</Text>
       </TouchableOpacity>
-      <Input placeholder="Số tài khoản" onChangeText={setAccountNumber} onBlur={accountNumberBlur} />
-      <Input placeholder="Tên tài khoản" onChangeText={setAccountName} value={accountName} />
-      <Button title="Xác nhận" onPress={confirm} />
+      <Input placeholder="Số tài khoản" onChangeText={onChageAccountNumber} onBlur={accountNumberBlur} value={accountNumber} />
+      <Input placeholder="Tên tài khoản" onChangeText={setAccountName} value={accountName} readOnly={disabelName} />
+      <Button title="Xác nhận" onPress={confirm} disabled={_.isEmpty(accountNumber)} />
       <ModalChooseBank />
     </View>
   )

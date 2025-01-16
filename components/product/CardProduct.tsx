@@ -5,14 +5,17 @@ import productService, { Product } from "@/service/product/productsStore";
 import { convertPrice } from "@/utils/convertData";
 import _ from "lodash";
 import useModal from "@/service/modal/modal";
+import useChooseImage from "@/service/chooseImage";
 
 
 export default function CardProduct({product}: {product: Product}) {
   const router = useRouter();
   const {setVisible} = useModal()
   const {setCurrentProduct} = productService()
+  const {setFile} = useChooseImage()
   const onFocus = () => {
     setCurrentProduct(product)
+    setFile(product.image || "")
     router.push('/products/updateProduct');
   }
 

@@ -1,10 +1,10 @@
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { orange, pictonBlue, white } from "@/constants/Pallete";
 import { Link, useRouter } from "expo-router";
 import ResetOnPullToRefresh from "../common/ResetOnPullRequest";
 import ItemStore from "../store/ItemStore";
-import { JSX, useEffect } from "react";
-import merchantService from "@/service/merchant/merchantStore";
+import { JSX, useEffect, useState } from "react";
+import merchantService, { Merchant } from "@/service/merchant/merchantStore";
 import * as _ from "lodash";
 import AddStoreBtn from "../store/AddStoreBtn";
 import { AvatarBtn } from "./AvatarBtn";
@@ -19,12 +19,11 @@ export default function LeftSideDrawer() {
   const {filter, merchants, unauth, setUnauth, currentMerchant} = merchantService()
   const {role, setRole} = authService()
   const {unauth: userUnauth, get} = userService()
-  useEffect(() => {
-    reloadMerchants()
-  }, [])
+  const [data, setData] = useState({} as Merchant | null)
 
   useEffect(() => {
     loadMenu()
+    reloadMerchants()
   }, [JSON.stringify(currentMerchant)])
 
   const reloadMerchants = async () => {
@@ -37,6 +36,7 @@ export default function LeftSideDrawer() {
       router.replace("/")
       return;
     }
+    setData(_.find(merchants, {id: currentMerchant}) || null)
   }
 
   const loadMenu = async () => {
@@ -70,9 +70,12 @@ export default function LeftSideDrawer() {
       <View style={{ flex: 5, backgroundColor: white[50] }}>
         <View style={styles.head}>
           <View style={styles.headerStorefront}>
-            <TabBarIcon name="storefront" color={white[50]} style={{textAlign:"center"}} size={50} />
+            {_.isEmpty(data?.avatar) ?
+              <TabBarIcon name="storefront" color={white[50]} style={{textAlign:"center"}} size={50} />
+              : <Image source={{uri: data?.avatar}} style={styles.avatar} />
+            }
           </View>
-          <Text style={{...styleText.textTitle}} >Cửa hàng</Text>
+          <Text style={{...styleText.textTitle}} >{data?.name}</Text>
           <Text style={{...styleText.sText}} >Cửa hàng</Text>
         </View>
         <View style={styles.menu}>
@@ -97,6 +100,10 @@ export default function LeftSideDrawer() {
           <TouchableOpacity onPress={() => router.push("/(drawer)/employee")} style={styles.actionLink}>
             <TabBarIcon name="people" color={orange[700]} />
             <Text style={{...styleText.sText}}>Quản lý nhân viên</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/(drawer)/merchantSetting")} style={styles.actionLink}>
+            <TabBarIcon name="settings" color={orange[700]} />
+            <Text style={{...styleText.sText}}>Cài đặt cửa hàng</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -130,5 +137,10 @@ const styles = StyleSheet.create({
     gap: 10,
     borderBottomColor: white[100],
     borderBottomWidth: 1
+  },
+  avatar: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 50
   }
 })

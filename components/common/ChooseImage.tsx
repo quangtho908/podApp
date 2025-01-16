@@ -4,9 +4,10 @@ import * as ImagePicker from "expo-image-picker";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { pictonBlue, red, white } from "@/constants/Pallete";
 import * as _ from "lodash";
-export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: string) => void, initFile?: string}) {
-  const [file, setFile] = useState("");
+import useChooseImage from "@/service/chooseImage";
+export default function ChooseIamge() {
   const [error, setError] = useState(null);
+  const {file, setFile} = useChooseImage()
   const pickImage = async () => {
     const { status } = await ImagePicker.
         requestMediaLibraryPermissionsAsync();
@@ -22,7 +23,6 @@ export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: str
       const result = await ImagePicker.launchImageLibraryAsync({allowsMultipleSelection: false});
       if (!result.canceled) {
           setFile(result.assets[0].uri)
-          !_.isNil(onChange) && onChange(result.assets[0].uri)
           setError(null);
       }
     }
@@ -30,31 +30,22 @@ export default function ChooseIamge({onChange, initFile} : {onChange?: (uri: str
 
   const removeImage = () => {
     setFile("")
-    !_.isNil(onChange) && onChange("")
   }
   return (
     <View style={styles.container}>
       <Text style={styles.header}>
           Chọn hình ảnh
       </Text>
-      {!_.isEmpty(file) ? (
-          <View style={styles.imageContainer}>
-              <Image source={{ uri: file }}
-                  style={styles.image} />
-          </View>
-      ) : (
-        <View>
-          <Text style={styles.errorText}>{error}</Text>
-          <View style={styles.imageContainer}>
-            {
-              !_.isEmpty(initFile)
-              ? <Image source={{uri: initFile}} style={styles.image} />
-              : <Image source={require('@/assets/images/upload-placeholder.jpg')} style={styles.image} />
-            }
-          </View>
+      <View>
+        <Text style={styles.errorText}>{error}</Text>
+        <View style={styles.imageContainer}>
+          {
+            !_.isEmpty(file)
+            ? <Image source={{uri: file}} style={styles.image} />
+            : <Image source={require('@/assets/images/upload-placeholder.jpg')} style={styles.image} />
+          }
         </View>
-          
-      )}
+      </View>
       <View style={{flexDirection: "row", gap: 10}}>
         <TouchableOpacity
           style={{...styles.button, ..._.isEmpty(file) ? {backgroundColor: white[300]} : {backgroundColor: red[700]}}}

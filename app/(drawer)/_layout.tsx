@@ -7,13 +7,20 @@ import { useRouter } from "expo-router";
 import { pictonBlue } from "@/constants/Pallete";
 import authService from "@/service/auth/authStore";
 import useModal from "@/service/modal/modal";
+import useChooseImage from "@/service/chooseImage";
 
 export default function DrawerLayout() {
   const {setVisible} = useModal()
   const router = useRouter();
   const {role} = authService()
+  const {setFile} = useChooseImage()
   const onAddTable = () => {
     setVisible("create_table", true)
+  }
+
+  const onAddProduct = () => {
+    setFile("")
+    router.push("/products/addProduct")
   }
 
   return (
@@ -44,7 +51,7 @@ export default function DrawerLayout() {
             headerRight: () => (
               <TouchableOpacity
                 style={{marginRight: 10}}
-                onPress={() => router.push("/products/addProduct")}
+                onPress={onAddProduct}
               >
                 <TabBarIcon name='add' color={pictonBlue[800]} />
               </TouchableOpacity>
@@ -80,7 +87,24 @@ export default function DrawerLayout() {
           }}
         />
         <Drawer.Screen
+          name="merchantSetting"
+          options={{
+            title: "Cài đặt cửa hàng",
+            headerRight: () => ( role === "OWNER" &&
+              <TouchableOpacity
+                onPress={() => router.push("/staff/invite")}
+                style={{marginRight: 10}}
+              >
+                <TabBarIcon name="add" color={pictonBlue[800]} />
+              </TouchableOpacity>
+            )
+          }}
+        />
+        <Drawer.Screen
           name="userSetting"
+          options={{
+            title: "Cài đặt người dùng"
+          }}
         />
       </Drawer>
     </GestureHandlerRootView>
